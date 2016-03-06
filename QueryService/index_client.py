@@ -1,36 +1,16 @@
 __author__ = 'hungtantran'
 
-from models import ServiceQuery
-
-from thrift import Thrift
-from thrift.transport import TSocket
-from thrift.transport import TTransport
-from thrift.protocol import TBinaryProtocol
+from thrift_index_client import ThriftIndexClient
 
 def main():
     # Make socket
-    transport = TSocket.TSocket('localhost', 9090)
-
-    # Buffering is critical. Raw sockets are very slow
-    transport = TTransport.TBufferedTransport(transport)
-
-    # Wrap in a protocol
-    protocol = TBinaryProtocol.TBinaryProtocol(transport)
-
-    # Create a client to use the protocol encoder
-    client = ServiceQuery.Client(protocol)
-
-    # Connect!
-    transport.open()
-
-    client.ping()
-    print(client.get_service_name())
-    print(client.get_indices())
-
-    transport.close()
+    with ThriftIndexClient('localhost', 9090) as client:
+        client.ping()
+        print(client.get_service_name())
+        print(client.get_indices())
 
 if __name__ == '__main__':
     try:
         main()
-    except Thrift.TException as tx:
-        print('%s' % tx.message)
+    except Exception as tx:
+        print(tx)
