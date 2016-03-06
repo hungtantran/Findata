@@ -2,7 +2,6 @@ __author__ = 'hungtantran'
 
 from models import ServiceQuery
 
-from thrift import Thrift
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
@@ -40,4 +39,6 @@ class ThriftIndexClient(object):
         return self.client.get_indices()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        print('Client exit with type %s, val %s, traceback %s' % (
+            exc_type, exc_val, exc_tb))
         self.transport.close()

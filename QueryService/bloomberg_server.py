@@ -1,6 +1,7 @@
 __author__ = 'hungtantran'
 
 from models import ServiceQuery
+from thrift_index_server import ThriftIndexServer
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -22,12 +23,14 @@ class BloombergHandler:
         return ["a", "b"]
 
 
-if __name__ == '__main__':
+def main():
     handler = BloombergHandler()
-    processor = ServiceQuery.Processor(handler)
-    transport = TSocket.TServerSocket(host='localhost',port=9090)
-    tfactory = TTransport.TBufferedTransportFactory()
-    pfactory = TBinaryProtocol.TBinaryProtocolFactory()
+    with ThriftIndexServer('localhost', 9090, handler) as server:
+        server.serve()
 
-    server = TServer.TSimpleServer(processor, transport, tfactory, pfactory)
-    server.serve()
+
+if __name__ == '__main__':
+    try:
+        main()
+    except Exception as tx:
+        print(tx)
