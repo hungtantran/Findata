@@ -1,5 +1,7 @@
 __author__ = 'hungtantran'
 
+from logger import Logger
+from logger import LogLevel
 from models import ServiceQuery
 
 from thrift.transport import TSocket
@@ -39,6 +41,6 @@ class ThriftIndexClient(object):
         return self.client.get_indices()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        print('Client exit with type %s, val %s, traceback %s' % (
+        Logger.log(LogLevel.INFO, 'Client exit with type %s, val %s, traceback %s' % (
             exc_type, exc_val, exc_tb))
         self.transport.close()

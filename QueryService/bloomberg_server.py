@@ -2,6 +2,8 @@ __author__ = 'hungtantran'
 
 import threading
 
+from logger import Logger
+from logger import LogLevel
 from models import ServiceQuery
 from thrift_index_server import ThriftIndexServer
 from thrift_index_server import RPCIndexServer
@@ -26,11 +28,21 @@ class BloombergHandler:
         return ["a", "b"]
 
 
+def start_bloomberg_server():
+    handler = BloombergHandler()
+    bloomberg_rpc_server = RPCIndexServer(handler)
+    bloomberg_rpc_server.start()
+    return bloomberg_rpc_server
+
 if __name__ == '__main__':
+    threads = []
+
     try:
-        handler = BloombergHandler()
-        bloomberg_rpc_server = RPCIndexServer(handler)
-        bloomberg_rpc_server.start()
-        bloomberg_rpc_server.join()
+        threads.append(start_bloomberg_server())
     except Exception as tx:
         print(tx)
+
+    Logger.log(LogLevel.INFO, 'Server starts waiting for all threads to finish')
+    for thread in threads:
+        thread.join()
+    Logger.log(LogLevel.INFO, 'Server exits')

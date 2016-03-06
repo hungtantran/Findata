@@ -1,5 +1,7 @@
 __author__ = 'hungtantran'
 
+from logger import Logger
+from logger import LogLevel
 from thrift_index_client import ThriftIndexClient
 
 def main():
@@ -12,4 +14,4 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as tx:
-        print(tx)
+        LogLevel.log(LogLevel.ERROR, tx)

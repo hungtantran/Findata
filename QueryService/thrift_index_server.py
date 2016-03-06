@@ -2,6 +2,8 @@ __author__ = 'hungtantran'
 
 import threading
 
+from logger import Logger
+from logger import LogLevel
 from models import ServiceQuery
 
 from thrift.transport import TSocket
@@ -11,7 +13,7 @@ from thrift.server import TServer
 
 class ThriftIndexServer(object):
     def __init__(self, host, port, handler):
-        print('Start index server %s at %s:%s' % (handler.get_service_name(), host, port))
+        print('Start index server %s at %s:%s\n' % (handler.get_service_name(), host, port))
         self.host = host
         self.port = port
         self.handler = handler
@@ -30,7 +32,7 @@ class ThriftIndexServer(object):
         self.server.serve()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        print('Server exit with type %s, val %s, traceback %s' % (
+        Logger.log(LogLevel.INFO, 'Server exit with type %s, val %s, traceback %s' % (
             exc_type, exc_val, exc_tb))
 
 
