@@ -1,7 +1,10 @@
 __author__ = 'hungtantran'
 
+import threading
+
 from models import ServiceQuery
 from thrift_index_server import ThriftIndexServer
+from thrift_index_server import RPCIndexServer
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -23,14 +26,11 @@ class BloombergHandler:
         return ["a", "b"]
 
 
-def main():
-    handler = BloombergHandler()
-    with ThriftIndexServer('localhost', 9090, handler) as server:
-        server.serve()
-
-
 if __name__ == '__main__':
     try:
-        main()
+        handler = BloombergHandler()
+        bloomberg_rpc_server = RPCIndexServer(handler)
+        bloomberg_rpc_server.start()
+        bloomberg_rpc_server.join()
     except Exception as tx:
         print(tx)
