@@ -1,30 +1,33 @@
 __author__ = 'hungtantran'
 
+
 import threading
 
-from logger import Logger
-from logger import LogLevel
-from models import ServiceQuery
+import logger
+import models.ServiceQuery
 
-from thrift.transport import TSocket
-from thrift.transport import TTransport
-from thrift.protocol import TBinaryProtocol
-from thrift.server import TServer
+import thrift.transport.TSocket
+import thrift.transport.TTransport
+import thrift.protocol.TBinaryProtocol
+import thrift.server.TServer
+
 
 class ThriftIndexServer(object):
     def __init__(self, host, port, handler):
-        print('Start index server %s at %s:%s\n' % (handler.get_service_name(), host, port))
+        logger.Logger.log(
+            logger.LogLevel.INFO,
+            'Start index server %s at %s:%s' % (handler.get_service_name(), host, port))
         self.host = host
         self.port = port
         self.handler = handler
 
     def __enter__(self):
-        processor = ServiceQuery.Processor(self.handler)
-        transport = TSocket.TServerSocket(host=self.host, port=self.port)
-        tfactory = TTransport.TBufferedTransportFactory()
-        pfactory = TBinaryProtocol.TBinaryProtocolFactory()
+        processor = models.ServiceQuery.Processor(self.handler)
+        transport = thrift.transport.TSocket.TServerSocket(host=self.host, port=self.port)
+        tfactory = thrift.transport.TTransport.TBufferedTransportFactory()
+        pfactory = thrift.protocol.TBinaryProtocol.TBinaryProtocolFactory()
 
-        self.server = TServer.TSimpleServer(processor, transport, tfactory, pfactory)
+        self.server = thrift.server.TServer.TSimpleServer(processor, transport, tfactory, pfactory)
 
         return self
 
@@ -32,7 +35,7 @@ class ThriftIndexServer(object):
         self.server.serve()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        Logger.log(LogLevel.INFO, 'Server exit with type %s, val %s, traceback %s' % (
+        logger.Logger.log(logger.LogLevel.INFO, 'Server exit with type %s, val %s, traceback %s' % (
             exc_type, exc_val, exc_tb))
 
 

@@ -1,6 +1,8 @@
 __author__ = 'hungtantran'
 
+import sys
 import datetime
+import traceback
 
 class LogLevel(object):
     TRACE = 1
@@ -24,4 +26,5 @@ class LogLevel(object):
 class Logger(object):
     @staticmethod
     def log(level, msg):
-        print("%s,%s,'%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), msg))
+        traces = traceback.extract_stack()
+        print("%s,%s,%s,'%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), msg, traces[-2]))

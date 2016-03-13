@@ -1,12 +1,13 @@
 __author__ = 'hungtantran'
 
-from logger import Logger
-from logger import LogLevel
-from models import ServiceQuery
 
-from thrift.transport import TSocket
-from thrift.transport import TTransport
-from thrift.protocol import TBinaryProtocol
+import logger
+import models.ServiceQuery
+
+import thrift.transport.TSocket
+import thrift.transport.TTransport
+import thrift.protocol.TBinaryProtocol
+
 
 class ThriftIndexClient(object):
     def __init__(self, host, port):
@@ -15,16 +16,16 @@ class ThriftIndexClient(object):
 
     def __enter__(self):
         # Make socket
-        self.transport = TSocket.TSocket('localhost', 9090)
+        self.transport = thrift.transport.TSocket.TSocket('localhost', 9090)
 
         # Buffering is critical. Raw sockets are very slow
-        self.transport = TTransport.TBufferedTransport(self.transport)
+        self.transport = thrift.transport.TTransport.TBufferedTransport(self.transport)
 
         # Wrap in a protocol
-        self.protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+        self.protocol = thrift.protocol.TBinaryProtocol.TBinaryProtocol(self.transport)
 
         # Create a client to use the protocol encoder
-        self.client = ServiceQuery.Client(self.protocol)
+        self.client = models.ServiceQuery.Client(self.protocol)
 
         # Connect!
         self.transport.open()
@@ -41,6 +42,6 @@ class ThriftIndexClient(object):
         return self.client.get_indices()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        Logger.log(LogLevel.INFO, 'Client exit with type %s, val %s, traceback %s' % (
+        logger.Logger.log(logger.LogLevel.INFO, 'Client exit with type %s, val %s, traceback %s' % (
             exc_type, exc_val, exc_tb))
         self.transport.close()
