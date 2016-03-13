@@ -27,4 +27,4 @@ class Logger(object):
     @staticmethod
     def log(level, msg):
         traces = traceback.extract_stack()
-        print("%s,%s,%s,'%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), msg, traces[-2]))
+        print("%s, %s, %s, '%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), msg, traces[-2]))

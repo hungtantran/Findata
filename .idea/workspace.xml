@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3e69dac9-c59d-4934-8965-b15402d1a637" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/QueryService/python_parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/QueryService/thrift_index_server.py" afterPath="$PROJECT_DIR$/QueryService/thrift_index_server.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/QueryService/bloomberg_parser.py" />
+      <change type="DELETED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\QueryService\python_parser.py" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/QueryService/bloomberg_server.py" afterPath="$PROJECT_DIR$/QueryService/bloomberg_server.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/logger.py" afterPath="$PROJECT_DIR$/Common/logger.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.cmd" afterPath="$PROJECT_DIR$/setup.cmd" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Models.iws" />
@@ -28,12 +30,14 @@
     <splitter split-orientation="horizontal" split-proportion="0.42459828">
       <split-first>
         <leaf>
-          <file leaf-file-name="thrift_index_client.py" pinned="false" current-in-tab="true">
+          <file leaf-file-name="thrift_index_client.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_client.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.1118421">
-                  <caret line="4" column="31" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
-                  <folding />
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#29#42#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -42,21 +46,21 @@
             <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_server.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+                  <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
                   <folding>
-                    <element signature="e#28#44#0" expanded="true" />
+                    <element signature="e#29#45#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="bloomberg_server.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="bloomberg_server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.6365132">
+                  <caret line="32" column="41" selection-start-line="32" selection-start-column="41" selection-end-line="32" selection-end-column="41" />
                   <folding>
-                    <element signature="e#28#44#0" expanded="true" />
+                    <element signature="e#29#42#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -66,22 +70,26 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="python_parser.py" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/QueryService/python_parser.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.05592105">
-                  <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="logger.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Common/logger.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-                  <folding />
+                  <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#28#38#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="bloomberg_parser.py" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser.py">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.47532895">
+                  <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#29#58#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -100,7 +108,7 @@
             <entry file="file://$PROJECT_DIR$/QueryService/index_client.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state vertical-scroll-proportion="0.0">
-                  <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
+                  <caret line="0" column="26" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
                   <folding />
                 </state>
               </provider>
@@ -134,12 +142,13 @@
         <option value="$PROJECT_DIR$/QueryService/thrift_client.py" />
         <option value="$PROJECT_DIR$/Common/logging.py" />
         <option value="$PROJECT_DIR$/thrift/transport/TTransport.py" />
-        <option value="$PROJECT_DIR$/Common/logger.py" />
         <option value="$PROJECT_DIR$/QueryService/thrift_index_client.py" />
-        <option value="$PROJECT_DIR$/QueryService/bloomberg_server.py" />
         <option value="$PROJECT_DIR$/QueryService/index_client.py" />
         <option value="$PROJECT_DIR$/QueryService/thrift_index_server.py" />
         <option value="$PROJECT_DIR$/QueryService/python_parser.py" />
+        <option value="$PROJECT_DIR$/QueryService/bloomberg_server.py" />
+        <option value="$PROJECT_DIR$/Common/logger.py" />
+        <option value="$PROJECT_DIR$/QueryService/bloomberg_parser.py" />
       </list>
     </option>
   </component>
@@ -147,7 +156,7 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1928" />
+    <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
@@ -267,38 +276,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="thrift_defs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="thrift" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="thrift" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="transport" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -580,7 +557,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15729167" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -632,16 +609,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#28#44#0" expanded="true" />
+            <element signature="e#29#42#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thrift/transport/TSocket.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="143" column="6" selection-start-line="143" selection-start-column="6" selection-end-line="143" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -701,14 +670,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/thrift/server/TServer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.028286189">
-          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gen-py/models/ServiceQuery.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -723,32 +684,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33223686">
           <caret line="693" column="6" selection-start-line="693" selection-start-column="6" selection-end-line="693" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thrift/transport/TTransport.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.551724">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding>
-            <element signature="e#786#816#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thrift/TTornado.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thrift/transport/TSocket.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="143" column="6" selection-start-line="143" selection-start-column="6" selection-end-line="143" selection-end-column="6" />
           <folding />
         </state>
       </provider>
@@ -785,12 +720,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/QueryService/index_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="26" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding>
+            <element signature="e#29#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_server.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding>
-            <element signature="e#28#44#0" expanded="true" />
+            <element signature="e#29#45#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -798,42 +751,30 @@
     <entry file="file://$PROJECT_DIR$/Common/logger.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/index_client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
-          <folding />
+          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding>
+            <element signature="e#28#38#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.6365132">
+          <caret line="32" column="41" selection-start-line="32" selection-start-column="41" selection-end-line="32" selection-end-column="41" />
           <folding>
-            <element signature="e#28#44#0" expanded="true" />
+            <element signature="e#29#42#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_client.py">
+    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1118421">
-          <caret line="4" column="31" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/python_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.05592105">
-          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
-          <folding />
+        <state vertical-scroll-proportion="0.47532895">
+          <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding>
+            <element signature="e#29#58#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

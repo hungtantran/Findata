@@ -1,8 +1,6 @@
 __author__ = 'hungtantran'
 
 
-import threading
-
 import logger
 import thrift_index_server
 
