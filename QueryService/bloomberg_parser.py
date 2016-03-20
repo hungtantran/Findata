@@ -18,12 +18,16 @@ class BloombergParser:
         name_str = re.sub('( )+', ' ', name_str)
         return name_str
 
+    @staticmethod
+    def parse_table_containers(html_elem):
+        return html_elem.findAll('div', attrs={'class': 'table-container'})
+
     def parse(self, link):
         logger.Logger.log(logger.LogLevel.INFO, 'BloombergParser attempts to parse link \'%s\'' % (link))
         link_handle = urllib.urlopen(link)
-        soup = BeautifulSoup(link_handle.read(), self.parser_type)
+        html = BeautifulSoup(link_handle.read(), self.parser_type)
 
-        table_containers = soup.findAll('div', attrs={'class': 'table-container'})
+        table_containers = self.parse_table_containers(html)
 
         # Iterate through each table
         for table in table_containers:
@@ -38,7 +42,7 @@ class BloombergParser:
             header_cell_titles = [cell.get_text() for cell in header_cells]
 
             # Parse all the data rows from the current table
-            data_rows = soup.findAll('tr', attrs={'class': 'data-table__row'})
+            data_rows = table.findAll('tr', attrs={'class': 'data-table__row'})
             for row in data_rows:
                 row_cells = row.findAll('td', attrs={'class': 'data-table__row__cell'})
                 if (len(row_cells) != len(header_cell_titles)):

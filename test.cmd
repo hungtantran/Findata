@@ -1,0 +1,1 @@
+python QueryService\bloomberg_parser_test.py
