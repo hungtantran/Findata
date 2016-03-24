@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Database/daofactory.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Database/daofactoryrepo.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Database/mysqldaofactory.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Database/mysqldaofactory_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Models.iml" afterPath="$PROJECT_DIR$/.idea/Models.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/QueryService/bloomberg_parser.py" afterPath="$PROJECT_DIR$/QueryService/bloomberg_parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/QueryService/bloomberg_parser_test.py" afterPath="$PROJECT_DIR$/QueryService/bloomberg_parser_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.cmd" afterPath="$PROJECT_DIR$/test.cmd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/mysqldaofactory.py" afterPath="$PROJECT_DIR$/Database/mysqldaofactory.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/mysqldaofactory_test.py" afterPath="$PROJECT_DIR$/Database/mysqldaofactory_test.py" />
     </list>
     <ignored path="Models.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,14 +36,36 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bloomberg_parser.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser.py">
+      <file leaf-file-name="mysqldaofactory_test.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Database/mysqldaofactory_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.572028">
-              <caret line="28" column="31" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
+            <state vertical-scroll-proportion="0.57123655">
+              <caret line="25" column="44" selection-start-line="25" selection-start-column="44" selection-end-line="25" selection-end-column="44" />
               <folding>
-                <element signature="e#29#58#0" expanded="true" />
+                <element signature="e#28#43#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mysqldaofactory.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Database/mysqldaofactory.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="19" column="50" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
+              <folding>
+                <element signature="e#28#42#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="thrift_index_client.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_client.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -76,40 +90,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mysqldaofactory.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Database/mysqldaofactory.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="68" selection-start-line="9" selection-start-column="68" selection-end-line="9" selection-end-column="68" />
-              <folding>
-                <element signature="e#28#42#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mysqldaofactory_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Database/mysqldaofactory_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="thrift_index_server.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_server.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
-              <folding>
-                <element signature="e#29#45#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -126,11 +106,11 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/QueryService/bloomberg_parser_test.py" />
-        <option value="$PROJECT_DIR$/Database/mysqldaofactory.py" />
         <option value="$PROJECT_DIR$/Database/daofactoryrepo.py" />
         <option value="$PROJECT_DIR$/Database/daofactory.py" />
-        <option value="$PROJECT_DIR$/Database/mysqldaofactory_test.py" />
         <option value="$PROJECT_DIR$/QueryService/bloomberg_parser.py" />
+        <option value="$PROJECT_DIR$/Database/mysqldaofactory.py" />
+        <option value="$PROJECT_DIR$/Database/mysqldaofactory_test.py" />
       </list>
     </option>
   </component>
@@ -440,19 +420,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_client.py">
+    <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-762174762/_mysql.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="1.4741259">
+          <caret line="705" column="20" selection-start-line="705" selection-start-column="13" selection-end-line="705" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/index_client.py">
+    <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="0.29166666">
+          <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
+          <folding>
+            <element signature="e#29#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33286715">
+          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+          <folding>
+            <element signature="e#29#58#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -464,11 +456,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-762174762/_mysql.py">
+    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.4741259">
-          <caret line="705" column="20" selection-start-line="705" selection-start-column="13" selection-end-line="705" selection-end-column="20" />
-          <folding />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
+          <folding>
+            <element signature="e#28#43#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -488,50 +482,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/QueryService/index_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.25134408">
+          <caret line="12" column="0" selection-start-line="8" selection-start-column="4" selection-end-line="12" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Database/mysqldaofactory.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="68" selection-start-line="9" selection-start-column="68" selection-end-line="9" selection-end-column="68" />
+          <caret line="19" column="50" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
           <folding>
             <element signature="e#28#42#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
-          <folding>
-            <element signature="e#29#45#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Database/mysqldaofactory_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="35" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.57123655">
+          <caret line="25" column="44" selection-start-line="25" selection-start-column="44" selection-end-line="25" selection-end-column="44" />
           <folding>
             <element signature="e#28#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.572028">
-          <caret line="28" column="31" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="31" />
-          <folding>
-            <element signature="e#29#58#0" expanded="true" />
           </folding>
         </state>
       </provider>
