@@ -1,6 +1,6 @@
 __author__ = 'hungtantran'
 
-from mysqldaofactory import MysqlDAOFactory
+from mysql_dao_factory import MysqlDAOFactory
 
 
 class DAOFactoryRepository(object):

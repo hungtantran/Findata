@@ -1,7 +1,7 @@
 __author__ = 'hungtantran'
 
 import MySQLdb
-from daofactory import DAOFactory
+from dao_factory import DAOFactory
 
 
 class MysqlDAOFactory(DAOFactory):

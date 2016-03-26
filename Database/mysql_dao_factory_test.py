@@ -3,7 +3,7 @@ __author__ = 'hungtantran'
 import unittest
 
 import logger
-from daofactoryrepo import DAOFactoryRepository
+from dao_factory_repo import DAOFactoryRepository
 
 
 class TestMysqlDAOFactory(unittest.TestCase):
@@ -67,6 +67,7 @@ class TestMysqlDAOFactory(unittest.TestCase):
             self.assertEqual(2, len(rows))
             self.assertEqual("fakename", rows[0][0])
             self.assertEqual("fakename3", rows[1][0])
+
 
 if __name__ == '__main__':
     unittest.main()
