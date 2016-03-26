@@ -2,22 +2,18 @@ __author__ = 'hungtantran'
 
 import unittest
 
+from constants_config import Config
 import logger
 from dao_factory_repo import DAOFactoryRepository
 
 
 class TestMysqlDAOFactory(unittest.TestCase):
-    username = 'root'
-    password = 'test'
-    server = '104.154.40.63'
-    database = 'models'
-
     def test_connection(self):
         mysql_dao_factory = DAOFactoryRepository.getInstance('mysql')
-        with mysql_dao_factory.create(TestMysqlDAOFactory.username,
-                                      TestMysqlDAOFactory.password,
-                                      TestMysqlDAOFactory.server,
-                                      TestMysqlDAOFactory.database) as mysql_connection:
+        with mysql_dao_factory.create(Config.test_mysql_username,
+                                      Config.test_mysql_password,
+                                      Config.test_mysql_server,
+                                      Config.test_mysql_database) as mysql_connection:
             mysql_cursor = mysql_connection.cursor()
             mysql_cursor.execute("SELECT VERSION()")
             data = mysql_cursor.fetchone()
@@ -27,10 +23,10 @@ class TestMysqlDAOFactory(unittest.TestCase):
 
     def test_createdroptable(self):
         mysql_dao_factory = DAOFactoryRepository.getInstance('mysql')
-        with mysql_dao_factory.create(TestMysqlDAOFactory.username,
-                                      TestMysqlDAOFactory.password,
-                                      TestMysqlDAOFactory.server,
-                                      TestMysqlDAOFactory.database) as mysql_connection:
+        with mysql_dao_factory.create(Config.test_mysql_username,
+                                      Config.test_mysql_password,
+                                      Config.test_mysql_server,
+                                      Config.test_mysql_database) as mysql_connection:
             mysql_cursor = mysql_connection.cursor()
             mysql_cursor.execute("DROP TABLE IF EXISTS TEST1")
             mysql_cursor.execute("CREATE TABLE TEST1 (FIRST_NAME CHAR(20) NOT NULL)")
@@ -42,10 +38,10 @@ class TestMysqlDAOFactory(unittest.TestCase):
 
     def test_insertdelete(self):
         mysql_dao_factory = DAOFactoryRepository.getInstance('mysql')
-        with mysql_dao_factory.create(TestMysqlDAOFactory.username,
-                                      TestMysqlDAOFactory.password,
-                                      TestMysqlDAOFactory.server,
-                                      TestMysqlDAOFactory.database) as mysql_connection:
+        with mysql_dao_factory.create(Config.test_mysql_username,
+                                      Config.test_mysql_password,
+                                      Config.test_mysql_server,
+                                      Config.test_mysql_database) as mysql_connection:
             mysql_cursor = mysql_connection.cursor()
             mysql_cursor.execute("DROP TABLE IF EXISTS TEST1")
             mysql_cursor.execute("CREATE TABLE TEST1 (FIRST_NAME CHAR(20) NOT NULL)")

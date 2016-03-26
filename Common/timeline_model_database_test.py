@@ -3,22 +3,18 @@ __author__ = 'hungtantran'
 
 import unittest
 
+from constants_config import Config
 import logger
 from timeline_model_database import TimelineModelDatabase
 
 
 class TestTimelineModelDatabase(unittest.TestCase):
-    username = 'root'
-    password = 'test'
-    server = '104.154.40.63'
-    database = 'models'
-
     def test_connection(self):
         model_db = TimelineModelDatabase('mysql',
-                                         TestTimelineModelDatabase.username,
-                                         TestTimelineModelDatabase.password,
-                                         TestTimelineModelDatabase.server,
-                                         TestTimelineModelDatabase.database)
+                                         Config.test_mysql_username,
+                                         Config.test_mysql_password,
+                                         Config.test_mysql_server,
+                                         Config.test_mysql_database)
         model_db.create_model('bond_1_Mo')
         model_db.insert_value('bond_1_Mo', '3/1/2016', 0.29)
         model_db.insert_value('bond_1_Mo', '2016-03-02', 0.28)
