@@ -15,11 +15,11 @@ class CsvParser(FileParser):
         except ValueError:
             return None
 
-    def parse(self, file):
+    def parse(self, file_name):
         dates = []
         titles = []
         results = []
-        with open(file) as f:
+        with open(file_name) as f:
             lines = f.readlines()
             lines = [line.strip() for line in lines]
             if len(lines) == 0:

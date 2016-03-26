@@ -26,8 +26,13 @@ class TimelineModelDatabase(object):
             if prog.match(time_str):
                 return datetime.datetime.strptime(time_str, patterns[pattern])
 
+    @staticmethod
+    def create_model_name(model):
+        return model.replace(' ', '_')
+
     def create_model(self, model):
-        logger.Logger.log(logger.LogLevel.INFO, 'Create model %s' % model)
+        model_name = TimelineModelDatabase.create_model_name(model)
+        logger.Logger.log(logger.LogLevel.INFO, 'Create model %s' % model_name)
         with self.dao_factory.create(self.username,
                                      self.password,
                                      self.server,
@@ -35,12 +40,13 @@ class TimelineModelDatabase(object):
             # TODO need to make this general
             try:
                 cursor = connection.cursor()
-                cursor.execute("CREATE TABLE IF NOT EXISTS %s (time DATETIME NOT NULL, value FLOAT NOT NULL, PRIMARY KEY(time))" % model)
+                cursor.execute("CREATE TABLE IF NOT EXISTS %s (time DATETIME NOT NULL, value FLOAT NOT NULL, PRIMARY KEY(time))" % model_name)
                 connection.commit()
             except:
                 connection.rollback()
 
     def insert_value(self, model, time, value):
+        model_name = TimelineModelDatabase.create_model_name(model)
         with self.dao_factory.create(self.username,
                                      self.password,
                                      self.server,
@@ -50,12 +56,14 @@ class TimelineModelDatabase(object):
                 cursor = connection.cursor()
                 datetime_obj = TimelineModelDatabase.convert_time(time)
                 if datetime_obj is not None:
-                    cursor.execute("INSERT INTO %s (time, value) VALUES ('%s', %f)" % (model, datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), value))
+                    cursor.execute("INSERT INTO %s (time, value) VALUES ('%s', %f)" %
+                                   (model_name, datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), value))
                     connection.commit()
             except:
                 connection.rollback()
 
     def remove_model(self, model):
+        model_name = TimelineModelDatabase.create_model_name(model)
         logger.Logger.log(logger.LogLevel.INFO, 'Drop model %s' % model)
         with self.dao_factory.create(self.username,
                                      self.password,
@@ -64,19 +72,20 @@ class TimelineModelDatabase(object):
             # TODO need to make this general
             try:
                 cursor = connection.cursor()
-                cursor.execute("DROP TABLE IF EXISTS %s" % model)
+                cursor.execute("DROP TABLE IF EXISTS %s" % model_name)
                 connection.commit()
             except:
                 connection.rollback()
 
     def get_model_data(self, model):
-        logger.Logger.log(logger.LogLevel.INFO, 'Get %s model data' % model)
+        model_name = TimelineModelDatabase.create_model_name(model)
+        logger.Logger.log(logger.LogLevel.INFO, 'Get %s model data' % model_name)
         with self.dao_factory.create(self.username,
                                      self.password,
                                      self.server,
                                      self.database) as connection:
             # TODO need to make this general
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM %s" % model)
+            cursor.execute("SELECT * FROM %s" % model_name)
             return cursor.fetchall()
 
