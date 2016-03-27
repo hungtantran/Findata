@@ -3,30 +3,13 @@ __author__ = 'hungtantran'
 
 from bs4 import BeautifulSoup
 import urllib
-import unicodedata
 
 import logger
-import re
+from string_helper import StringHelper
 
 class BloombergParser:
     def __init__(self):
         self.parser_type = 'html.parser'
-
-    @staticmethod
-    def clean_name(name_str):
-        name_str = name_str.strip()
-        name_str = name_str.replace('\n', '')
-        name_str = re.sub('( )+', ' ', name_str)
-        name_str = unicodedata.normalize('NFKD', name_str).encode('ascii','ignore')
-        name_str = name_str.lower()
-        return name_str
-
-    @staticmethod
-    def parse_value_string(value_string):
-        try:
-            return float(value_string)
-        except ValueError:
-            return value_string
 
     @staticmethod
     def parse_table_containers_from_html(html_elem):
@@ -41,7 +24,7 @@ class BloombergParser:
 
         header_cells = header[0].findAll('th', attrs={'class': 'data-table__headers__cell'})
         # A list of titles of the table like ['INDEX', 'UNITS', 'PRICE', 'CHANGE', '%CHANGE']
-        header_cell_titles = [BloombergParser.clean_name(cell.get_text()) for cell in header_cells]
+        header_cell_titles = [StringHelper.clean_name(cell.get_text()) for cell in header_cells]
         return header_cell_titles
 
     @staticmethod
@@ -52,11 +35,11 @@ class BloombergParser:
     def parse_values_from_row(row_html_elem):
         row_cells = row_html_elem.findAll('td', attrs={'class': 'data-table__row__cell'})
         # A list of values like ['CL1:COM', 'USD/bll.', '39.44', '-1.89%']
-        row_cell_values = [BloombergParser.clean_name(cell.get_text()) for cell in row_cells]
+        row_cell_values = [StringHelper.clean_name(cell.get_text()) for cell in row_cells]
 
         values = []
         for value_string in row_cell_values:
-            values.append(BloombergParser.parse_value_string(value_string))
+            values.append(StringHelper.parse_value_string(value_string))
 
         return values
 

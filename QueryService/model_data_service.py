@@ -64,20 +64,20 @@ def main():
                                           Config.mysql_password,
                                           Config.mysql_server,
                                           Config.mysql_database)
-    model_data_service.parse_and_insert_model_data_from_directory('.\\Common\\test_files\\')
 
     for i in range(1, len(args)):
         arg = args[i]
-        if arg.startsWith('directories='):
+        if arg.startswith('directories='):
             dir_str = arg[len('directories='):]
             dirs = dir_str.split(',')
             for dir_name in dirs:
                 model_data_service.parse_and_insert_model_data_from_directory(dir_name)
-        elif arg.startsWith('files='):
+        elif arg.startswith('files='):
             file_str = arg[len('files='):]
             files = file_str.split(',')
             for file_name in files:
                 model_data_service.parse_and_insert_model_data_from_file(file_name)
+
 
 if __name__ == '__main__':
     main()

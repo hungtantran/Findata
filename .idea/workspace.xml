@@ -2,14 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Common/text_parser.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Common/text_parser_test.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Common/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Common/string_helper.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Common/yahoo_historical_parser.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Common/yahoo_historical_parser_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/csv_parser.py" afterPath="$PROJECT_DIR$/Common/csv_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/QueryService/model_data_service.py" afterPath="$PROJECT_DIR$/QueryService/model_data_service.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/QueryService/model_data_service_test.py" afterPath="$PROJECT_DIR$/QueryService/model_data_service_test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.cmd" afterPath="$PROJECT_DIR$/test.cmd" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/text_parser.py" afterPath="$PROJECT_DIR$/Common/text_parser.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/timeline_model_database.py" afterPath="$PROJECT_DIR$/Common/timeline_model_database.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/timeline_model_database_test.py" afterPath="$PROJECT_DIR$/Common/timeline_model_database_test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\Common\file_parser.py" afterPath="$PROJECT_DIR$/Common/generic_parser.py" />
+      <change type="MOVED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\QueryService\bloomberg_parser.py" afterPath="$PROJECT_DIR$/Common/bloomberg_parser.py" />
+      <change type="MOVED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\QueryService\bloomberg_parser_test.py" afterPath="$PROJECT_DIR$/Common/bloomberg_parser_test.py" />
     </list>
     <ignored path="Models.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,35 +36,47 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="mysql_dao_factory_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Database/mysql_dao_factory_test.py">
+      <file leaf-file-name="yahoo_historical_parser.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Common/yahoo_historical_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="46" column="47" selection-start-line="46" selection-start-column="47" selection-end-line="46" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.47311828">
+              <caret line="114" column="40" selection-start-line="114" selection-start-column="40" selection-end-line="114" selection-end-column="40" />
               <folding>
-                <element signature="e#28#43#0" expanded="true" />
+                <element signature="e#28#39#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model_data_service.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/QueryService/model_data_service.py">
+      <file leaf-file-name="string_helper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/string_helper.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="45" column="39" selection-start-line="45" selection-start-column="39" selection-end-line="45" selection-end-column="39" />
+              <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
               <folding>
-                <element signature="e#29#51#0" expanded="true" />
+                <element signature="e#29#38#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model_data_service_test.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/QueryService/model_data_service_test.py">
+      <file leaf-file-name="bloomberg_parser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.61155915">
-              <caret line="79" column="76" selection-start-line="79" selection-start-column="76" selection-end-line="79" selection-end-column="76" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="77" column="26" selection-start-line="77" selection-start-column="26" selection-end-line="77" selection-end-column="26" />
+              <folding>
+                <element signature="e#29#58#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="yahoo_historical_parser_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/yahoo_historical_parser_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
               <folding>
                 <element signature="e#29#44#0" expanded="true" />
               </folding>
@@ -66,11 +84,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bloomberg_parser_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser_test.py">
+      <file leaf-file-name="generic_parser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/generic_parser.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="31" column="56" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="56" />
+              <caret line="5" column="50" selection-start-line="5" selection-start-column="48" selection-end-line="5" selection-end-column="50" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="text_parser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/text_parser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="38" />
               <folding />
             </state>
           </provider>
@@ -80,17 +108,7 @@
         <entry file="file://$PROJECT_DIR$/Common/csv_parser_test.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="45" selection-start-line="32" selection-start-column="45" selection-end-line="32" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="timeline_model_database.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/timeline_model_database.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="91" column="58" selection-start-line="91" selection-start-column="58" selection-end-line="91" selection-end-column="58" />
+              <caret line="36" column="19" selection-start-line="3" selection-start-column="0" selection-end-line="36" selection-end-column="19" />
               <folding>
                 <element signature="e#29#44#0" expanded="true" />
               </folding>
@@ -98,35 +116,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="timeline_model_database_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/timeline_model_database_test.py">
+      <file leaf-file-name="csv_parser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/csv_parser.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
+              <caret line="23" column="30" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
               <folding>
-                <element signature="e#29#44#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="text_parser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/text_parser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="31" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="text_parser_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/text_parser_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="19" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
-              <folding>
-                <element signature="e#29#44#0" expanded="true" />
+                <element signature="e#29#69#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -150,13 +146,11 @@
         <option value="$PROJECT_DIR$/QueryService/bloomberg_parser_test.py" />
         <option value="$PROJECT_DIR$/Database/daofactoryrepo.py" />
         <option value="$PROJECT_DIR$/Database/daofactory.py" />
-        <option value="$PROJECT_DIR$/QueryService/bloomberg_parser.py" />
         <option value="$PROJECT_DIR$/Database/mysqldaofactory.py" />
         <option value="$PROJECT_DIR$/Database/mysqldaofactory_test.py" />
         <option value="$PROJECT_DIR$/test.cmd" />
         <option value="$PROJECT_DIR$/Common/csv_parser_test.py" />
         <option value="$PROJECT_DIR$/Database/mysql_dao_factory.py" />
-        <option value="$PROJECT_DIR$/Common/csv_parser.py" />
         <option value="$PROJECT_DIR$/QueryService/file_parser_service.py" />
         <option value="$PROJECT_DIR$/Common/constants.py" />
         <option value="$PROJECT_DIR$/Database/mysql_dao_factory_test.py" />
@@ -165,11 +159,19 @@
         <option value="$PROJECT_DIR$/Common/test_files/daily_treasury_yield_curve.txt" />
         <option value="$PROJECT_DIR$/Common/text_parser_test.py" />
         <option value="$PROJECT_DIR$/Common/file_parser.py" />
-        <option value="$PROJECT_DIR$/Common/text_parser.py" />
+        <option value="$PROJECT_DIR$/QueryService/model_data_service_test.py" />
         <option value="$PROJECT_DIR$/QueryService/model_data_service.py" />
         <option value="$PROJECT_DIR$/Common/timeline_model_database_test.py" />
         <option value="$PROJECT_DIR$/Common/timeline_model_database.py" />
-        <option value="$PROJECT_DIR$/QueryService/model_data_service_test.py" />
+        <option value="$PROJECT_DIR$/QueryService/yahoo_historical_parser.py" />
+        <option value="$PROJECT_DIR$/Common/parser.py" />
+        <option value="$PROJECT_DIR$/Common/generic_parser.py" />
+        <option value="$PROJECT_DIR$/QueryService/bloomberg_parser.py" />
+        <option value="$PROJECT_DIR$/Common/text_parser.py" />
+        <option value="$PROJECT_DIR$/Common/csv_parser.py" />
+        <option value="$PROJECT_DIR$/Common/string_helper.py" />
+        <option value="$PROJECT_DIR$/Common/yahoo_historical_parser_test.py" />
+        <option value="$PROJECT_DIR$/Common/yahoo_historical_parser.py" />
       </list>
     </option>
   </component>
@@ -238,7 +240,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="QueryService" />
+              <option name="myItemId" value="gen-py" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -253,10 +255,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="QueryService" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test_html" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -302,24 +300,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test_files" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -331,6 +311,11 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="FullScreen" value="false" />
     <property name="ignore_missing_gitignore" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Users\hungtantran\PycharmProjects\Models\Common" />
+    </key>
   </component>
   <component name="RunManager">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
@@ -477,6 +462,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18479408" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -488,7 +474,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
@@ -508,7 +493,7 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/QueryService/bloomberg_parser_test.py</url>
+          <url>file://$PROJECT_DIR$/Common/bloomberg_parser_test.py</url>
           <line>2</line>
         </line-breakpoint>
       </breakpoints>
@@ -517,32 +502,12 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Database/mysql_dao_factory_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/model_data_service_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="47" selection-start-line="14" selection-start-column="47" selection-end-line="14" selection-end-column="47" />
-          <folding>
-            <element signature="e#29#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/timeline_model_database_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="5" column="28" selection-start-line="5" selection-start-column="28" selection-end-line="5" selection-end-column="28" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -568,7 +533,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="38" selection-start-line="15" selection-start-column="38" selection-end-line="15" selection-end-column="38" />
           <folding>
-            <element signature="e#28#43#0" expanded="true" />
+            <element signature="e#28#43#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -588,7 +553,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="16" column="68" selection-start-line="16" selection-start-column="68" selection-end-line="16" selection-end-column="68" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -606,7 +571,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="62" column="41" selection-start-line="62" selection-start-column="41" selection-end-line="62" selection-end-column="41" />
           <folding>
-            <element signature="e#28#43#0" expanded="true" />
+            <element signature="e#28#43#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -616,7 +581,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="52" column="136" selection-start-line="52" selection-start-column="106" selection-end-line="52" selection-end-column="136" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -633,7 +598,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -652,7 +617,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser_test.py">
+    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="43" selection-start-line="32" selection-start-column="43" selection-end-line="32" selection-end-column="43" />
@@ -665,7 +630,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="27" column="35" selection-start-line="27" selection-start-column="35" selection-end-line="27" selection-end-column="35" />
           <folding>
-            <element signature="e#28#43#0" expanded="true" />
+            <element signature="e#28#43#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -698,14 +663,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser.py">
+    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="20" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="20" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser_test.py">
+    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -748,13 +713,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26153848">
-          <caret line="23" column="4" selection-start-line="23" selection-start-column="4" selection-end-line="28" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test.cmd">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.047419805">
@@ -783,14 +741,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7997312">
-          <caret line="36" column="94" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="94" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -815,14 +765,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common/csv_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="12" selection-start-line="0" selection-start-column="0" selection-end-line="55" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/test_files/daily_treasury_yield_curve.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -831,74 +773,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common/file_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="12" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/text_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="31" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/text_parser_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.45698926">
           <caret line="20" column="19" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Database/mysql_dao_factory_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="46" column="47" selection-start-line="46" selection-start-column="47" selection-end-line="46" selection-end-column="47" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_parser_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="56" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/csv_parser_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="45" selection-start-line="32" selection-start-column="45" selection-end-line="32" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/model_data_service.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="45" column="39" selection-start-line="45" selection-start-column="39" selection-end-line="45" selection-end-column="39" />
-          <folding>
-            <element signature="e#29#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/timeline_model_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="91" column="58" selection-start-line="91" selection-start-column="58" selection-end-line="91" selection-end-column="58" />
-          <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -911,22 +791,144 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Database/mysql_dao_factory_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="46" column="47" selection-start-line="46" selection-start-column="47" selection-end-line="46" selection-end-column="47" />
+          <folding>
+            <element signature="e#28#43#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QueryService/model_data_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="73" column="43" selection-start-line="73" selection-start-column="43" selection-end-line="73" selection-end-column="43" />
+          <folding>
+            <element signature="e#29#51#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Common/timeline_model_database_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="16" />
+          <caret line="31" column="59" selection-start-line="31" selection-start-column="51" selection-end-line="31" selection-end-column="59" />
+          <folding>
+            <element signature="e#29#44#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/timeline_model_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="34" column="32" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
+          <folding>
+            <element signature="e#29#44#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/csv_parser_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="19" selection-start-line="3" selection-start-column="0" selection-end-line="36" selection-end-column="19" />
           <folding>
             <element signature="e#29#44#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="56" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/QueryService/model_data_service_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61155915">
-          <caret line="79" column="76" selection-start-line="79" selection-start-column="76" selection-end-line="79" selection-end-column="76" />
+        <state vertical-scroll-proportion="-0.41666666">
+          <caret line="34" column="16" selection-start-line="34" selection-start-column="16" selection-end-line="34" selection-end-column="16" />
           <folding>
             <element signature="e#29#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5255376">
+          <caret line="24" column="32" selection-start-line="24" selection-start-column="32" selection-end-line="24" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/generic_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="50" selection-start-line="5" selection-start-column="48" selection-end-line="5" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/text_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/csv_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="23" column="30" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
+          <folding>
+            <element signature="e#29#69#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/string_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="21" column="38" selection-start-line="21" selection-start-column="38" selection-end-line="21" selection-end-column="38" />
+          <folding>
+            <element signature="e#29#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/yahoo_historical_parser_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="48" selection-start-line="12" selection-start-column="48" selection-end-line="12" selection-end-column="48" />
+          <folding>
+            <element signature="e#29#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="77" column="26" selection-start-line="77" selection-start-column="26" selection-end-line="77" selection-end-column="26" />
+          <folding>
+            <element signature="e#29#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/yahoo_historical_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.47311828">
+          <caret line="114" column="40" selection-start-line="114" selection-start-column="40" selection-end-line="114" selection-end-column="40" />
+          <folding>
+            <element signature="e#28#39#0" expanded="true" />
           </folding>
         </state>
       </provider>

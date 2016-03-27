@@ -41,6 +41,12 @@ class TestTimelineModelDatabase(unittest.TestCase):
         time = TimelineModelDatabase.convert_time('03/04/16')
         self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-04 00:00:00')
 
+        time = TimelineModelDatabase.convert_time('Mar 05, 2016')
+        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-05 00:00:00')
+
+        time = TimelineModelDatabase.convert_time('Mar 06 2016')
+        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-06 00:00:00')
+
 
 if __name__ == '__main__':
     unittest.main()

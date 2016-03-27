@@ -1,9 +1,8 @@
 __author__ = 'hungtantran'
 
 import unittest
+
 from bs4 import BeautifulSoup
-
-
 import bloomberg_parser
 
 

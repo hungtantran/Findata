@@ -19,10 +19,18 @@ class TimelineModelDatabase(object):
     @staticmethod
     def convert_time(time_str):
         patterns = {}
+        # 3/1/2016
         patterns['^[0-9][0-9]?/[0-9][0-9]?/[0-9][0-9][0-9][0-9]$'] = '%m/%d/%Y'
+        # 2016/03/03
         patterns['^[0-9][0-9][0-9][0-9]/[0-9][0-9]?/[0-9][0-9]?$'] = '%Y/%m/%d'
+        # 03/04/16
         patterns['^[0-9][0-9]?/[0-9][0-9]?/[0-9][0-9]$'] = '%m/%d/%y'
+        # 2016-03-02
         patterns['^[0-9][0-9][0-9][0-9]-[0-9]+-[0-9]+$'] = '%Y-%m-%d'
+        # Mar 06 2016
+        patterns['^[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]? [0-9][0-9]? [0-9][0-9][0-9][0-9]$'] = '%b %d %Y'
+        # Mar 06, 2016
+        patterns['^[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]? [0-9][0-9]?, [0-9][0-9][0-9][0-9]$'] = '%b %d, %Y'
 
         for pattern in patterns:
             prog = re.compile(pattern)
