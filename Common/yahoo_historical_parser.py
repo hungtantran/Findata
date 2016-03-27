@@ -9,8 +9,9 @@ from generic_parser import GenericParser
 from string_helper import StringHelper
 
 class YahooHistoricalParser(GenericParser):
-    def __init__(self):
+    def __init__(self, sleep_secs=5):
         self.parser_type = 'html.parser'
+        self.sleep_secs = sleep_secs
 
     # Given source like https://finance.yahoo.com/q/hp?s=%5EDJI&a=0&b=29&c=1985&d=2&e=27&f=2016&g=d&z=200&y=0,
     # return https://finance.yahoo.com/q/hp?s=%5EDJI&a=0&b=29&c=1985&d=2&e=27&f=2016&g=d&z=200
@@ -23,7 +24,7 @@ class YahooHistoricalParser(GenericParser):
     # return https://finance.yahoo.com/q/hp?s=%5EDJI&a=0&b=29&c=1985&d=2&e=27&f=2016&g=d&z=200&y=66
     @staticmethod
     def construct_link(link, page_num):
-        return link + '&y=' + str(page_num * 66)
+        return link + str(page_num * 66)
 
     @staticmethod
     def get_content_table(html_elem):
@@ -65,7 +66,10 @@ class YahooHistoricalParser(GenericParser):
         num_results = 0
         done = False
         while True:
-            time.sleep(3)
+            if page >= 9:
+                break
+
+            time.sleep(self.sleep_secs)
             link = YahooHistoricalParser.construct_link(core_source, page)
             page += 1
 
@@ -78,10 +82,12 @@ class YahooHistoricalParser(GenericParser):
                 # Get the table html elem
                 content_table_elem = YahooHistoricalParser.get_content_table(html_elem)
                 if content_table_elem is None:
+                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no content table')
                     break
 
                 rows_elem = content_table_elem.findAll('tr')
                 if len(rows_elem) == 0:
+                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no row values left')
                     break
 
                 # This is the first page, extract the title
@@ -89,14 +95,17 @@ class YahooHistoricalParser(GenericParser):
                     header_elem = rows_elem[0]
                     titles = YahooHistoricalParser.extract_titles(header_elem)
                     if titles is None:
+                        logger.Logger.log(logger.LogLevel.INFO, 'Exit found no title')
                         break
 
                     for i in range(len(titles)):
                         results.append([])
 
                 if len(titles) == 0:
+                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no title after first page')
                     break
 
+                logger.Logger.log(logger.LogLevel.INFO, 'Found %d row values on page %d' % (len(rows_elem) - 1, page))
                 # Iterate through each row in the table, extract date and value
                 for i in range(1, len(rows_elem)):
                     row_elem = rows_elem[i]
@@ -127,6 +136,8 @@ class YahooHistoricalParser(GenericParser):
                     break
                 else:
                     continue
+
+        logger.Logger.log(logger.LogLevel.INFO, 'Finish parsing. Found %d results' % len(dates))
 
         return (titles, dates, results)
 

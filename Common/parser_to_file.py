@@ -10,13 +10,20 @@ class ParserToFile(object):
             logger.Logger.log(logger.LogLevel.WARN, 'Number of titles %d does not match number of results array %d' %
                               (len(titles), len(results)))
             return
+        else:
+            logger.Logger.log(logger.LogLevel.INFO, 'Writing file with %d titles' % len(titles))
 
         for result in results:
             if len(dates) != len(result):
                 logger.Logger.log(logger.LogLevel.WARN, 'Number of dates %d does not match number of result array %d' %
                                   (len(titles), len(result)))
                 return
+
+        logger.Logger.log(logger.LogLevel.INFO, 'Writing file with %d rows' % len(dates))
+
+        f = None
         try:
+            logger.Logger.log(logger.LogLevel.INFO, 'Start writing to file %s' % output_file_name)
             f = open(output_file_name, 'w')
 
             # Write the first header line
@@ -38,6 +45,10 @@ class ParserToFile(object):
                 values_string += '\n'
                 f.write(values_string)
 
+            logger.Logger.log(logger.LogLevel.INFO, 'Finish writing to file %s' % output_file_name)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception %s' % e)
         finally:
-            f.flush()
-            f.close()
+            if f is not None:
+                f.flush()
+                f.close()
