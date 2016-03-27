@@ -19,8 +19,11 @@ class TimelineModelDatabase(object):
     @staticmethod
     def convert_time(time_str):
         patterns = {}
-        patterns['[0-9]+/[0-9]+/[0-9][0-9][0-9][0-9]'] = '%m/%d/%Y'
-        patterns['[0-9][0-9][0-9][0-9]-[0-9]+-[0-9]+'] = '%Y-%m-%d'
+        patterns['^[0-9][0-9]?/[0-9][0-9]?/[0-9][0-9][0-9][0-9]$'] = '%m/%d/%Y'
+        patterns['^[0-9][0-9][0-9][0-9]/[0-9][0-9]?/[0-9][0-9]?$'] = '%Y/%m/%d'
+        patterns['^[0-9][0-9]?/[0-9][0-9]?/[0-9][0-9]$'] = '%m/%d/%y'
+        patterns['^[0-9][0-9][0-9][0-9]-[0-9]+-[0-9]+$'] = '%Y-%m-%d'
+
         for pattern in patterns:
             prog = re.compile(pattern)
             if prog.match(time_str):
@@ -86,6 +89,6 @@ class TimelineModelDatabase(object):
                                      self.database) as connection:
             # TODO need to make this general
             cursor = connection.cursor()
-            cursor.execute("SELECT * FROM %s" % model_name)
+            cursor.execute("SELECT * FROM %s ORDER BY time" % model_name)
             return cursor.fetchall()
 

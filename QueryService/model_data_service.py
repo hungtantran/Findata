@@ -3,8 +3,11 @@ __author__ = 'hungtantran'
 
 from os import listdir
 from os.path import isfile, join
+import sys
 
+from constants_config import Config
 from csv_parser import CsvParser
+from text_parser import TextParser
 import logger
 from timeline_model_database import TimelineModelDatabase
 
@@ -21,6 +24,8 @@ class ModelDataService(object):
     def get_parser(file_name):
         if file_name.endswith('.csv'):
             return CsvParser()
+        elif file_name.endswith('.txt'):
+            return TextParser()
         else:
             return None
 
@@ -49,3 +54,30 @@ class ModelDataService(object):
         file_names = [join(dir_name, f) for f in listdir(dir_name) if isfile(join(dir_name, f))]
         for file_name in file_names:
             self.parse_and_insert_model_data_from_file(file_name)
+
+
+def main():
+    args = sys.argv
+
+    model_data_service = ModelDataService('mysql',
+                                          Config.mysql_username,
+                                          Config.mysql_password,
+                                          Config.mysql_server,
+                                          Config.mysql_database)
+    model_data_service.parse_and_insert_model_data_from_directory('.\\Common\\test_files\\')
+
+    for i in range(1, len(args)):
+        arg = args[i]
+        if arg.startsWith('directories='):
+            dir_str = arg[len('directories='):]
+            dirs = dir_str.split(',')
+            for dir_name in dirs:
+                model_data_service.parse_and_insert_model_data_from_directory(dir_name)
+        elif arg.startsWith('files='):
+            file_str = arg[len('files='):]
+            files = file_str.split(',')
+            for file_name in files:
+                model_data_service.parse_and_insert_model_data_from_file(file_name)
+
+if __name__ == '__main__':
+    main()

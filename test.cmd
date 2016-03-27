@@ -1,4 +1,5 @@
 python Common\csv_parser_test.py
+python Common\text_parser_test.py
 python Common\timeline_model_database_test.py
 
 python Database\mysql_dao_factory_test.py
