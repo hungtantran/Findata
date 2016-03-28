@@ -19,12 +19,21 @@ class TestTimelineModelDatabase(unittest.TestCase):
             model_db.create_model('bond_1_Mo')
             model_db.insert_value('bond_1_Mo', '3/1/2016', 0.29)
             model_db.insert_value('bond_1_Mo', '2016-03-02', 0.28)
+
+            times = ['2016-03-03', 'Mar 04 2016']
+            values = [0.27, 0.26]
+            model_db.insert_values('bond_1_Mo', times, values)
+
             data = model_db.get_model_data('bond_1_Mo')
-            self.assertEqual(len(data), 2)
+            self.assertEqual(len(data), 4)
             self.assertEqual(data[0][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
             self.assertEqual(data[0][1], 0.29)
             self.assertEqual(data[1][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
             self.assertEqual(data[1][1], 0.28)
+            self.assertEqual(data[2][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-03 00:00:00')
+            self.assertEqual(data[2][1], 0.27)
+            self.assertEqual(data[3][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-04 00:00:00')
+            self.assertEqual(data[3][1], 0.26)
         finally:
             model_db.remove_model('bond_1_Mo')
 
@@ -47,6 +56,11 @@ class TestTimelineModelDatabase(unittest.TestCase):
         time = TimelineModelDatabase.convert_time('Mar 06 2016')
         self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-06 00:00:00')
 
+        time = TimelineModelDatabase.convert_time('07-Mar-16')
+        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-07 00:00:00')
+
+        time = TimelineModelDatabase.convert_time('08-Mar-2016')
+        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-08 00:00:00')
 
 if __name__ == '__main__':
     unittest.main()

@@ -13,6 +13,8 @@ from timeline_model_database import TimelineModelDatabase
 
 
 class ModelDataService(object):
+    sql_batch_size = 5000
+
     def __init__(self, db_type, username, password, server, database):
         self.db_type = db_type
         self.username = username
@@ -43,10 +45,20 @@ class ModelDataService(object):
             title = titles[i]
             model_db.create_model(title)
 
+            dates_arr = []
+            results_arr = []
             for j in range(len(dates)):
-                date = dates[j]
-                value = results[i][j]
-                model_db.insert_value(title, date, value)
+                # Batch insert to improve performance
+                if len(dates_arr) >= ModelDataService.sql_batch_size:
+                    model_db.insert_values(title, dates_arr, results_arr)
+                    dates_arr = []
+                    results_arr = []
+
+                dates_arr.append(dates[j])
+                results_arr.append(results[i][j])
+
+            # Insert the last batch
+            model_db.insert_values(title, dates_arr, results_arr)
 
     def parse_and_insert_model_data_from_directory(self, dir_name):
         logger.Logger.log(logger.LogLevel.INFO, 'Parse and insert model data from directory %s' % dir_name)

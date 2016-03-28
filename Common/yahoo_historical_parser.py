@@ -66,9 +66,6 @@ class YahooHistoricalParser(GenericParser):
         num_results = 0
         done = False
         while True:
-            if page >= 9:
-                break
-
             time.sleep(self.sleep_secs)
             link = YahooHistoricalParser.construct_link(core_source, page)
             page += 1
