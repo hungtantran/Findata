@@ -1,10 +1,27 @@
 __author__ = 'hungtantran'
 
-
+from math import sqrt
 from constants_config import Config
 from timeline_model_database import TimelineModelDatabase
 
 class CalHelper(object):
+    @staticmethod
+    def mean(data_list):
+        """calculates mean"""
+        sum = 0
+        for i in range(len(data_list)):
+            sum += data_list[i]
+        return (sum / len(data_list))
+
+    @staticmethod
+    def standard_deviation(data_list):
+        """calculates standard deviation"""
+        sum = 0
+        mean = CalHelper.mean(data_list)
+        for i in range(len(data_list)):
+            sum += pow((data_list[i] - mean), 2)
+        return sqrt(sum/(len(data_list)-1))
+
     @staticmethod
     def covariance(model1_data, model2_data, avg_model1, avg_model2):
         num_data_point = len(model1_data)
@@ -47,12 +64,16 @@ class CalHelper(object):
                                          Config.mysql_server,
                                          Config.mysql_database)
         join_data = model_db.get_join_models_data(model1, model2)
+        TimelineModelDatabase.query_result_to_file(join_data, 'E:\OneDrive\Issues\Finance\\result.txt')
         num_data_point = len(join_data)
 
-        avg_model1 = model_db.get_average_model_data(model1, join_data[0][0], join_data[num_data_point - 1][0])
-        avg_model2 = model_db.get_average_model_data(model2, join_data[0][0], join_data[num_data_point - 1][0])
-        std_model1 = model_db.get_std_model_data(model1, join_data[0][0], join_data[num_data_point - 1][0])
-        std_model2 = model_db.get_std_model_data(model2, join_data[0][0], join_data[num_data_point - 1][0])
+        model1_data = [data[1] for data in join_data]
+        model2_data = [data[2] for data in join_data]
+        avg_model1 = CalHelper.mean(model1_data)
+        avg_model2 = CalHelper.mean(model2_data)
+        std_model1 = CalHelper.standard_deviation(model1_data)
+        std_model2 = CalHelper.standard_deviation(model2_data)
+        print "%f %f %f %f" % (avg_model1, avg_model2, std_model1, std_model2)
 
         covariance = 0
         for i in range(num_data_point):
@@ -111,7 +132,7 @@ if __name__ == '__main__':
     #        models_name_close.append(name)
     #print len(models_name_close)
 
-    model_list = ['SP500_close', '10_Yr', '20_Yr']
+    model_list = ['SP500_close', '10_Yr']
     matrix = CalHelper.cal_stat_matrix(model_list)
     for i in range(len(matrix)):
         print matrix[i]

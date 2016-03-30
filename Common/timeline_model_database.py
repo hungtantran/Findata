@@ -172,7 +172,7 @@ class TimelineModelDatabase(object):
                 (lower_time_object, upper_time_object) = TimelineModelDatabase.get_time_limit(
                         lower_time_limit, upper_time_limit)
 
-                execute_query =  "SELECT AVG(value) FROM %s WHERE time > '%s' and time < '%s'" % (
+                execute_query =  "SELECT AVG(value) FROM %s WHERE time >= '%s' and time <= '%s'" % (
                         model_name,
                         StringHelper.convert_datetime_to_string(lower_time_object),
                         StringHelper.convert_datetime_to_string(upper_time_object))
@@ -200,10 +200,11 @@ class TimelineModelDatabase(object):
                 (lower_time_object, upper_time_object) = TimelineModelDatabase.get_time_limit(
                         lower_time_limit, upper_time_limit)
 
-                execute_query =  "SELECT STD(value) FROM %s WHERE time > '%s' and time < '%s'" % (
+                execute_query =  "SELECT STDDEV(value) FROM %s WHERE time >= '%s' and time <= '%s'" % (
                         model_name,
                         StringHelper.convert_datetime_to_string(lower_time_object),
                         StringHelper.convert_datetime_to_string(upper_time_object))
+                print execute_query
 
                 cursor.execute(execute_query)
                 avg_arrs = cursor.fetchall()
@@ -226,8 +227,35 @@ class TimelineModelDatabase(object):
                 cursor.execute("SHOW TABLES")
                 all_models = cursor.fetchall()
                 return all_models
-
-                return None
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+
+    @staticmethod
+    def query_result_to_file(query_result, output_file_name, delimiter=','):
+        f = None
+        try:
+            logger.Logger.log(logger.LogLevel.INFO, 'Start writing to file %s' % output_file_name)
+            f = open(output_file_name, 'w')
+
+            # Write each row for each date
+            for i in range(len(query_result)):
+                values_arr = query_result[i]
+                string_values_arr = []
+                for value in values_arr:
+                    if type(value) is datetime.datetime:
+                        string_values_arr.append(StringHelper.convert_datetime_to_string(value))
+                    elif type(value) is float:
+                        string_values_arr.append(str(value))
+
+                values_string = delimiter.join(string_values_arr)
+                values_string += '\n'
+                f.write(values_string)
+
+            logger.Logger.log(logger.LogLevel.INFO, 'Finish writing to file %s' % output_file_name)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception %s' % e)
+        finally:
+            if f is not None:
+                f.flush()
+                f.close()
 
