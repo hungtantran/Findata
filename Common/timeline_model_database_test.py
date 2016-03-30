@@ -34,6 +34,7 @@ class TestTimelineModelDatabase(unittest.TestCase):
             self.assertEqual(data[2][1], 0.27)
             self.assertEqual(data[3][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-04 00:00:00')
             self.assertEqual(data[3][1], 0.26)
+            self.assertAlmostEqual(model_db.get_average_model_data('bond_1_Mo'), 0.275)
         finally:
             model_db.remove_model('bond_1_Mo')
 

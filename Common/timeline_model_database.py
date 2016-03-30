@@ -3,10 +3,11 @@ __author__ = 'hungtantran'
 
 import datetime
 import re
-import time
+from time import sleep
 
 import logger
 from dao_factory_repo import DAOFactoryRepository
+from string_helper import StringHelper
 
 
 class TimelineModelDatabase(object):
@@ -20,33 +21,26 @@ class TimelineModelDatabase(object):
         self.database = database
 
     @staticmethod
-    def convert_time(time_str):
-        patterns = {}
-        # 3/1/2016
-        patterns['^[0-9][0-9]?/[0-9][0-9]?/[0-9][0-9][0-9][0-9]$'] = '%m/%d/%Y'
-        # 2016/03/03
-        patterns['^[0-9][0-9][0-9][0-9]/[0-9][0-9]?/[0-9][0-9]?$'] = '%Y/%m/%d'
-        # 03/04/16
-        patterns['^[0-9][0-9]?/[0-9][0-9]?/[0-9][0-9]$'] = '%m/%d/%y'
-        # 2016-03-02
-        patterns['^[0-9][0-9][0-9][0-9]-[0-9]+-[0-9]+$'] = '%Y-%m-%d'
-        # Mar 06 2016
-        patterns['^[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]? [0-9][0-9]? [0-9][0-9][0-9][0-9]$'] = '%b %d %Y'
-        # Mar 06, 2016
-        patterns['^[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]? [0-9][0-9]?, [0-9][0-9][0-9][0-9]$'] = '%b %d, %Y'
-        # 07-Mar-2016
-        patterns['^[0-9][0-9]?-[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?-[0-9][0-9][0-9][0-9]$'] = '%d-%b-%Y'
-        # 08-Mar-16
-        patterns['^[0-9][0-9]?-[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?-[0-9][0-9]$'] = '%d-%b-%y'
-
-        for pattern in patterns:
-            prog = re.compile(pattern)
-            if prog.match(time_str):
-                return datetime.datetime.strptime(time_str, patterns[pattern])
-
-    @staticmethod
     def create_model_name(model):
         return model.replace(' ', '_')
+
+    @staticmethod
+    def get_time_limit(lower_time_limit, upper_time_limit):
+        lower_time_object = datetime.datetime(1, 1, 1, 0, 0)
+        if lower_time_limit is not None:
+            if type(lower_time_limit) is datetime.datetime:
+                lower_time_object = lower_time_limit
+            elif type(lower_time_limit) is str:
+                lower_time_object = StringHelper.convert_string_to_datetime(lower_time_limit)
+
+        upper_time_object = datetime.datetime(9999, 12, 31, 0, 0)
+        if upper_time_limit is not None:
+            if type(upper_time_limit) is datetime.datetime:
+                upper_time_object = upper_time_limit
+            elif type(upper_time_object) is str:
+                upper_time_object = StringHelper.convert_string_to_datetime(upper_time_limit)
+
+        return (lower_time_limit, upper_time_limit)
 
     def create_model(self, model):
         model_name = TimelineModelDatabase.create_model_name(model)
@@ -62,7 +56,6 @@ class TimelineModelDatabase(object):
                 connection.commit()
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-                connection.rollback()
 
     def insert_value(self, model, time, value):
         model_name = TimelineModelDatabase.create_model_name(model)
@@ -73,14 +66,13 @@ class TimelineModelDatabase(object):
             # TODO need to make this general
             try:
                 cursor = connection.cursor()
-                datetime_obj = TimelineModelDatabase.convert_time(time)
+                datetime_obj = StringHelper.convert_string_to_datetime(time)
                 if datetime_obj is not None:
                     cursor.execute("INSERT INTO %s (time, value) VALUES ('%s', %f)" %
-                                   (model_name, datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), value))
+                                   (model_name, StringHelper.convert_datetime_to_string(datetime_obj), value))
                     connection.commit()
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-                connection.rollback()
 
     def insert_values(self, model, times, values):
         if len(times) != len(values):
@@ -105,9 +97,9 @@ class TimelineModelDatabase(object):
                         time = times[i]
                         value = values[i]
 
-                        datetime_obj = TimelineModelDatabase.convert_time(time)
+                        datetime_obj = StringHelper.convert_string_to_datetime(time)
                         if datetime_obj is not None:
-                            value_string = "('%s', %f)" % (datetime_obj.strftime("%Y-%m-%d %H:%M:%S"), value)
+                            value_string = "('%s', %f)" %  (StringHelper.convert_datetime_to_string(datetime_obj), value)
                             values_arr.append(value_string)
 
                     if len(values_arr) > 0:
@@ -117,8 +109,7 @@ class TimelineModelDatabase(object):
                 break;
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-                connection.rollback()
-                time.sleep(2)
+                sleep(2)
 
     def remove_model(self, model):
         model_name = TimelineModelDatabase.create_model_name(model)
@@ -134,9 +125,8 @@ class TimelineModelDatabase(object):
                 connection.commit()
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-                connection.rollback()
 
-    def get_model_data(self, model):
+    def get_model_data(self, model, lower_time_limit=None):
         model_name = TimelineModelDatabase.create_model_name(model)
         logger.Logger.log(logger.LogLevel.INFO, 'Get %s model data' % model_name)
         with self.dao_factory.create(self.username,
@@ -148,6 +138,96 @@ class TimelineModelDatabase(object):
                 cursor = connection.cursor()
                 cursor.execute("SELECT * FROM %s ORDER BY time" % model_name)
                 return cursor.fetchall()
+            except Exception as e:
+                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+
+    def get_join_models_data(self, model1, model2, lower_time_limit=None, upper_time_limit=None):
+        model1_name = TimelineModelDatabase.create_model_name(model1)
+        model2_name = TimelineModelDatabase.create_model_name(model2)
+        logger.Logger.log(logger.LogLevel.INFO, 'Get join model1 %s, model2 %s data' % (model1_name, model2_name))
+        with self.dao_factory.create(self.username,
+                                     self.password,
+                                     self.server,
+                                     self.database) as connection:
+            try:
+                # TODO need to make this general
+                cursor = connection.cursor()
+                cursor.execute("SELECT A.time as time, A.value, B.value FROM %s as A INNER JOIN %s as B on A.time = B.time ORDER BY A.time" %
+                               (model1_name, model2_name))
+                return cursor.fetchall()
+            except Exception as e:
+                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+
+    def get_average_model_data(self, model, lower_time_limit=None, upper_time_limit=None):
+        model_name = TimelineModelDatabase.create_model_name(model)
+        logger.Logger.log(logger.LogLevel.INFO, 'Get average model %s' % model_name)
+        with self.dao_factory.create(self.username,
+                                     self.password,
+                                     self.server,
+                                     self.database) as connection:
+            try:
+                # TODO need to make this general
+                cursor = connection.cursor()
+
+                (lower_time_object, upper_time_object) = TimelineModelDatabase.get_time_limit(
+                        lower_time_limit, upper_time_limit)
+
+                execute_query =  "SELECT AVG(value) FROM %s WHERE time > '%s' and time < '%s'" % (
+                        model_name,
+                        StringHelper.convert_datetime_to_string(lower_time_object),
+                        StringHelper.convert_datetime_to_string(upper_time_object))
+
+                cursor.execute(execute_query)
+                avg_arrs = cursor.fetchall()
+                if len(avg_arrs) == 1 and len(avg_arrs[0]) == 1:
+                    return avg_arrs[0][0]
+
+                return None
+            except Exception as e:
+                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+
+    def get_std_model_data(self, model, lower_time_limit=None, upper_time_limit=None):
+        model_name = TimelineModelDatabase.create_model_name(model)
+        logger.Logger.log(logger.LogLevel.INFO, 'Get standard deviation model %s' % model_name)
+        with self.dao_factory.create(self.username,
+                                     self.password,
+                                     self.server,
+                                     self.database) as connection:
+            try:
+                # TODO need to make this general
+                cursor = connection.cursor()
+
+                (lower_time_object, upper_time_object) = TimelineModelDatabase.get_time_limit(
+                        lower_time_limit, upper_time_limit)
+
+                execute_query =  "SELECT STD(value) FROM %s WHERE time > '%s' and time < '%s'" % (
+                        model_name,
+                        StringHelper.convert_datetime_to_string(lower_time_object),
+                        StringHelper.convert_datetime_to_string(upper_time_object))
+
+                cursor.execute(execute_query)
+                avg_arrs = cursor.fetchall()
+                if len(avg_arrs) == 1 and len(avg_arrs[0]) == 1:
+                    return avg_arrs[0][0]
+
+                return None
+            except Exception as e:
+                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+
+    def get_all_models_names(self):
+        logger.Logger.log(logger.LogLevel.INFO, 'Get all model names')
+        with self.dao_factory.create(self.username,
+                                     self.password,
+                                     self.server,
+                                     self.database) as connection:
+            try:
+                # TODO need to make this general
+                cursor = connection.cursor()
+                cursor.execute("SHOW TABLES")
+                all_models = cursor.fetchall()
+                return all_models
+
+                return None
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 
