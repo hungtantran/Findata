@@ -1,6 +1,8 @@
 python Common\bloomberg_parser_test.py
-python Common\csv_parser_test.py
-python Common\text_parser_test.py
+python Common\csv_timeline_model_parser_test.py
+python Common\generic_file_parser_test.py
+python Common\string_helper_test.py
+python Common\text_timeline_model_parser_test.py
 python Common\timeline_model_database_test.py
 python Common\yahoo_historical_parser_test.py
 

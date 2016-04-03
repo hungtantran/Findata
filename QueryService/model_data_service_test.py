@@ -13,18 +13,20 @@ class TestModelDataService(unittest.TestCase):
     db_type = 'mysql'
 
     def test_parse_and_insert_model_data_from_file(self):
-        model_data_service = ModelDataService(TestModelDataService.db_type,
-                                              Config.test_mysql_username,
-                                              Config.test_mysql_password,
-                                              Config.test_mysql_server,
-                                              Config.test_mysql_database)
-        model_data_service.parse_and_insert_model_data_from_file('.\\Common\\test_files\\daily_treasury_yield_curve.csv')
-
         model_db = TimelineModelDatabase(TestModelDataService.db_type,
                                          Config.test_mysql_username,
                                          Config.test_mysql_password,
                                          Config.test_mysql_server,
                                          Config.test_mysql_database)
+        model_db.remove_model('1 Mo')
+        model_db.remove_model('3 Mo')
+
+        model_data_service = ModelDataService(TestModelDataService.db_type,
+                                              Config.test_mysql_username,
+                                              Config.test_mysql_password,
+                                              Config.test_mysql_server,
+                                              Config.test_mysql_database)
+        model_data_service.parse_and_insert_model_data_from_file('.\\QueryService\\test_files\\daily_treasury_yield_curve.csv')
         try:
             data = model_db.get_model_data('1 Mo')
             self.assertEqual(len(data), 2)
@@ -46,6 +48,15 @@ class TestModelDataService(unittest.TestCase):
             model_db.remove_model('3 Mo')
 
     def test_parse_and_insert_model_data_from_directory(self):
+        model_db = TimelineModelDatabase(TestModelDataService.db_type,
+                                         Config.test_mysql_username,
+                                         Config.test_mysql_password,
+                                         Config.test_mysql_server,
+                                         Config.test_mysql_database)
+
+        model_db.remove_model('1 Mo')
+        model_db.remove_model('3 Mo')
+
         model_data_service = ModelDataService(TestModelDataService.db_type,
                                               Config.test_mysql_username,
                                               Config.test_mysql_password,
@@ -53,11 +64,6 @@ class TestModelDataService(unittest.TestCase):
                                               Config.test_mysql_database)
         model_data_service.parse_and_insert_model_data_from_directory('.\\Common\\test_files\\')
 
-        model_db = TimelineModelDatabase(TestModelDataService.db_type,
-                                         Config.test_mysql_username,
-                                         Config.test_mysql_password,
-                                         Config.test_mysql_server,
-                                         Config.test_mysql_database)
         try:
             data = model_db.get_model_data('1 Mo')
             self.assertEqual(len(data), 4)

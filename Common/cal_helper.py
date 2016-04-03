@@ -64,7 +64,6 @@ class CalHelper(object):
                                          Config.mysql_server,
                                          Config.mysql_database)
         join_data = model_db.get_join_models_data(model1, model2)
-        TimelineModelDatabase.query_result_to_file(join_data, 'E:\OneDrive\Issues\Finance\\result.txt')
         num_data_point = len(join_data)
 
         model1_data = [data[1] for data in join_data]
@@ -81,7 +80,7 @@ class CalHelper(object):
             covariance += (val[1] - avg_model1) * (val[2] - avg_model2)
         covariance /= (num_data_point - 1)
         correlation = covariance / (std_model1 * std_model2)
-        return (covariance, correlation)
+        return (covariance, correlation, join_data[0][0], join_data[-1][0])
 
     @staticmethod
     def rsquare_model(model, predict_model, lower_time_limit=None, upper_time_limit=None):
@@ -132,7 +131,7 @@ if __name__ == '__main__':
     #        models_name_close.append(name)
     #print len(models_name_close)
 
-    model_list = ['SP500_close', '10_Yr']
+    model_list = ['NASDAQ_FB_close', 'NASDAQ_AAPL_close']
     matrix = CalHelper.cal_stat_matrix(model_list)
     for i in range(len(matrix)):
         print matrix[i]

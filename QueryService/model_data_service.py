@@ -6,8 +6,8 @@ from os.path import isfile, join
 import sys
 
 from constants_config import Config
-from csv_parser import CsvParser
-from text_parser import TextParser
+from csv_timeline_model_parser import CsvTimelineModelParser
+from text_timeline_model_parser import TextTimelineModelParser
 import logger
 from timeline_model_database import TimelineModelDatabase
 
@@ -25,9 +25,9 @@ class ModelDataService(object):
     @staticmethod
     def get_parser(file_name):
         if file_name.endswith('.csv'):
-            return CsvParser()
+            return CsvTimelineModelParser()
         elif file_name.endswith('.txt'):
-            return TextParser()
+            return TextTimelineModelParser()
         else:
             return None
 

@@ -6,7 +6,7 @@ import unittest
 
 import logger
 from parser_to_file import ParserToFile
-from csv_parser_test import CsvParser
+from csv_timeline_model_parser_test import CsvTimelineModelParser
 
 
 class TestParserToFile(unittest.TestCase):
@@ -19,7 +19,7 @@ class TestParserToFile(unittest.TestCase):
                                                     output_file_name='test_parse_result_to_file.csv',
                                                     delimiter=',')
 
-            parser = CsvParser()
+            parser = CsvTimelineModelParser()
             (titles, dates, results) = parser.parse('test_parse_result_to_file.csv')
 
             # Verify title content

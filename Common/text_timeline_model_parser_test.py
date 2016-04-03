@@ -4,12 +4,12 @@ __author__ = 'hungtantran'
 import unittest
 
 import logger
-from text_parser import TextParser
+from text_timeline_model_parser import TextTimelineModelParser
 
 
-class TestTextParser(unittest.TestCase):
+class TestTextTimelineModelParser(unittest.TestCase):
     def test_parse(self):
-        parser = TextParser()
+        parser = TextTimelineModelParser()
         (titles, dates, results) = parser.parse('.\\Common\\test_files\\daily_treasury_yield_curve.txt')
 
         # Verify title content

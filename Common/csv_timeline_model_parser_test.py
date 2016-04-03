@@ -4,12 +4,12 @@ __author__ = 'hungtantran'
 import unittest
 
 import logger
-from csv_parser import CsvParser
+from csv_timeline_model_parser import CsvTimelineModelParser
 
 
-class TestCsvParser(unittest.TestCase):
+class TestCsvTimelineModelParser(unittest.TestCase):
     def test_parse(self):
-        parser = CsvParser()
+        parser = CsvTimelineModelParser()
         (titles, dates, results) = parser.parse('.\\Common\\test_files\\daily_treasury_yield_curve.csv')
 
         # Verify title content

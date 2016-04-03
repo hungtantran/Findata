@@ -4,7 +4,7 @@ __author__ = 'hungtantran'
 from generic_parser import GenericParser
 from string_helper import StringHelper
 
-class CsvParser(GenericParser):
+class CsvTimelineModelParser(GenericParser):
     def __init__(self):
         pass
 
@@ -16,16 +16,16 @@ class CsvParser(GenericParser):
             lines = f.readlines()
             lines = [line.strip() for line in lines]
             if len(lines) == 0:
-                return results
+                return (titles, dates, results)
 
             # The first line should be a title in the form like (Date, Dows, SP500)
             header_titles = lines[0].split(',')
             if len(header_titles) <= 1:
-                return results
+                return (titles, dates, results)
 
             # The first title must be Date
             if header_titles[0] != 'Date':
-                return results
+                return (titles, dates, results)
 
             # Populate the titles list
             for i in range(1, len(header_titles)):

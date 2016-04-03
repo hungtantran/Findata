@@ -38,30 +38,6 @@ class TestTimelineModelDatabase(unittest.TestCase):
         finally:
             model_db.remove_model('bond_1_Mo')
 
-    def test_convert_time(self):
-        time = TimelineModelDatabase.convert_time('3/1/2016')
-        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
-
-        time = TimelineModelDatabase.convert_time('2016-03-02')
-        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
-
-        time = TimelineModelDatabase.convert_time('2016/03/03')
-        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-03 00:00:00')
-
-        time = TimelineModelDatabase.convert_time('03/04/16')
-        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-04 00:00:00')
-
-        time = TimelineModelDatabase.convert_time('Mar 05, 2016')
-        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-05 00:00:00')
-
-        time = TimelineModelDatabase.convert_time('Mar 06 2016')
-        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-06 00:00:00')
-
-        time = TimelineModelDatabase.convert_time('07-Mar-16')
-        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-07 00:00:00')
-
-        time = TimelineModelDatabase.convert_time('08-Mar-2016')
-        self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-08 00:00:00')
 
 if __name__ == '__main__':
     unittest.main()

@@ -26,7 +26,7 @@ class TimelineModelDatabase(object):
 
     @staticmethod
     def get_time_limit(lower_time_limit, upper_time_limit):
-        lower_time_object = datetime.datetime(1, 1, 1, 0, 0)
+        lower_time_object = datetime.datetime(1900, 1, 1, 0, 0)
         if lower_time_limit is not None:
             if type(lower_time_limit) is datetime.datetime:
                 lower_time_object = lower_time_limit
@@ -40,7 +40,7 @@ class TimelineModelDatabase(object):
             elif type(upper_time_object) is str:
                 upper_time_object = StringHelper.convert_string_to_datetime(upper_time_limit)
 
-        return (lower_time_limit, upper_time_limit)
+        return (lower_time_object, upper_time_object)
 
     def create_model(self, model):
         model_name = TimelineModelDatabase.create_model_name(model)
@@ -204,7 +204,6 @@ class TimelineModelDatabase(object):
                         model_name,
                         StringHelper.convert_datetime_to_string(lower_time_object),
                         StringHelper.convert_datetime_to_string(upper_time_object))
-                print execute_query
 
                 cursor.execute(execute_query)
                 avg_arrs = cursor.fetchall()
