@@ -1,6 +1,7 @@
 __author__ = 'hungtantran'
 
 
+import filecmp
 import os
 import unittest
 
@@ -45,6 +46,20 @@ class TestSecFileRetriever(unittest.TestCase):
             content = file.read()
             self.assertGreater(len(content), 0)
             self.assertTrue('CIK|Company Name|Form Type|Date Filed|Filename' in content)
+
+    def test_get_xbrl_zip_file(self):
+        file_retriver = SecFileRetriever(link=Config.sec_ftp_link,
+                                         full_index_path=Config.sec_ftp_full_index_path)
+        target_file_path = "%s/microsoft_2014_QTR4_10-Q.zip" % './SEC/test_output_files'
+
+        try:
+            os.remove(target_file_path)
+        except Exception:
+            pass
+
+        file_retriver.get_xbrl_zip_file(789019, '0001193125-14-380252', target_file_path)
+
+        self.assertTrue(filecmp.cmp(target_file_path, './SEC/test_files/microsoft_2014_QTR4_10-Q.zip'))
 
     def test_get_file(self):
         file_retriver = SecFileRetriever(link=Config.sec_ftp_link,

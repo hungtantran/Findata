@@ -58,6 +58,14 @@ class SecFileRetriever(object):
             if ftp is not None:
                 ftp.quit()
 
+    def get_xbrl_zip_file(self, cik, accession, target_file_path):
+        ftp_file_path = '%s/%d/%s/%s' % (Config.sec_xbrl_data_directory,
+                                         cik,
+                                         accession.replace('-', ''),
+                                         accession + '-xbrl.zip')
+        return self.get_file(ftp_file_path=ftp_file_path,
+                             target_file_path=target_file_path)
+
     def get_file(self, ftp_file_path, target_file_path):
         ftp = None
 
@@ -65,7 +73,6 @@ class SecFileRetriever(object):
             with open(target_file_path, 'wb') as file:
                 ftp = FTP(self.link)
                 ftp.login()
-
 
                 ftp_directory = ftp_file_path[:ftp_file_path.rfind('/')]
                 ftp_file_name = ftp_file_path[(ftp_file_path.rfind('/') + 1):]

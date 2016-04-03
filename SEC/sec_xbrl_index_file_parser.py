@@ -30,10 +30,24 @@ class SecXbrlIndexFileParser(object):
                 (titles[4] != 'Filename')):
                 return None
 
+            num_results = len(results[0])
+            for i in range(len(results)):
+                if len(results[i]) != num_results:
+                    return None
+
+            # Convert cik to integer
             for i in range(len(results[0])):
                 results[0][i] = int(results[0][i])
 
+            # Convert date filed field to datetime object
             for i in range(len(results[3])):
                 results[3][i] = StringHelper.convert_string_to_datetime(results[3][i])
+
+            # Extract accession string out of filename
+            for i in range(len(results[4])):
+                accession = results[4][i]
+                accession = accession[(accession.rfind('/') + 1):]
+                accession = accession[:accession.rfind('.txt')]
+                results[4][i] = accession
 
             return results

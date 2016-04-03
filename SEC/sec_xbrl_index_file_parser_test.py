@@ -35,8 +35,8 @@ class TestSecXbrlIndexFileParser(unittest.TestCase):
         self.assertEqual(results[3][1].strftime("%Y-%m-%d %H:%M:%S"), '2016-04-01 00:00:00')
 
         # Verify file name
-        self.assertEqual(results[4][0], 'edgar/data/1027596/0000894189-16-008706.txt')
-        self.assertEqual(results[4][1], 'edgar/data/1070235/0001070235-16-000129.txt')
+        self.assertEqual(results[4][0], '0000894189-16-008706')
+        self.assertEqual(results[4][1], '0001070235-16-000129')
 
 
 if __name__ == '__main__':
