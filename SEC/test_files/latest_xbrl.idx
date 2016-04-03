@@ -1,0 +1,12 @@
+Description:           XBRL Index of EDGAR Dissemination Feed
+Last Data Received:    April  2, 2016
+Comments:              webmaster@sec.gov
+Anonymous FTP:         ftp://ftp.sec.gov/edgar/
+ 
+ 
+ 
+ 
+CIK|Company Name|Form Type|Date Filed|Filename
+--------------------------------------------------------------------------------
+1027596|ADVISORS SERIES TRUST|485BPOS|2016-04-01|edgar/data/1027596/0000894189-16-008706.txt
+1070235|BLACKBERRY Ltd|40-F|2016-04-01|edgar/data/1070235/0001070235-16-000129.txt

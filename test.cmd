@@ -4,8 +4,9 @@ python Common\generic_file_parser_test.py
 python Common\string_helper_test.py
 python Common\text_timeline_model_parser_test.py
 python Common\timeline_model_database_test.py
-python Common\yahoo_historical_parser_test.py
 
 python Database\mysql_dao_factory_test.py
 
 python QueryService\model_data_service_test.py
+
+python SEC\sec_xbrl_index_file_parser_test.py
