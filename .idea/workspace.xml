@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/external_test.cmd" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/test_files/latest_xbrl.idx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/test_output_files/latest_xbrl.idx" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/generic_file_parser.py" afterPath="$PROJECT_DIR$/Common/generic_file_parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.cmd" afterPath="$PROJECT_DIR$/setup.cmd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.cmd" afterPath="$PROJECT_DIR$/test.cmd" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_file_retriever.py" afterPath="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" afterPath="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Models.iws" />
@@ -34,25 +25,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="sec_file_retriever.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="sec_file_retriever.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6474429">
-              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-              <folding>
-                <element signature="e#29#51#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sec_xbrl_index_file_parser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
-          <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
               <folding>
-                <element signature="e#29#42#0" expanded="true" />
+                <element signature="e#28#43#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -94,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sec_file_retriever_test.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="sec_file_retriever_test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.5179543">
+              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding>
                 <element signature="e#29#38#0" expanded="true" />
               </folding>
@@ -176,12 +155,12 @@
         <option value="$PROJECT_DIR$/QueryService/model_data_service_test.py" />
         <option value="$PROJECT_DIR$/Common/ftp_client.py" />
         <option value="$PROJECT_DIR$/Common/constants_config.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" />
         <option value="$PROJECT_DIR$/Common/generic_file_parser_test.py" />
         <option value="$PROJECT_DIR$/Common/generic_file_parser.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" />
       </list>
     </option>
   </component>
@@ -851,26 +830,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-          <folding>
-            <element signature="e#29#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
-          <folding>
-            <element signature="e#29#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/string_helper_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -937,12 +896,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5734494">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding>
+            <element signature="e#29#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6474429">
-          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
           <folding>
-            <element signature="e#29#51#0" expanded="true" />
+            <element signature="e#28#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5179543">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding>
+            <element signature="e#29#38#0" expanded="true" />
           </folding>
         </state>
       </provider>

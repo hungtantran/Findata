@@ -1,6 +1,6 @@
 __author__ = 'hungtantran'
 
-
+import datetime
 from ftplib import FTP
 
 import logger
@@ -27,6 +27,51 @@ class SecFileRetriever(object):
                 ftp.login()
                 ftp.cwd(self.full_index_path)
                 ftp.retrbinary("RETR " + self.xbrl_index_file, file.write)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, e)
+        finally:
+            if ftp is not None:
+                ftp.quit()
+
+    def get_past_xbrl_index(self, year, quarter, target_dir='.'):
+        if quarter < 1 or quarter > 4:
+            return
+
+        now = datetime.datetime.now()
+        if year < 1990 or year > now.year:
+            return
+
+        ftp = None
+
+        try:
+            target_file_path = "%s/%d_qtr%d_%s" % (target_dir, year, quarter, self.xbrl_index_file)
+            with open(target_file_path, 'wb') as file:
+                ftp = FTP(self.link)
+                ftp.login()
+
+                ftp_target_directory = '%s/%d/QTR%d' % (self.full_index_path, year, quarter)
+                ftp.cwd(ftp_target_directory)
+                ftp.retrbinary("RETR " + self.xbrl_index_file, file.write)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, e)
+        finally:
+            if ftp is not None:
+                ftp.quit()
+
+    def get_file(self, ftp_file_path, target_file_path):
+        ftp = None
+
+        try:
+            with open(target_file_path, 'wb') as file:
+                ftp = FTP(self.link)
+                ftp.login()
+
+
+                ftp_directory = ftp_file_path[:ftp_file_path.rfind('/')]
+                ftp_file_name = ftp_file_path[(ftp_file_path.rfind('/') + 1):]
+
+                ftp.cwd(ftp_directory)
+                ftp.retrbinary("RETR " + ftp_file_name, file.write)
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, e)
         finally:
