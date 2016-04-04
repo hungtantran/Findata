@@ -10,3 +10,4 @@ python Database\mysql_dao_factory_test.py
 python QueryService\model_data_service_test.py
 
 python SEC\sec_xbrl_index_file_parser_test.py
+python SEC\sec_xbrl_processor_test.py

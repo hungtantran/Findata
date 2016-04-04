@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/test_files/microsoft_2014_QTR4_10-Q.zip" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/test_files/2014_qtr4_xbrl.idx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_file_retriever.py" afterPath="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" afterPath="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.cmd" afterPath="$PROJECT_DIR$/setup.cmd" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.cmd" afterPath="$PROJECT_DIR$/test.cmd" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Models.iws" />
@@ -33,9 +31,33 @@
         <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="60" column="66" selection-start-line="60" selection-start-column="8" selection-end-line="60" selection-end-column="66" />
+              <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
               <folding>
                 <element signature="e#28#43#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_xbrl_processor.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="42" column="39" selection-start-line="42" selection-start-column="39" selection-end-line="42" selection-end-column="39" />
+              <folding>
+                <element signature="e#29#38#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_xbrl_processor_test.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.7584331">
+              <caret line="41" column="42" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
+              <folding>
+                <element signature="e#29#43#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -53,57 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sec_xbrl_index_file_parser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="48" column="66" selection-start-line="48" selection-start-column="66" selection-end-line="48" selection-end-column="66" />
-              <folding>
-                <element signature="e#29#42#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="generic_file_parser_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/generic_file_parser_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="30" column="47" selection-start-line="30" selection-start-column="47" selection-end-line="30" selection-end-column="47" />
-              <folding>
-                <element signature="e#29#44#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="generic_file_parser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/generic_file_parser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-              <folding>
-                <element signature="e#29#69#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="constants_config.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/constants_config.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="27" selection-start-line="17" selection-start-column="4" selection-end-line="17" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="sec_file_retriever_test.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever_test.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="59" column="40" selection-start-line="59" selection-start-column="40" selection-end-line="59" selection-end-column="40" />
+              <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
               <folding>
                 <element signature="e#29#43#0" expanded="true" />
               </folding>
@@ -111,23 +87,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/SEC/test_output_files/.gitignore">
+      <file leaf-file-name="string_helper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/string_helper.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="28" selection-start-line="0" selection-start-column="28" selection-end-line="0" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="string_helper_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/string_helper_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="83" selection-start-line="32" selection-start-column="83" selection-end-line="32" selection-end-column="83" />
+              <caret line="18" column="26" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="26" />
               <folding>
-                <element signature="e#29#44#0" expanded="true" />
+                <element signature="e#28#43#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -148,8 +114,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/QueryService/bloomberg_parser_test.py" />
-        <option value="$PROJECT_DIR$/Database/daofactoryrepo.py" />
         <option value="$PROJECT_DIR$/Database/daofactory.py" />
         <option value="$PROJECT_DIR$/Database/mysqldaofactory.py" />
         <option value="$PROJECT_DIR$/Database/mysqldaofactory_test.py" />
@@ -195,9 +159,12 @@
         <option value="$PROJECT_DIR$/Common/constants_config.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
         <option value="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" />
         <option value="$PROJECT_DIR$/SEC/test_output_files/.gitignore" />
+        <option value="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
+        <option value="$PROJECT_DIR$/SEC/test_output_files/sec_xbrl_processor.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
       </list>
     </option>
   </component>
@@ -376,6 +343,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Users\hungtantran\PycharmProjects\Models\SEC" />
       <recent name="E:\Users\hungtantran\PycharmProjects\Models\Common" />
     </key>
   </component>
@@ -558,26 +526,17 @@
           <url>file://$PROJECT_DIR$/Common/bloomberg_parser_test.py</url>
           <line>2</line>
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/Common/bloomberg_parser.py</url>
+          <line>3</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Database/mysql_dao_factory.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="50" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/thrift_index_client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Database/dao_factory.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -678,13 +637,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7258065">
-          <caret line="77" column="26" selection-start-line="77" selection-start-column="26" selection-end-line="77" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Scripts/sanitize_files.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.5255376">
@@ -758,16 +710,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common/string_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/yahoo_historical_parser_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -789,7 +731,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="14" column="33" selection-start-line="14" selection-start-column="33" selection-end-line="14" selection-end-column="33" />
           <folding>
-            <element signature="e#29#86#0" expanded="true" />
+            <element signature="e#29#86#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -815,7 +757,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="26" column="25" selection-start-line="26" selection-start-column="25" selection-end-line="26" selection-end-column="25" />
           <folding>
-            <element signature="e#28#42#0" expanded="true" />
+            <element signature="e#28#42#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -857,17 +799,17 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding>
-            <element signature="e#29#69#0" expanded="true" />
+            <element signature="e#29#69#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Common/string_helper_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.5919478">
           <caret line="32" column="83" selection-start-line="32" selection-start-column="83" selection-end-line="32" selection-end-column="83" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -877,7 +819,7 @@
         <state vertical-scroll-proportion="0.6474429">
           <caret line="35" column="46" selection-start-line="35" selection-start-column="46" selection-end-line="35" selection-end-column="46" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -887,7 +829,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="30" column="47" selection-start-line="30" selection-start-column="47" selection-end-line="30" selection-end-column="47" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -905,7 +847,7 @@
         <state vertical-scroll-proportion="0.38846573">
           <caret line="21" column="46" selection-start-line="21" selection-start-column="46" selection-end-line="21" selection-end-column="46" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -930,39 +872,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="48" column="66" selection-start-line="48" selection-start-column="66" selection-end-line="48" selection-end-column="66" />
-          <folding>
-            <element signature="e#29#42#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
-          <folding>
-            <element signature="e#29#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="60" column="66" selection-start-line="60" selection-start-column="8" selection-end-line="60" selection-end-column="66" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="59" column="40" selection-start-line="59" selection-start-column="40" selection-end-line="59" selection-end-column="40" />
-          <folding>
-            <element signature="e#29#43#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -979,6 +889,76 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="28" selection-start-line="0" selection-start-column="28" selection-end-line="0" selection-end-column="28" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <folding>
+            <element signature="e#28#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding>
+            <element signature="e#29#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.18498367">
+          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+          <folding>
+            <element signature="e#29#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/string_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="18" column="26" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="26" />
+          <folding>
+            <element signature="e#28#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
+          <folding>
+            <element signature="e#29#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="39" selection-start-line="42" selection-start-column="39" selection-end-line="42" selection-end-column="39" />
+          <folding>
+            <element signature="e#29#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7584331">
+          <caret line="41" column="42" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
+          <folding>
+            <element signature="e#29#43#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
