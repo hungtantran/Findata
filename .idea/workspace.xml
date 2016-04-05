@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.cmd" afterPath="$PROJECT_DIR$/setup.cmd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.cmd" afterPath="$PROJECT_DIR$/test.cmd" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Models.iws" />
@@ -43,7 +41,7 @@
         <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="42" column="39" selection-start-line="42" selection-start-column="39" selection-end-line="42" selection-end-column="39" />
+              <caret line="78" column="24" selection-start-line="78" selection-start-column="24" selection-end-line="78" selection-end-column="24" />
               <folding>
                 <element signature="e#29#38#0" expanded="true" />
               </folding>
@@ -54,8 +52,8 @@
       <file leaf-file-name="sec_xbrl_processor_test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7584331">
-              <caret line="41" column="42" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.59303594">
+              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
               <folding>
                 <element signature="e#29#43#0" expanded="true" />
               </folding>
@@ -67,7 +65,7 @@
         <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
+              <caret line="33" column="91" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="91" />
               <folding>
                 <element signature="e#29#38#0" expanded="true" />
               </folding>
@@ -932,20 +930,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
+          <caret line="78" column="24" selection-start-line="78" selection-start-column="24" selection-end-line="78" selection-end-column="24" />
           <folding>
             <element signature="e#29#38#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="42" column="39" selection-start-line="42" selection-start-column="39" selection-end-line="42" selection-end-column="39" />
+          <caret line="33" column="91" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="91" />
           <folding>
             <element signature="e#29#38#0" expanded="true" />
           </folding>
@@ -954,8 +952,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7584331">
-          <caret line="41" column="42" selection-start-line="41" selection-start-column="42" selection-end-line="41" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.59303594">
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding>
             <element signature="e#29#43#0" expanded="true" />
           </folding>

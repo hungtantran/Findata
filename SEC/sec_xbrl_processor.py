@@ -28,12 +28,51 @@ class SecXbrlProcessor(object):
             os.remove(extracted_file_path)
 
     def parse_xbrl(self, xbrl_file, field_tags):
+        results = {}
+
         tree = etree.parse(xbrl_file)
         root = tree.getroot()
 
-        results = {}
+        if len(field_tags) == 0:
+            return results
+
+        # Gather all the context informaiton.
+        # key = context id
+        # value = [startdate, enddate]
+        context = {}
+        for child in root:
+            if child.tag.find('context') == -1:
+                continue
+
+            if 'id' not in child.attrib:
+                continue
+
+            context_id = child.attrib['id']
+
+            startDate = None
+            endDate = None
+            for grandchild in child:
+                if not grandchild.tag.endswith('period'):
+                    continue
+
+                for elem in grandchild:
+                    if elem.tag.endswith('instant'):
+                        startDate = elem.text
+                        endDate = elem.text
+                        pass
+                    elif elem.tag.endswith('startDate'):
+                        startDate = elem.text
+                        pass
+                    elif elem.tag.endswith('endDate'):
+                        endDate = elem.text
+                        pass
+
+            if (startDate is not None) and (endDate is not None):
+                context[context_id] = [StringHelper.convert_string_to_datetime(startDate),
+                                       StringHelper.convert_string_to_datetime(endDate)]
+
         for tag in field_tags:
-            results[tag] = None
+            results[tag] = []
 
             index = tag.find(':')
             if index < 0:
@@ -45,12 +84,20 @@ class SecXbrlProcessor(object):
 
             field_name = tag[(index + 1):]
             full_field_tag = '{%s}%s' % (namespace, field_name)
-            print full_field_tag
-            elem = root.find(full_field_tag)
+            elems = root.findall(full_field_tag)
 
-            if elem is not None:
-                results[tag] = StringHelper.parse_value_string(elem.text)
+            for elem in elems:
+                if 'contextRef' not in elem.attrib:
+                    continue
 
+                context_ref = elem.attrib['contextRef']
+
+                if context_ref not in context:
+                    continue
+
+                results[tag].append([StringHelper.parse_value_string(elem.text),
+                                    context[context_ref][0],
+                                    context[context_ref][1]])
 
         return results
 

@@ -33,13 +33,20 @@ class TestSecXbrlProcessor(unittest.TestCase):
 
         processor = SecXbrlProcessor()
 
-        field_tags = ['us-gaap:GrossProfit', 'us-gaap:fake', 'fake']
+        field_tags = ['us-gaap:Liabilities', 'us-gaap:fake', 'fake']
         results = processor.parse_xbrl(xbrl_file, field_tags)
 
         self.assertEqual(len(field_tags), len(results))
-        self.assertEqual(results['us-gaap:GrossProfit'], 13384000000)
-        self.assertIsNone(results['us-gaap:fake'])
-        self.assertIsNone(results['fake'])
+        self.assertEqual(0, len(results['us-gaap:fake']))
+        self.assertEqual(0, len(results['fake']))
+
+        self.assertEqual(len(results['us-gaap:Liabilities']), 2)
+        self.assertEqual(results['us-gaap:Liabilities'][0][0], 79486000000)
+        self.assertEqual(results['us-gaap:Liabilities'][0][1].strftime("%Y-%m-%d %H:%M:%S"), '2014-09-30 00:00:00')
+        self.assertEqual(results['us-gaap:Liabilities'][0][2].strftime("%Y-%m-%d %H:%M:%S"), '2014-09-30 00:00:00')
+        self.assertEqual(results['us-gaap:Liabilities'][1][0], 82600000000)
+        self.assertEqual(results['us-gaap:Liabilities'][1][1].strftime("%Y-%m-%d %H:%M:%S"), '2014-06-30 00:00:00')
+        self.assertEqual(results['us-gaap:Liabilities'][1][2].strftime("%Y-%m-%d %H:%M:%S"), '2014-06-30 00:00:00')
 
 
 if __name__ == '__main__':
