@@ -1,0 +1,17 @@
+Description:           XBRL Index of EDGAR Dissemination Feed
+Last Data Received:    June 30, 2005
+Comments:              webmaster@sec.gov
+Anonymous FTP:         ftp://ftp.sec.gov/edgar/
+ 
+ 
+ 
+ 
+CIK|Company Name|Form Type|Date Filed|Filename
+--------------------------------------------------------------------------------
+1067491|INFOSYS TECHNOLOGIES LTD|6-K|2005-05-03|edgar/data/1067491/0001193125-05-092677.txt
+1080224|EDGAR ONLINE INC|8-K|2005-04-25|edgar/data/1080224/0001275287-05-001434.txt
+13610|BOWNE & CO INC|8-K|2005-04-04|edgar/data/13610/0000950123-05-004029.txt
+29669|DONNELLEY R R & SONS CO|8-K|2005-04-04|edgar/data/29669/0001193125-05-068717.txt
+789019|MICROSOFT CORP|8-K|2005-05-04|edgar/data/789019/0001193125-05-095930.txt
+790070|EMC CORP|8-K|2005-05-06|edgar/data/790070/0000950135-05-002637.txt
+928753|BUSINESS OBJECTS S.A.|10-Q|2005-05-09|edgar/data/928753/0000891618-05-000338.txt

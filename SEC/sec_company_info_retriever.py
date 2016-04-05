@@ -31,6 +31,7 @@ class SecCompanyInfoRetriever(object):
         xbrl_index_file = self.file_retriever.get_past_xbrl_index(year=year,
                                                                   quarter=quarter,
                                                                   target_dir=intermediate_file_dir)
+
         return self.retrieve_company_info_from_cik_and_xbrl_index_file(cik=cik,
                                                                        field_tags=field_tags,
                                                                        xbrl_index_file=xbrl_index_file,
