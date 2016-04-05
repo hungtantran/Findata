@@ -16,7 +16,8 @@ class SecXbrlProcessor(object):
     def __init__(self):
         pass
 
-    def process_xbrl_zip_file(self, zip_file_path, field_tags, extracted_directory='.', remove_extracted_file_after_done=False):
+    def process_xbrl_zip_file(self, zip_file_path, field_tags, extracted_directory='.',
+                              remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s field tags %s ' % (zip_file_path, field_tags))
 
         extracted_file_path = self.extract_xbrl_zip_file(zip_file_path=zip_file_path,
