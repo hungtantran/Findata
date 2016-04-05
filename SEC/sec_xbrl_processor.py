@@ -16,21 +16,31 @@ class SecXbrlProcessor(object):
     def __init__(self):
         pass
 
-    def process_xbrl_zip_file(self, zip_file_path, extracted_directory='.', remove_extracted_file_after_done=True):
-        self.extract_xbrl_zip_file(zip_file_path=zip_file_path,
+    def process_xbrl_zip_file(self, zip_file_path, field_tags, extracted_directory='.', remove_extracted_file_after_done=False):
+        logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s field tags %s ' % (zip_file_path, field_tags))
+
+        extracted_file_path = self.extract_xbrl_zip_file(zip_file_path=zip_file_path,
                                    extracted_directory=extracted_directory)
 
-        extracted_file_path = '%s/%s' % (extracted_directory, zip_file_path)
-        with open(extracted_file_path) as file:
-            content = file.read()
+        results = self.parse_xbrl(xbrl_file=extracted_file_path,
+                                  field_tags=field_tags)
 
         if remove_extracted_file_after_done:
             os.remove(extracted_file_path)
 
+        return results
+
     def parse_xbrl(self, xbrl_file, field_tags):
+        logger.Logger.log(logger.LogLevel.INFO, 'Parsing xbrl file %s with field tags %s ' % (xbrl_file, field_tags))
+
         results = {}
 
-        tree = etree.parse(xbrl_file)
+        try:
+            tree = etree.parse(xbrl_file)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.INFO, e)
+            return results
+
         root = tree.getroot()
 
         if len(field_tags) == 0:
@@ -122,3 +132,4 @@ class SecXbrlProcessor(object):
                         zipfile, files))
 
             zip_file.extract(xbrl_file, extracted_directory)
+            return '%s/%s' % (extracted_directory, xbrl_file)

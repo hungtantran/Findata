@@ -1,3 +1,4 @@
 python Common\yahoo_historical_parser_test.py
 
 python SEC\sec_file_retriever_test.py
+python SEC\sec_company_info_retriever_test.py

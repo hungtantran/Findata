@@ -12,6 +12,7 @@ class SecXbrlIndexFileParser(object):
         self.generic_parser = GenericFileParser()
 
     def parse(self, source_name):
+        logger.Logger.log(logger.LogLevel.INFO, 'Parsing xbrl index file %s' % source_name)
         with open(source_name) as f:
             content = f.read()
             if SecXbrlIndexFileParser.HEADER not in content:
