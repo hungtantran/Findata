@@ -43,6 +43,17 @@ class SecCompanyInfoRetriever(object):
                           'Retrieve company info with cik %d, xbrl_index_file %s, field_tags %s' %
                           (cik, xbrl_index_file, field_tags))
         results = {}
+
+        # xbrl_index_file should be like path/to/index/file/2011_qtr4_xbrl.idx so
+        # file_parts should be like ['2011', 'qtr4', 'xbrl.idx]
+        index = xbrl_index_file.rfind('/')
+        if index > 0:
+            xbrl_index_file_name = xbrl_index_file[(index + 1):]
+        file_parts = xbrl_index_file_name.split('_')
+        if len(file_parts) != 3 or (not xbrl_index_file_name.endswith('_xbrl.idx')):
+            logger.Logger.log(logger.LogLevel.WARN, 'xbrl index file has to be in format {YYYY}_qtr{Q}_xbrl.idx')
+            return results
+
         xbrl_indices = self.xbrl_index_parser.parse(xbrl_index_file)
 
         # Expect there are 5 arrays of CIK, Company Name, Form Type, Date Filed and Accession
@@ -52,8 +63,12 @@ class SecCompanyInfoRetriever(object):
         # Get the xbrl zip file corresponding to the company
         xbrl_zip_file = None
         for i in range(len(xbrl_indices[0])):
-            if xbrl_indices[0][i] == cik:
-                target_file_path = '%s/%d-%s-xbrl.zip' % (intermediate_file_dir, cik, xbrl_indices[4][i])
+            # Only parse 10-Q and 10-K for now
+            # TODO parse more form types
+            if xbrl_indices[0][i] == cik and (xbrl_indices[2][i] == '10-Q' or xbrl_indices[2][i] == '10-K'):
+                target_file_path = '%s/%d-%s-%s-%s-%s-xbrl.zip' % (intermediate_file_dir, cik, file_parts[0],
+                                                                   file_parts[1], xbrl_indices[2][i],
+                                                                   xbrl_indices[4][i])
                 xbrl_zip_file = self.file_retriever.get_xbrl_zip_file(cik=cik,
                                                                       accession=xbrl_indices[4][i],
                                                                       target_file_path=target_file_path)

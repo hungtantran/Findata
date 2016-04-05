@@ -69,7 +69,7 @@ class SecFileRetriever(object):
                                          accession + '-xbrl.zip')
 
         if target_file_path is None:
-            target_file_path = './%s-xbrl.zip' % accession
+            target_file_path = './%d-%s-xbrl.zip' % (cik, accession)
 
         logger.Logger.log(logger.LogLevel.INFO, 'Downloading xbrl zip file for cik %d, accession %s to %s' % (
                 cik, accession, target_file_path))
