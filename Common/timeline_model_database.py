@@ -204,6 +204,7 @@ class TimelineModelDatabase(object):
                         model_name,
                         StringHelper.convert_datetime_to_string(lower_time_object),
                         StringHelper.convert_datetime_to_string(upper_time_object))
+                print execute_query
 
                 cursor.execute(execute_query)
                 avg_arrs = cursor.fetchall()
