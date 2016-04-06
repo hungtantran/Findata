@@ -33,20 +33,24 @@ class TestSecXbrlProcessor(unittest.TestCase):
 
         processor = SecXbrlProcessor()
 
-        field_tags = ['us-gaap:Liabilities', 'us-gaap:fake', 'fake']
-        results = processor.parse_xbrl(xbrl_file, field_tags)
+        results = processor.parse_xbrl(xbrl_file)
 
-        self.assertEqual(len(field_tags), len(results))
-        self.assertEqual(0, len(results['us-gaap:fake']))
-        self.assertEqual(0, len(results['fake']))
+        self.assertGreater(len(results), 0)
+        self.assertTrue('GrossProfit' in results)
+        self.assertTrue('Liabilities' in results)
+        self.assertTrue('Assets' in results)
+        self.assertTrue('EarningsPerShareBasic' in results)
+        self.assertTrue('EarningsPerShareDiluted' in results)
 
-        self.assertEqual(len(results['us-gaap:Liabilities']), 2)
-        self.assertEqual(results['us-gaap:Liabilities'][0][0], 79486000000)
-        self.assertEqual(results['us-gaap:Liabilities'][0][1].strftime("%Y-%m-%d %H:%M:%S"), '2014-09-30 00:00:00')
-        self.assertEqual(results['us-gaap:Liabilities'][0][2].strftime("%Y-%m-%d %H:%M:%S"), '2014-09-30 00:00:00')
-        self.assertEqual(results['us-gaap:Liabilities'][1][0], 82600000000)
-        self.assertEqual(results['us-gaap:Liabilities'][1][1].strftime("%Y-%m-%d %H:%M:%S"), '2014-06-30 00:00:00')
-        self.assertEqual(results['us-gaap:Liabilities'][1][2].strftime("%Y-%m-%d %H:%M:%S"), '2014-06-30 00:00:00')
+        self.assertEqual(len(results['Liabilities']), 2)
+        self.assertEqual(results['Liabilities'][0][0], 79486000000)
+        self.assertEqual(results['Liabilities'][0][1].strftime("%Y-%m-%d %H:%M:%S"), '2014-09-30 00:00:00')
+        self.assertEqual(results['Liabilities'][0][2].strftime("%Y-%m-%d %H:%M:%S"), '2014-09-30 00:00:00')
+        self.assertEqual(results['Liabilities'][0][3], 'http://fasb.org/us-gaap/2014-01-31')
+        self.assertEqual(results['Liabilities'][1][0], 82600000000)
+        self.assertEqual(results['Liabilities'][1][1].strftime("%Y-%m-%d %H:%M:%S"), '2014-06-30 00:00:00')
+        self.assertEqual(results['Liabilities'][1][2].strftime("%Y-%m-%d %H:%M:%S"), '2014-06-30 00:00:00')
+        self.assertEqual(results['Liabilities'][1][3], 'http://fasb.org/us-gaap/2014-01-31')
 
 
 if __name__ == '__main__':

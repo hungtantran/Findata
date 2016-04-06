@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Scripts/get_all_xbrl_zip_files.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/logger.py" afterPath="$PROJECT_DIR$/Common/logger.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_company_info_retriever.py" afterPath="$PROJECT_DIR$/SEC/sec_company_info_retriever.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_file_retriever.py" afterPath="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_company_info_retriever_test.py" afterPath="$PROJECT_DIR$/SEC/sec_company_info_retriever_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
     </list>
     <ignored path="Models.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -29,46 +30,10 @@
       <file leaf-file-name="sec_company_info_retriever.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SEC/sec_company_info_retriever.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="90" selection-start-line="12" selection-start-column="8" selection-end-line="14" selection-end-column="90" />
+            <state vertical-scroll-proportion="-11.137931">
+              <caret line="19" column="47" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
               <folding>
                 <element signature="e#29#42#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sec_company_info_retriever_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SEC/sec_company_info_retriever_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="101" selection-start-line="25" selection-start-column="101" selection-end-line="25" selection-end-column="101" />
-              <folding>
-                <element signature="e#29#43#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="get_all_xbrl_zip_files.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Scripts/get_all_xbrl_zip_files.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4069641">
-              <caret line="22" column="61" selection-start-line="22" selection-start-column="61" selection-end-line="22" selection-end-column="61" />
-              <folding>
-                <element signature="e#29#51#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="get_all_xbrl_index_files.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Scripts/get_all_xbrl_index_files.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="44" />
-              <folding>
-                <element signature="e#28#43#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -86,22 +51,74 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sec_xbrl_processor.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
+      <file leaf-file-name="sec_xbrl_index_file_parser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+            <state vertical-scroll-proportion="-20.724138">
+              <caret line="42" column="38" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="38" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sec_xbrl_index_file_parser.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
+      <file leaf-file-name="sec_xbrl_index_file_parser_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-18.172413">
+              <caret line="36" column="26" selection-start-line="36" selection-start-column="26" selection-end-line="36" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_xbrl_processor.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
+              <caret line="115" column="34" selection-start-line="115" selection-start-column="34" selection-end-line="115" selection-end-column="34" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="logger.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Common/logger.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.53645265">
+              <caret line="31" column="30" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="30" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_xbrl_processor_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-14.827586">
+              <caret line="33" column="38" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="constants_config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/constants_config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="20" selection-end-column="56" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_company_info_retriever_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_company_info_retriever_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+              <folding>
+                <element signature="e#29#43#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -142,7 +159,6 @@
         <option value="$PROJECT_DIR$/Common/yahoo_historical_parser.py" />
         <option value="$PROJECT_DIR$/Scripts/sanitize_files.py" />
         <option value="$PROJECT_DIR$/QueryService/yahoo_historical_parser_to_file_service.py" />
-        <option value="$PROJECT_DIR$/Common/logger.py" />
         <option value="$PROJECT_DIR$/Common/string_helper.py" />
         <option value="$PROJECT_DIR$/Common/cal_helper.py" />
         <option value="$PROJECT_DIR$/Common/csv_timeline_model_parser_test.py" />
@@ -163,15 +179,16 @@
         <option value="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" />
         <option value="$PROJECT_DIR$/SEC/test_output_files/.gitignore" />
         <option value="$PROJECT_DIR$/SEC/test_output_files/sec_xbrl_processor.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
         <option value="$PROJECT_DIR$/Common/constants_config.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_company_info_retriever_test.py" />
         <option value="$PROJECT_DIR$/Scripts/get_all_xbrl_index_files.py" />
         <option value="$PROJECT_DIR$/SEC/sec_file_retriever.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_company_info_retriever.py" />
         <option value="$PROJECT_DIR$/Scripts/get_all_xbrl_zip_files.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_company_info_retriever.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_company_info_retriever_test.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
+        <option value="$PROJECT_DIR$/Common/logger.py" />
       </list>
     </option>
   </component>
@@ -605,25 +622,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Scripts/sanitize_files.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.5255376">
-          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-762174762/time.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33297062">
           <caret line="121" column="4" selection-start-line="121" selection-start-column="4" selection-end-line="121" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/logger.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49945593">
-          <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -830,24 +832,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="16" selection-start-line="22" selection-start-column="16" selection-end-line="22" selection-end-column="16" />
-          <folding>
-            <element signature="e#29#43#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/constants_config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36996734">
-          <caret line="20" column="56" selection-start-line="20" selection-start-column="56" selection-end-line="20" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QueryService/model_data_service_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -872,18 +856,62 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31447226">
-          <caret line="22" column="30" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2241567">
           <caret line="33" column="73" selection-start-line="33" selection-start-column="48" selection-end-line="33" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Scripts/sanitize_files.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Scripts/get_all_xbrl_index_files.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="44" />
+          <folding>
+            <element signature="e#28#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Scripts/get_all_xbrl_zip_files.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="38" column="60" selection-start-line="38" selection-start-column="60" selection-end-line="38" selection-end-column="60" />
+          <folding>
+            <element signature="e#29#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/constants_config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="20" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.724138">
+          <caret line="42" column="38" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.172413">
+          <caret line="36" column="26" selection-start-line="36" selection-start-column="26" selection-end-line="36" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -898,30 +926,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
+    <entry file="file://$PROJECT_DIR$/SEC/sec_company_info_retriever.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
-          <folding />
+        <state vertical-scroll-proportion="-11.137931">
+          <caret line="19" column="47" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
+          <folding>
+            <element signature="e#29#42#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SEC/sec_company_info_retriever_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="101" selection-start-line="25" selection-start-column="101" selection-end-line="25" selection-end-column="101" />
+          <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
           <folding>
             <element signature="e#29#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Scripts/get_all_xbrl_index_files.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="44" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -929,28 +949,24 @@
     <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
+          <caret line="115" column="34" selection-start-line="115" selection-start-column="34" selection-end-line="115" selection-end-column="34" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_company_info_retriever.py">
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="90" selection-start-line="12" selection-start-column="8" selection-end-line="14" selection-end-column="90" />
-          <folding>
-            <element signature="e#29#42#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="-14.827586">
+          <caret line="33" column="38" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Scripts/get_all_xbrl_zip_files.py">
+    <entry file="file://$PROJECT_DIR$/Common/logger.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4069641">
-          <caret line="22" column="61" selection-start-line="22" selection-start-column="61" selection-end-line="22" selection-end-column="61" />
-          <folding>
-            <element signature="e#29#51#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.53645265">
+          <caret line="31" column="30" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="30" />
+          <folding />
         </state>
       </provider>
     </entry>

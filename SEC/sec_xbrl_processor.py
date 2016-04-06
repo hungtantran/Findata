@@ -16,23 +16,21 @@ class SecXbrlProcessor(object):
     def __init__(self):
         pass
 
-    def process_xbrl_zip_file(self, zip_file_path, field_tags, extracted_directory='.',
-                              remove_extracted_file_after_done=False):
-        logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s field tags %s ' % (zip_file_path, field_tags))
+    def process_xbrl_zip_file(self, zip_file_path, extracted_directory='.', remove_extracted_file_after_done=False):
+        logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s' % zip_file_path)
 
         extracted_file_path = self.extract_xbrl_zip_file(zip_file_path=zip_file_path,
                                    extracted_directory=extracted_directory)
 
-        results = self.parse_xbrl(xbrl_file=extracted_file_path,
-                                  field_tags=field_tags)
+        results = self.parse_xbrl(xbrl_file=extracted_file_path)
 
         if remove_extracted_file_after_done:
             os.remove(extracted_file_path)
 
         return results
 
-    def parse_xbrl(self, xbrl_file, field_tags):
-        logger.Logger.log(logger.LogLevel.INFO, 'Parsing xbrl file %s with field tags %s ' % (xbrl_file, field_tags))
+    def parse_xbrl(self, xbrl_file):
+        logger.Logger.log(logger.LogLevel.INFO, 'Parsing xbrl file %s' % xbrl_file)
 
         results = {}
 
@@ -43,9 +41,6 @@ class SecXbrlProcessor(object):
             return results
 
         root = tree.getroot()
-
-        if len(field_tags) == 0:
-            return results
 
         # Gather all the context informaiton.
         # key = context id
@@ -82,33 +77,46 @@ class SecXbrlProcessor(object):
                 context[context_id] = [StringHelper.convert_string_to_datetime(startDate),
                                        StringHelper.convert_string_to_datetime(endDate)]
 
-        for tag in field_tags:
-            results[tag] = []
+        reverse_nsmap = {}
+        for namespace in root.nsmap:
+            reverse_nsmap[root.nsmap[namespace]] = namespace
 
-            index = tag.find(':')
-            if index < 0:
-                continue
+        for child in root:
+            try:
+                full_tag = child.tag
+                attrib = child.attrib
+                text_value = 'a'
 
-            namespace = tag[:index]
-            if namespace in root.nsmap:
-                namespace = root.nsmap[namespace]
-
-            field_name = tag[(index + 1):]
-            full_field_tag = '{%s}%s' % (namespace, field_name)
-            elems = root.findall(full_field_tag)
-
-            for elem in elems:
-                if 'contextRef' not in elem.attrib:
+                if ((text_value is None) or (full_tag is None) or (attrib is None) or
+                    ('unitRef' not in attrib) or ('contextRef' not in attrib) or
+                    ('USD' not in attrib['unitRef']) or (attrib['contextRef'] not in context)):
                     continue
 
-                context_ref = elem.attrib['contextRef']
-
-                if context_ref not in context:
+                # Each tag should look like this {http://xbrl.us/us-gaap/2009-01-31}GrossProfit
+                match = re.search(r'{(.+)}(.+)', full_tag)
+                if match:
+                    namespace = match.group(1)
+                    tag = match.group(2)
+                else:
                     continue
 
-                results[tag].append([StringHelper.parse_value_string(elem.text),
+                # If there is no namespace match this field namespace
+                if namespace not in reverse_nsmap:
+                    continue
+
+                if tag not in results:
+                    results[tag] = []
+
+                context_ref = attrib['contextRef']
+                # For ex: results['GrossProfit'] = [[1000, '2014-01-01', '2014-04-01', 'http://xbrl.us/us-gaap/2009-01-31']]
+                results[tag].append([StringHelper.parse_value_string(child.text),
                                     context[context_ref][0],
-                                    context[context_ref][1]])
+                                    context[context_ref][1],
+                                    namespace])
+            except Exception as e:
+                logger.Logger.log(logger.LogLevel.ERROR, e)
+            finally:
+                pass
 
         return results
 

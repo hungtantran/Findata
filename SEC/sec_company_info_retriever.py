@@ -16,13 +16,11 @@ class SecCompanyInfoRetriever(object):
         self.xbrl_processor = SecXbrlProcessor()
         self.xbrl_index_parser = SecXbrlIndexFileParser()
 
-    def retrieve_company_info_from_cik(self, cik, field_tags, year, quarter, intermediate_file_dir='.'):
+    def retrieve_company_info_from_cik(self, cik, year, quarter, intermediate_file_dir='.'):
         logger.Logger.log(logger.LogLevel.INFO,
-                          'Retrieve company info with cik %d, year %d, quarter %d, field_tags %s' %
-                          (cik, year, quarter, field_tags))
+                          'Retrieve company info with cik %d, year %d, quarter %d' % (cik, year, quarter))
         results = {}
         if (cik is None or
-            field_tags is None or
             year is None or
             quarter is None):
             return results
@@ -33,15 +31,12 @@ class SecCompanyInfoRetriever(object):
                                                                   target_dir=intermediate_file_dir)
 
         return self.retrieve_company_info_from_cik_and_xbrl_index_file(cik=cik,
-                                                                       field_tags=field_tags,
                                                                        xbrl_index_file=xbrl_index_file,
                                                                        intermediate_file_dir=intermediate_file_dir)
 
-    def retrieve_company_info_from_cik_and_xbrl_index_file(self, cik, field_tags, xbrl_index_file,
-                                                           intermediate_file_dir='.'):
+    def retrieve_company_info_from_cik_and_xbrl_index_file(self, cik, xbrl_index_file, intermediate_file_dir='.'):
         logger.Logger.log(logger.LogLevel.INFO,
-                          'Retrieve company info with cik %d, xbrl_index_file %s, field_tags %s' %
-                          (cik, xbrl_index_file, field_tags))
+                          'Retrieve company info with cik %d, xbrl_index_file %s' % (cik, xbrl_index_file))
         results = {}
 
         # xbrl_index_file should be like path/to/index/file/2011_qtr4_xbrl.idx so
@@ -79,14 +74,13 @@ class SecCompanyInfoRetriever(object):
 
         # Extract the xbrl zip file, get the information file and parse it
         return self.xbrl_processor.process_xbrl_zip_file(zip_file_path=xbrl_zip_file,
-                                                         field_tags=field_tags,
                                                          extracted_directory=intermediate_file_dir)
 
-    def retrieve_companies_info_from_cik(self, cik_list, field_tags, year, quarter):
+    def retrieve_companies_info_from_cik(self, cik_list, year, quarter):
         pass
 
-    def retrieve_company_info_from_ticker(self, ticker, field_tags, year, quarter):
+    def retrieve_company_info_from_ticker(self, ticker, year, quarter):
         pass
 
-    def retrive_companies_info_from_ticker(self, ticker_list, field_tags, year, quarter):
+    def retrive_companies_info_from_ticker(self, ticker_list, year, quarter):
         pass

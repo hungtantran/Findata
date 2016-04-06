@@ -26,5 +26,11 @@ class LogLevel(object):
 class Logger(object):
     @staticmethod
     def log(level, msg):
+        print_msg = ''
+        if type(msg) is Exception:
+            print_msg = msg.__str__
+        elif type(msg) is str:
+            print_msg = msg
+
         traces = traceback.extract_stack()
-        print("%s, %s, %s, '%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), msg, traces[-2]))
+        print("%s, %s, %s, '%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), print_msg, traces[-2]))
