@@ -25,10 +25,11 @@ class TestGenericModelDatabase(unittest.TestCase):
             test_values.append([3, 2, 'test1', '2016-03-01 00:00:00'])
             test_values.append([5, 4.0, 'test2', '2016-03-02 00:00:00'])
             test_values.append([7, 6.3, 'test3', '2016-03-03 00:00:00'])
+            test_values.append([10, 9.0, None, None])
             model_db.insert_values('TestModel', test_values)
 
             data = model_db.get_model_data('TestModel')
-            self.assertEqual(len(data), 3)
+            self.assertEqual(len(data), 4)
 
             self.assertEqual(data[0][0], 3)
             self.assertEqual(data[0][1], 2)
@@ -44,6 +45,11 @@ class TestGenericModelDatabase(unittest.TestCase):
             self.assertEqual(data[2][1], 6.3)
             self.assertEqual(data[2][2], 'test3')
             self.assertEqual(data[2][3].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-03 00:00:00')
+
+            self.assertEqual(data[3][0], 10)
+            self.assertEqual(data[3][1], 9.0)
+            self.assertEqual(data[3][2], None)
+            self.assertEqual(data[3][3], None)
         finally:
             model_db.remove_model('TestModel')
 

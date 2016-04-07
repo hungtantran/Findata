@@ -72,7 +72,7 @@ class GenericModelDatabase(object):
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 
-    def insert_values(self, model, values):
+    def insert_values(self, model, values, ignore_duplicated=False):
         num_retries = 0
         while num_retries < GenericModelDatabase.MAX_NUM_RETRIES:
             num_retries += 1
@@ -88,7 +88,9 @@ class GenericModelDatabase(object):
                     for row in values:
                         value_string = '('
                         for cell in row:
-                            if type(cell) is str:
+                            if cell is None:
+                                value_string += "NULL,"
+                            elif type(cell) is str:
                                 value_string += "'%s'," % cell
                             elif type(cell) is datetime.datetime:
                                 value_string += "'%s'," % StringHelper.convert_datetime_to_string(cell)
@@ -100,7 +102,10 @@ class GenericModelDatabase(object):
                         values_arr.append(value_string)
 
                     if len(values_arr) > 0:
-                        query_string = "INSERT INTO %s VALUES %s" % (model_name, ','.join(values_arr))
+                        query_string = "INSERT "
+                        if ignore_duplicated:
+                            query_string += "IGNORE "
+                        query_string += "INTO %s VALUES %s" % (model_name, ','.join(values_arr))
                         cursor.execute(query_string)
                         connection.commit()
                 break;
