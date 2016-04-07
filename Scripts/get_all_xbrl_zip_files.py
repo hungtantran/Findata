@@ -48,7 +48,7 @@ def retrieve_xbrl_zip_files_from_cik_list_and_xbrl_index_file(cik_list, xbrl_ind
                                                  target_file_path=target_file_path)
 
 
-cik_list=[789019]
+cik_list=[1288776, 1326801, 320193, 1108524, 1018724, 51143]
 intermediate_file_dir='./SEC/xbrl_zip_files'
 xbrl_index_dir='./SEC/xbrl_index_files/'
 retrieve_xbrl_zip_files_from_cik_list_and_xbrl_index_file(cik_list, xbrl_index_dir, intermediate_file_dir)

@@ -24,21 +24,26 @@ class GenericModelDatabase(object):
     def create_model_name(model):
         return model.replace(' ', '_')
 
-    def create_model(self, model, column_names, column_types, primary_key_column=None):
+    def create_model(self, model, column_names, column_types, primary_key_columns=None):
         if len(column_names) == 0:
             logger.Logger.log(logger.LogLevel.WARN, 'There is no column name')
+            return
 
         if len(column_types) != len(column_names):
             logger.Logger.log(logger.LogLevel.WARN, 'Given %d names and %d types, not match!' %
                               (len(column_names), len(column_types)))
+            return
 
-        if (primary_key_column is not None) and (primary_key_column not in column_names):
-            logger.Logger.log(logger.LogLevel.WARN, 'Primary column %s not in the list of colum names %s' %
-                              (primary_key_column, column_names))
+        if primary_key_columns is not None:
+            for primary_key in primary_key_columns:
+                if primary_key not in column_names:
+                    logger.Logger.log(logger.LogLevel.WARN, 'Primary column %s not in the list of colum names %s' %
+                                      (primary_key, column_names))
+                    return
 
         model_name = GenericModelDatabase.create_model_name(model)
         logger.Logger.log(logger.LogLevel.INFO, 'Create model %s with name %s, type %s, primary key %s' %
-                          (model_name, column_names, column_types, primary_key_column))
+                          (model_name, column_names, column_types, primary_key_columns))
 
         with self.dao_factory.create(self.username,
                                      self.password,
@@ -50,8 +55,16 @@ class GenericModelDatabase(object):
                 query_string = 'CREATE TABLE IF NOT EXISTS %s (%s %s' % (model_name, column_names[0], column_types[0])
                 for i in range(1, len(column_names)):
                     query_string += ', %s %s' % (column_names[i], column_types[i])
-                if primary_key_column is not None:
-                    query_string += ', PRIMARY KEY(%s)' % primary_key_column
+
+                if primary_key_columns is not None:
+                    query_string += ', PRIMARY KEY('
+                    for primary_key in primary_key_columns:
+                        query_string += primary_key +','
+                    # Close the primary key parentheses
+                    query_string = query_string[:-1]
+                    query_string += ')'
+
+                # Close the columns parentheses
                 query_string += ')'
 
                 cursor.execute(query_string)
