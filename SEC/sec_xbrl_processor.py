@@ -8,6 +8,7 @@ from lxml import etree
 
 import logger
 from string_helper import StringHelper
+from sec_xbrl_helper import SecXbrlHelper
 
 
 class SecXbrlProcessor(object):
@@ -15,6 +16,47 @@ class SecXbrlProcessor(object):
 
     def __init__(self):
         pass
+
+    @staticmethod
+    def parse_xbrl_zip_file_name(xbrl_zip_file_name):
+        # TODO extend more than just 10Q, 10K
+        # The zip file name should look like this 51143-2009-qtr3-10-Q-0001104659-09-045198-xbrl.zip
+        match = re.search(r"(\d+)-(\d+)-qtr(\d)-(10-Q|10-K)-.+", xbrl_zip_file_name)
+        if match:
+            # Return cik, year, quarter, form name
+            return (int(match.group(1)), int(match.group(2)), int(match.group(3)), match.group(4))
+        return None
+
+    def process_xbrl_directory_and_push_database(self, xbrl_zip_directory, sec_xbrl_database_helper, extracted_directory='.',
+                                                 remove_extracted_file_after_done=False):
+        logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip directory %s and push to database' % xbrl_zip_directory)
+        xbrl_zip_files = SecXbrlHelper.get_all_xbrl_zip_files_from_directory(xbrl_zip_directory)
+        for xbrl_zip_file in xbrl_zip_files:
+            self.process_xbrl_zip_file_and_push_database(zip_file_path=xbrl_zip_file,
+                                                         sec_xbrl_database_helper=sec_xbrl_database_helper,
+                                                         extracted_directory=extracted_directory,
+                                                         remove_extracted_file_after_done=remove_extracted_file_after_done)
+
+    def process_xbrl_zip_file_and_push_database(self, zip_file_path, sec_xbrl_database_helper, extracted_directory='.',
+                                                remove_extracted_file_after_done=False):
+        logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s and push to database' % zip_file_path)
+
+        results = self.process_xbrl_zip_file(zip_file_path=zip_file_path,
+                                             extracted_directory=extracted_directory,
+                                             remove_extracted_file_after_done=remove_extracted_file_after_done)
+
+        (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(zip_file_path)
+        (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
+
+        sec_xbrl_database_helper.create_companies_metrics_table()
+        converted_results = sec_xbrl_database_helper.convert_processed_results_to_database_insert(
+                    cik=cik,
+                    year=year,
+                    quarter=quarter,
+                    form_name=form_name,
+                    parse_results=results)
+
+        sec_xbrl_database_helper.insert_company_metrics_table(values=converted_results)
 
     def process_xbrl_zip_file(self, zip_file_path, extracted_directory='.', remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s' % zip_file_path)
@@ -85,11 +127,11 @@ class SecXbrlProcessor(object):
             try:
                 full_tag = child.tag
                 attrib = child.attrib
-                text_value = 'a'
+                text_value = child.text
 
                 if ((text_value is None) or (full_tag is None) or (attrib is None) or
                     ('unitRef' not in attrib) or ('contextRef' not in attrib) or
-                    ('USD' not in attrib['unitRef']) or (attrib['contextRef'] not in context)):
+                    ('USD'.lower() not in attrib['unitRef'].lower()) or (attrib['contextRef'] not in context)):
                     continue
 
                 # Each tag should look like this {http://xbrl.us/us-gaap/2009-01-31}GrossProfit
@@ -109,7 +151,7 @@ class SecXbrlProcessor(object):
 
                 context_ref = attrib['contextRef']
                 # For ex: results['GrossProfit'] = [[1000, '2014-01-01', '2014-04-01', 'http://xbrl.us/us-gaap/2009-01-31']]
-                results[tag].append([StringHelper.parse_value_string(child.text),
+                results[tag].append([StringHelper.parse_value_string(text_value),
                                     context[context_ref][0],
                                     context[context_ref][1],
                                     namespace])

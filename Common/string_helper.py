@@ -6,6 +6,7 @@ import unicodedata
 
 
 class StringHelper(object):
+    # TODO write unit test for this
     @staticmethod
     def clean_name(name_str):
         name_str = name_str.strip()
@@ -15,6 +16,7 @@ class StringHelper(object):
         name_str = name_str.lower()
         return name_str
 
+    # TODO write unit test for this
     @staticmethod
     def parse_value_string(value_string):
         try:
@@ -26,6 +28,21 @@ class StringHelper(object):
     @staticmethod
     def convert_datetime_to_string(datetime_obj):
         return datetime_obj.strftime("%Y-%m-%d %H:%M:%S")
+
+    @staticmethod
+    def extract_directory_and_file_name_from_path(path):
+        directory = None
+        file_name = None
+
+        index = path.rfind('/')
+        if index >= 0:
+            file_name = path[(index + 1):]
+            directory = path[:index]
+        else:
+            file_name = path
+            directory = '.'
+
+        return (directory, file_name)
 
     @staticmethod
     def convert_string_to_datetime(time_str):

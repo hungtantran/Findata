@@ -1,7 +1,6 @@
 __author__ = 'hungtantran'
 
 
-import filecmp
 import os
 import unittest
 
@@ -73,7 +72,11 @@ class TestSecXbrlDatabaseHelper(unittest.TestCase):
             results = processor.parse_xbrl(xbrl_file)
 
             converted_results = self.database_helper.convert_processed_results_to_database_insert(
-                1, 2014, None, '10Q', results)
+                    cik=1,
+                    year=2014,
+                    quarter=None,
+                    form_name='10Q',
+                    parse_results=results)
 
             self.database_helper.insert_company_metrics_table(values=converted_results, table_name='company_metrics')
 

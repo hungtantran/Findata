@@ -32,6 +32,14 @@ class TestStringHelper(unittest.TestCase):
         time = StringHelper.convert_string_to_datetime('08-Mar-2016')
         self.assertEqual(time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-08 00:00:00')
 
+    def test_extract_directory_and_file_name_from_path(self):
+        (directory, file_name) = StringHelper.extract_directory_and_file_name_from_path('path/to/file.zip')
+        self.assertEqual(directory, 'path/to')
+        self.assertEqual(file_name, 'file.zip')
+
+        (directory, file_name) = StringHelper.extract_directory_and_file_name_from_path('file.zip')
+        self.assertEqual(directory, '.')
+        self.assertEqual(file_name, 'file.zip')
 
 if __name__ == '__main__':
     unittest.main()
