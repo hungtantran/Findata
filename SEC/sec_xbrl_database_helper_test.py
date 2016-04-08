@@ -34,6 +34,7 @@ class TestSecXbrlDatabaseHelper(unittest.TestCase):
 
             test_values = []
             test_values.append([1,
+                                'MSFT',
                                 2014,
                                 None,
                                 StringHelper.convert_string_to_datetime('2014-03-03'),
@@ -47,17 +48,19 @@ class TestSecXbrlDatabaseHelper(unittest.TestCase):
             self.model_db.insert_values('company_metrics', values=test_values)
             data = self.model_db.get_model_data('company_metrics')
             self.assertEqual(len(data), 1)
+            self.assertEqual(len(data[0]), 12)
             self.assertEqual(data[0][0], 1)
-            self.assertEqual(data[0][1], 2014)
-            self.assertEqual(data[0][2], None)
-            self.assertEqual(data[0][3].strftime("%Y-%m-%d %H:%M:%S"), '2014-03-03 00:00:00')
+            self.assertEqual(data[0][1], "MSFT")
+            self.assertEqual(data[0][2], 2014)
+            self.assertEqual(data[0][3], None)
             self.assertEqual(data[0][4].strftime("%Y-%m-%d %H:%M:%S"), '2014-03-03 00:00:00')
-            self.assertEqual(data[0][5], None)
-            self.assertEqual(data[0][6], 'test_metrics')
-            self.assertEqual(data[0][7], 1)
-            self.assertEqual(data[0][8], None)
-            self.assertEqual(data[0][9], 'USD')
-            self.assertEqual(data[0][10], None)
+            self.assertEqual(data[0][5].strftime("%Y-%m-%d %H:%M:%S"), '2014-03-03 00:00:00')
+            self.assertEqual(data[0][6], None)
+            self.assertEqual(data[0][7], 'test_metrics')
+            self.assertEqual(data[0][8], 1)
+            self.assertEqual(data[0][9], None)
+            self.assertEqual(data[0][10], 'USD')
+            self.assertEqual(data[0][11], None)
         finally:
             self.model_db.remove_model('company_metrics')
 
@@ -73,6 +76,7 @@ class TestSecXbrlDatabaseHelper(unittest.TestCase):
 
             converted_results = self.database_helper.convert_processed_results_to_database_insert(
                     cik=1,
+                    ticker='MSFT',
                     year=2014,
                     quarter=None,
                     form_name='10Q',

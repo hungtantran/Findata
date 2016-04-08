@@ -21,8 +21,8 @@ class SecXbrlDatabaseHelper(object):
         if table_name is None:
             table_name = 'Companies_Metrics'
         self.model_db.create_model(model=table_name,
-                                   column_names=['cik', 'year', 'quarter', 'start_date', 'end_date', 'form_name', 'metrics_name', 'value_float', 'value_string', 'metrics_unit', 'standard'],
-                                   column_types=['INTEGER', 'SMALLINT', 'SMALLINT', 'DATETIME', 'DATETIME', 'VARCHAR(255)', 'VARCHAR(255)', 'FLOAT', 'TEXT', 'VARCHAR(255)', 'VARCHAR(255)'],
+                                   column_names=['cik', 'ticker', 'year', 'quarter', 'start_date', 'end_date', 'form_name', 'metrics_name', 'value_float', 'value_string', 'metrics_unit', 'standard'],
+                                   column_types=['INTEGER', 'VARCHAR(32)', 'SMALLINT', 'SMALLINT', 'DATETIME', 'DATETIME', 'VARCHAR(255)', 'VARCHAR(255)', 'FLOAT', 'TEXT', 'VARCHAR(255)', 'VARCHAR(255)'],
                                    primary_key_columns=['cik', 'start_date', 'end_date', 'metrics_name'])
 
     def insert_company_metrics_table(self, values, table_name=None):
@@ -32,7 +32,7 @@ class SecXbrlDatabaseHelper(object):
                                     values=values,
                                     ignore_duplicated=True)
 
-    def convert_processed_results_to_database_insert(self, cik, year, quarter, form_name, parse_results):
+    def convert_processed_results_to_database_insert(self, cik, ticker, year, quarter, form_name, parse_results):
         converted_results = []
         for metrics_name in parse_results:
             metrics_results = parse_results[metrics_name]
@@ -51,6 +51,6 @@ class SecXbrlDatabaseHelper(object):
                 start_date = metrics_result[1]
                 end_date = metrics_result[2]
                 standard = metrics_result[3]
-                converted_result = [cik, year, quarter, start_date, end_date, form_name, metrics_name, value_float, value_string, 'USD', standard]
+                converted_result = [cik, ticker, year, quarter, start_date, end_date, form_name, metrics_name, value_float, value_string, 'USD', standard]
                 converted_results.append(converted_result)
         return converted_results

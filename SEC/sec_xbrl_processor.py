@@ -9,6 +9,7 @@ from lxml import etree
 import logger
 from string_helper import StringHelper
 from sec_xbrl_helper import SecXbrlHelper
+from sec_ticker_info_helper import SecTickerInfoHelper
 
 
 class SecXbrlProcessor(object):
@@ -27,18 +28,19 @@ class SecXbrlProcessor(object):
             return (int(match.group(1)), int(match.group(2)), int(match.group(3)), match.group(4))
         return None
 
-    def process_xbrl_directory_and_push_database(self, xbrl_zip_directory, sec_xbrl_database_helper, extracted_directory='.',
-                                                 remove_extracted_file_after_done=False):
+    def process_xbrl_directory_and_push_database(self, xbrl_zip_directory, sec_xbrl_database_helper, sec_ticker_info_helper,
+                                                 extracted_directory='.', remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip directory %s and push to database' % xbrl_zip_directory)
         xbrl_zip_files = SecXbrlHelper.get_all_xbrl_zip_files_from_directory(xbrl_zip_directory)
         for xbrl_zip_file in xbrl_zip_files:
             self.process_xbrl_zip_file_and_push_database(zip_file_path=xbrl_zip_file,
                                                          sec_xbrl_database_helper=sec_xbrl_database_helper,
+                                                         sec_ticker_info_helper=sec_ticker_info_helper,
                                                          extracted_directory=extracted_directory,
                                                          remove_extracted_file_after_done=remove_extracted_file_after_done)
 
-    def process_xbrl_zip_file_and_push_database(self, zip_file_path, sec_xbrl_database_helper, extracted_directory='.',
-                                                remove_extracted_file_after_done=False):
+    def process_xbrl_zip_file_and_push_database(self, zip_file_path, sec_xbrl_database_helper, sec_ticker_info_helper,
+                                                extracted_directory='.', remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s and push to database' % zip_file_path)
 
         results = self.process_xbrl_zip_file(zip_file_path=zip_file_path,
@@ -47,16 +49,22 @@ class SecXbrlProcessor(object):
 
         (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(zip_file_path)
         (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
+        ticker = sec_ticker_info_helper.cik_to_ticker(cik)
+        if ticker is None:
+            logger.Logger.log(logger.LogLevel.WARN, 'Cannot find ticker for cik %d' % cik)
+            return
 
-        sec_xbrl_database_helper.create_companies_metrics_table()
         converted_results = sec_xbrl_database_helper.convert_processed_results_to_database_insert(
                     cik=cik,
+                    ticker=ticker,
                     year=year,
                     quarter=quarter,
                     form_name=form_name,
                     parse_results=results)
 
-        sec_xbrl_database_helper.insert_company_metrics_table(values=converted_results)
+        table_name = '%s_metrics' % ticker
+        sec_xbrl_database_helper.create_companies_metrics_table(table_name=table_name)
+        sec_xbrl_database_helper.insert_company_metrics_table(values=converted_results, table_name=table_name)
 
     def process_xbrl_zip_file(self, zip_file_path, extracted_directory='.', remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s' % zip_file_path)
@@ -89,35 +97,40 @@ class SecXbrlProcessor(object):
         # value = [startdate, enddate]
         context = {}
         for child in root:
-            if child.tag.find('context') == -1:
-                continue
-
-            if 'id' not in child.attrib:
-                continue
-
-            context_id = child.attrib['id']
-
-            startDate = None
-            endDate = None
-            for grandchild in child:
-                if not grandchild.tag.endswith('period'):
+            try:
+                if child.tag.find('context') == -1:
                     continue
 
-                for elem in grandchild:
-                    if elem.tag.endswith('instant'):
-                        startDate = elem.text
-                        endDate = elem.text
-                        pass
-                    elif elem.tag.endswith('startDate'):
-                        startDate = elem.text
-                        pass
-                    elif elem.tag.endswith('endDate'):
-                        endDate = elem.text
-                        pass
+                if 'id' not in child.attrib:
+                    continue
 
-            if (startDate is not None) and (endDate is not None):
-                context[context_id] = [StringHelper.convert_string_to_datetime(startDate),
-                                       StringHelper.convert_string_to_datetime(endDate)]
+                context_id = child.attrib['id']
+
+                startDate = None
+                endDate = None
+                for grandchild in child:
+                    if not grandchild.tag.endswith('period'):
+                        continue
+
+                    for elem in grandchild:
+                        if elem.tag.endswith('instant'):
+                            startDate = elem.text
+                            endDate = elem.text
+                            pass
+                        elif elem.tag.endswith('startDate'):
+                            startDate = elem.text
+                            pass
+                        elif elem.tag.endswith('endDate'):
+                            endDate = elem.text
+                            pass
+
+                if (startDate is not None) and (endDate is not None):
+                    context[context_id] = [StringHelper.convert_string_to_datetime(startDate),
+                                           StringHelper.convert_string_to_datetime(endDate)]
+            except Exception as e:
+                logger.Logger.log(logger.LogLevel.ERROR, e)
+            finally:
+                pass
 
         reverse_nsmap = {}
         for namespace in root.nsmap:

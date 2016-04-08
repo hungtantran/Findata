@@ -49,3 +49,6 @@ def execute_query(query):
             connection.commit()
         except Exception as e:
             print e
+
+# write_query_to_file("show tables like '%NYSEMKT%open%'", 'tables.txt')
+# execute_query("INSERT IGNORE INTO ticker_info (ticker) VALUES ('AAMC')")
