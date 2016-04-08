@@ -11,7 +11,7 @@ from string_helper import StringHelper
 
 
 class GenericModelDatabase(object):
-    MAX_NUM_RETRIES = 3
+    MAX_NUM_RETRIES = 1
 
     def __init__(self, db_type, username, password, server, database):
         self.dao_factory = DAOFactoryRepository.getInstance(db_type)
@@ -83,6 +83,7 @@ class GenericModelDatabase(object):
                                              self.server,
                                              self.database) as connection:
                     # TODO need to make this general
+                    # TODO seriously need to make this parametrized
                     cursor = connection.cursor()
                     values_arr = []
                     for row in values:
@@ -110,6 +111,7 @@ class GenericModelDatabase(object):
                         connection.commit()
                 break;
             except Exception as e:
+                # TODO only retry for certain Exception not all of them
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
                 sleep(2)
 

@@ -2,16 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_ticker_info_helper.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SEC/sec_ticker_info_helper_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.cmd" afterPath="$PROJECT_DIR$/test.cmd" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Scripts/populate_ticker_info_table.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/generic_model_database.py" afterPath="$PROJECT_DIR$/Common/generic_model_database.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Data/nasdaq_company_list.csv" afterPath="$PROJECT_DIR$/Data/nasdaq_company_list.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Data/nyse_company_list.csv" afterPath="$PROJECT_DIR$/Data/nyse_company_list.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/timeline_model_database.py" afterPath="$PROJECT_DIR$/Common/timeline_model_database.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Scripts/write_query_to_file.py" afterPath="$PROJECT_DIR$/Scripts/write_query_to_file.py" />
     </list>
     <ignored path="Models.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,11 +28,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="insert_xbrl_zip_file_to_database.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="timeline_model_database.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Common/timeline_model_database.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="13" column="22" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="insert_xbrl_zip_file_to_database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6844396">
-              <caret line="37" column="73" selection-start-line="37" selection-start-column="73" selection-end-line="37" selection-end-column="73" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="38" column="85" selection-start-line="0" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
               <folding>
                 <element signature="e#29#43#0" expanded="true" />
               </folding>
@@ -44,11 +50,53 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="populate_ticker_info_table.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Scripts/populate_ticker_info_table.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.8335147">
+              <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+              <folding>
+                <element signature="e#29#43#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_xbrl_database_helper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="32" column="48" selection-start-line="32" selection-start-column="48" selection-end-line="32" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_file_retriever.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="65" column="61" selection-start-line="65" selection-start-column="61" selection-end-line="65" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_ticker_info_helper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_ticker_info_helper.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="32" column="78" selection-start-line="19" selection-start-column="8" selection-end-line="32" selection-end-column="78" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="generic_model_database.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Common/generic_model_database.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-24.862068">
-              <caret line="80" column="59" selection-start-line="80" selection-start-column="59" selection-end-line="80" selection-end-column="59" />
+            <state vertical-scroll-proportion="-25.793104">
+              <caret line="113" column="71" selection-start-line="113" selection-start-column="71" selection-end-line="113" selection-end-column="71" />
               <folding>
                 <element signature="e#29#44#0" expanded="true" />
               </folding>
@@ -95,7 +143,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Common/parser.py" />
         <option value="$PROJECT_DIR$/Common/generic_parser.py" />
         <option value="$PROJECT_DIR$/QueryService/bloomberg_parser.py" />
         <option value="$PROJECT_DIR$/Common/text_parser.py" />
@@ -130,7 +177,6 @@
         <option value="$PROJECT_DIR$/SEC/sec_company_info_retriever.py" />
         <option value="$PROJECT_DIR$/SEC/sec_company_info_retriever_test.py" />
         <option value="$PROJECT_DIR$/Common/logger.py" />
-        <option value="$PROJECT_DIR$/Common/timeline_model_database.py" />
         <option value="$PROJECT_DIR$/Common/generic_model_database_test.py" />
         <option value="$PROJECT_DIR$/Common/string_helper_test.py" />
         <option value="$PROJECT_DIR$/Common/string_helper.py" />
@@ -144,8 +190,10 @@
         <option value="$PROJECT_DIR$/Scripts/write_query_to_file.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
-        <option value="$PROJECT_DIR$/Common/generic_model_database.py" />
         <option value="$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py" />
+        <option value="$PROJECT_DIR$/Common/timeline_model_database.py" />
+        <option value="$PROJECT_DIR$/Common/generic_model_database.py" />
+        <option value="$PROJECT_DIR$/Scripts/populate_ticker_info_table.py" />
       </list>
     </option>
   </component>
@@ -153,8 +201,8 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="-1905" />
+    <option name="y" value="277" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -448,7 +496,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-1905" y="277" width="1936" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22552083" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -500,14 +548,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="56" selection-start-line="31" selection-start-column="56" selection-end-line="31" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QueryService/bloomberg_server.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5255376">
@@ -720,7 +760,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="39" column="0" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
           <folding>
-            <element signature="e#29#43#0" expanded="true" />
+            <element signature="e#29#43#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -762,7 +802,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding>
-            <element signature="e#28#43#0" expanded="true" />
+            <element signature="e#28#43#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -772,7 +812,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
           <folding>
-            <element signature="e#29#51#0" expanded="true" />
+            <element signature="e#29#51#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -782,7 +822,7 @@
         <state vertical-scroll-proportion="-25.413794">
           <caret line="50" column="576" selection-start-line="50" selection-start-column="571" selection-end-line="50" selection-end-column="576" />
           <folding>
-            <element signature="e#29#51#0" expanded="true" />
+            <element signature="e#29#51#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -808,7 +848,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="75" column="49" selection-start-line="75" selection-start-column="49" selection-end-line="75" selection-end-column="49" />
           <folding>
-            <element signature="e#29#42#0" expanded="true" />
+            <element signature="e#29#42#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -821,32 +861,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2023939">
-          <caret line="65" column="61" selection-start-line="65" selection-start-column="61" selection-end-line="65" selection-end-column="61" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Common/timeline_model_database_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="21" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/timeline_model_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="68" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="68" />
-          <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -856,17 +876,7 @@
         <state vertical-scroll-proportion="0.22198041">
           <caret line="12" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
           <folding>
-            <element signature="e#29#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_ticker_info_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="40" selection-start-line="25" selection-start-column="40" selection-end-line="25" selection-end-column="40" />
-          <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#38#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -886,17 +896,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="81" selection-start-line="13" selection-start-column="8" selection-end-line="17" selection-end-column="81" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5919478">
-          <caret line="32" column="48" selection-start-line="32" selection-start-column="48" selection-end-line="32" selection-end-column="48" />
-          <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -926,25 +926,67 @@
         <state vertical-scroll-proportion="0.35364527">
           <caret line="55" column="37" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="37" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/generic_model_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-24.862068">
-          <caret line="80" column="59" selection-start-line="80" selection-start-column="59" selection-end-line="80" selection-end-column="59" />
-          <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6844396">
-          <caret line="37" column="73" selection-start-line="37" selection-start-column="73" selection-end-line="37" selection-end-column="73" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="38" column="85" selection-start-line="0" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+          <folding>
+            <element signature="e#29#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="48" selection-start-line="32" selection-start-column="48" selection-end-line="32" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="65" column="61" selection-start-line="65" selection-start-column="61" selection-end-line="65" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_ticker_info_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="78" selection-start-line="19" selection-start-column="8" selection-end-line="32" selection-end-column="78" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/timeline_model_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="13" column="22" selection-start-line="13" selection-start-column="22" selection-end-line="13" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Common/generic_model_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-25.793104">
+          <caret line="113" column="71" selection-start-line="113" selection-start-column="71" selection-end-line="113" selection-end-column="71" />
+          <folding>
+            <element signature="e#29#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Scripts/populate_ticker_info_table.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8335147">
+          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
           <folding>
             <element signature="e#29#43#0" expanded="true" />
           </folding>

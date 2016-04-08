@@ -11,7 +11,7 @@ from string_helper import StringHelper
 
 
 class TimelineModelDatabase(object):
-    max_num_reties = 3;
+    max_num_reties = 1;
 
     def __init__(self, db_type, username, password, server, database):
         self.dao_factory = DAOFactoryRepository.getInstance(db_type)
