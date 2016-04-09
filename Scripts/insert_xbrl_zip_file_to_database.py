@@ -35,5 +35,5 @@ def process_xbrl_directory_and_push_database(xbrl_zip_directory, extracted_direc
         print e
 
 
-process_xbrl_directory_and_push_database(xbrl_zip_directory='SEC/xbrl_zip_files',
-                                         extracted_directory='SEC/xbrl_output_files')
+#process_xbrl_directory_and_push_database(xbrl_zip_directory='SEC/xbrl_zip_files',
+#                                         extracted_directory='SEC/xbrl_output_files')

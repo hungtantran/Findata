@@ -67,19 +67,30 @@ def populate_cik():
         try:
             # TODO need to make this general
             cursor = connection.cursor()
-            cursor.execute('SELECT name from ticker_info where cik is null')
+            cursor.execute('SELECT DISTINCT name from ticker_info where cik is null')
             data = cursor.fetchall()
             for row in data:
-                name = row[0]
-                cik = sec_ticker_info_helper.company_name_to_cik(company_name=name)
-                print 'Update company %s with cik %s' % (name, cik)
-                cursor2 = connection.cursor()
-                cursor2.execute('UPDATE ticker_info SET cik=%s WHERE name=%s', (cik, name))
+                try:
+                    original_name = row[0]
+                    name = original_name.lower()
+                    name = name.replace(',', '')
+                    name = name.replace('.', '')
+                    name = name.replace('inc', '')
+                    name = name.replace('corporation', '')
+                    name = name.strip()
+                    name = name.replace('  ', ' ')
+                    cik = sec_ticker_info_helper.company_name_to_cik(company_name=name)
+                    print 'Update company %s (%s) with cik %s' % (original_name, name, cik)
+                    cursor2 = connection.cursor()
+                    cursor2.execute('UPDATE ticker_info SET cik=%s WHERE name=%s', (cik, original_name))
+                    connection.commit()
+                except Exception as e:
+                    print e
 
         except Exception as e:
             print e
 
-populate_cik()
+#populate_cik()
 #populate_ticker_info_table(company_info_file='Data/amex_company_list.csv', exchange='NYSEMKT')
 #populate_ticker_info_table(company_info_file='Data/nyse_company_list.csv', exchange='NYSE')
 #populate_ticker_info_table(company_info_file='Data/nasdaq_company_list.csv', exchange='NASDAQ')

@@ -29,5 +29,5 @@ def get_past_xbrl_index(target_dir='.'):
         if ftp is not None:
             ftp.quit()
 
-get_past_xbrl_index('SEC/test_output_files')
+#get_past_xbrl_index('SEC/test_output_files')
 
