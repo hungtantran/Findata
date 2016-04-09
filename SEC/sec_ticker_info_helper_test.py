@@ -38,6 +38,15 @@ class TestSecTickerInfoHelper(unittest.TestCase):
         finally:
             self.TearDown()
 
+    def test_company_name_to_cik(self):
+        try:
+            self.SetUp()
+            self.assertEqual(self.ticker_info_helper.company_name_to_cik('Arbor Realty Trust'), 1253986)
+            self.assertEqual(self.ticker_info_helper.company_name_to_cik('MICROSOFT'), None)
+            self.assertEqual(self.ticker_info_helper.company_name_to_cik('fake company'), None)
+        finally:
+            self.TearDown()
+
 
 if __name__ == '__main__':
     unittest.main()

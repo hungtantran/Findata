@@ -32,6 +32,7 @@ class SecXbrlProcessor(object):
                                                  extracted_directory='.', remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip directory %s and push to database' % xbrl_zip_directory)
         xbrl_zip_files = SecXbrlHelper.get_all_xbrl_zip_files_from_directory(xbrl_zip_directory)
+
         for xbrl_zip_file in xbrl_zip_files:
             self.process_xbrl_zip_file_and_push_database(zip_file_path=xbrl_zip_file,
                                                          sec_xbrl_database_helper=sec_xbrl_database_helper,
@@ -46,6 +47,8 @@ class SecXbrlProcessor(object):
         results = self.process_xbrl_zip_file(zip_file_path=zip_file_path,
                                              extracted_directory=extracted_directory,
                                              remove_extracted_file_after_done=remove_extracted_file_after_done)
+        if results is None:
+            return
 
         (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(zip_file_path)
         (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
@@ -71,6 +74,8 @@ class SecXbrlProcessor(object):
 
         extracted_file_path = self.extract_xbrl_zip_file(zip_file_path=zip_file_path,
                                    extracted_directory=extracted_directory)
+        if extracted_file_path is None:
+            return None
 
         results = self.parse_xbrl(xbrl_file=extracted_file_path)
 
@@ -194,6 +199,7 @@ class SecXbrlProcessor(object):
             if xbrl_file is None:
                 logger.Logger.log(logger.LogLevel.WARN, 'Cannot find any xbrl file in zip %s. Found these files %s' % (
                         zipfile, files))
+                return None
 
             zip_file.extract(xbrl_file, extracted_directory)
             return '%s/%s' % (extracted_directory, xbrl_file)
