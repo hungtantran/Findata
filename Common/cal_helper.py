@@ -1,8 +1,10 @@
 __author__ = 'hungtantran'
 
 from math import sqrt
+
 from constants_config import Config
-from timeline_model_database import TimelineModelDatabase
+from Database.timeline_model_database import TimelineModelDatabase
+
 
 class CalHelper(object):
     @staticmethod

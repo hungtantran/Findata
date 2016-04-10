@@ -5,9 +5,9 @@ import datetime
 import re
 from time import sleep
 
-import logger
+import Common.logger
 from dao_factory_repo import DAOFactoryRepository
-from string_helper import StringHelper
+from Common.string_helper import StringHelper
 
 
 class GenericModelDatabase(object):
@@ -24,25 +24,42 @@ class GenericModelDatabase(object):
     def create_model_name(model):
         return model.replace(' ', '_')
 
+    def copy_model(self, src_db, src_model, dst_db, dst_model):
+        with self.dao_factory.create(self.username,
+                                     self.password,
+                                     self.server,
+                                     self.database) as connection:
+            # TODO need to make this general
+            try:
+                cursor = connection.cursor()
+                create_model_query_string = 'CREATE TABLE %s.%s LIKE %s.%s' % (dst_db, dst_model, src_db, src_model)
+                insert_model_query_string = 'INSERT INTO %s.%s SELECT * FROM %s.%s' % (dst_db, dst_model, src_db, src_model)
+                cursor.execute(create_model_query_string)
+                connection.commit()
+                cursor.execute(insert_model_query_string)
+                connection.commit()
+            except Exception as e:
+                Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+
     def create_model(self, model, column_names, column_types, primary_key_columns=None):
         if len(column_names) == 0:
-            logger.Logger.log(logger.LogLevel.WARN, 'There is no column name')
+            Common.logger.Logger.log(Common.logger.LogLevel.WARN, 'There is no column name')
             return
 
         if len(column_types) != len(column_names):
-            logger.Logger.log(logger.LogLevel.WARN, 'Given %d names and %d types, not match!' %
+            Common.logger.Logger.log(Common.logger.LogLevel.WARN, 'Given %d names and %d types, not match!' %
                               (len(column_names), len(column_types)))
             return
 
         if primary_key_columns is not None:
             for primary_key in primary_key_columns:
                 if primary_key not in column_names:
-                    logger.Logger.log(logger.LogLevel.WARN, 'Primary column %s not in the list of colum names %s' %
+                    Common.logger.Logger.log(Common.logger.LogLevel.WARN, 'Primary column %s not in the list of colum names %s' %
                                       (primary_key, column_names))
                     return
 
         model_name = GenericModelDatabase.create_model_name(model)
-        logger.Logger.log(logger.LogLevel.INFO, 'Create model %s with name %s, type %s, primary key %s' %
+        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Create model %s with name %s, type %s, primary key %s' %
                           (model_name, column_names, column_types, primary_key_columns))
 
         with self.dao_factory.create(self.username,
@@ -70,7 +87,7 @@ class GenericModelDatabase(object):
                 cursor.execute(query_string)
                 connection.commit()
             except Exception as e:
-                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+                Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
 
     def insert_values(self, model, values, ignore_duplicated=False):
         num_retries = 0
@@ -112,12 +129,12 @@ class GenericModelDatabase(object):
                 break;
             except Exception as e:
                 # TODO only retry for certain Exception not all of them
-                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+                Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
                 sleep(2)
 
     def get_model_data(self, model, lower_time_limit=None):
         model_name = GenericModelDatabase.create_model_name(model)
-        logger.Logger.log(logger.LogLevel.INFO, 'Get %s model data' % model_name)
+        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Get %s model data' % model_name)
         with self.dao_factory.create(self.username,
                                      self.password,
                                      self.server,
@@ -128,11 +145,11 @@ class GenericModelDatabase(object):
                 cursor.execute("SELECT * FROM %s" % model_name)
                 return cursor.fetchall()
             except Exception as e:
-                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+                Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
 
     def remove_model(self, model):
         model_name = GenericModelDatabase.create_model_name(model)
-        logger.Logger.log(logger.LogLevel.INFO, 'Drop model %s' % model)
+        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Drop model %s' % model)
         with self.dao_factory.create(self.username,
                                      self.password,
                                      self.server,
@@ -143,4 +160,4 @@ class GenericModelDatabase(object):
                 cursor.execute("DROP TABLE IF EXISTS %s" % model_name)
                 connection.commit()
             except Exception as e:
-                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+                Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)

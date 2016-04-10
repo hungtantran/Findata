@@ -30,20 +30,20 @@ class TestModelDataService(unittest.TestCase):
         try:
             data = model_db.get_model_data('1 Mo')
             self.assertEqual(len(data), 2)
-            self.assertEqual(data[0][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
-            self.assertEqual(data[0][1], 0.29)
-            self.assertEqual(data[1][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
-            self.assertEqual(data[1][1], 0.28)
+            self.assertEqual(data[0].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
+            self.assertEqual(data[0].value, 0.29)
+            self.assertEqual(data[1].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
+            self.assertEqual(data[1].value, 0.28)
         finally:
             model_db.remove_model('1 Mo')
 
         try:
             data = model_db.get_model_data('3 Mo')
             self.assertEqual(len(data), 2)
-            self.assertEqual(data[0][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
-            self.assertEqual(data[0][1], 0.33)
-            self.assertEqual(data[1][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
-            self.assertEqual(data[1][1], 0.36)
+            self.assertEqual(data[0].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
+            self.assertEqual(data[0].value, 0.33)
+            self.assertEqual(data[1].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
+            self.assertEqual(data[1].value, 0.36)
         finally:
             model_db.remove_model('3 Mo')
 
@@ -67,28 +67,28 @@ class TestModelDataService(unittest.TestCase):
         try:
             data = model_db.get_model_data('1 Mo')
             self.assertEqual(len(data), 4)
-            self.assertEqual(data[0][0].strftime("%Y-%m-%d %H:%M:%S"), '2015-01-02 00:00:00')
-            self.assertEqual(data[0][1], 0.02)
-            self.assertEqual(data[1][0].strftime("%Y-%m-%d %H:%M:%S"), '2015-01-05 00:00:00')
-            self.assertEqual(data[1][1], 0.02)
-            self.assertEqual(data[2][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
-            self.assertEqual(data[2][1], 0.29)
-            self.assertEqual(data[3][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
-            self.assertEqual(data[3][1], 0.28)
+            self.assertEqual(data[0].time.strftime("%Y-%m-%d %H:%M:%S"), '2015-01-02 00:00:00')
+            self.assertEqual(data[0].value, 0.02)
+            self.assertEqual(data[1].time.strftime("%Y-%m-%d %H:%M:%S"), '2015-01-05 00:00:00')
+            self.assertEqual(data[1].value, 0.02)
+            self.assertEqual(data[2].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
+            self.assertEqual(data[2].value, 0.29)
+            self.assertEqual(data[3].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
+            self.assertEqual(data[3].value, 0.28)
         finally:
             model_db.remove_model('1 Mo')
 
         try:
             data = model_db.get_model_data('3 Mo')
             self.assertEqual(len(data), 4)
-            self.assertEqual(data[0][0].strftime("%Y-%m-%d %H:%M:%S"), '2015-01-02 00:00:00')
-            self.assertEqual(data[0][1], 0.02)
-            self.assertEqual(data[1][0].strftime("%Y-%m-%d %H:%M:%S"), '2015-01-05 00:00:00')
-            self.assertEqual(data[1][1], 0.03)
-            self.assertEqual(data[2][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
-            self.assertEqual(data[2][1], 0.33)
-            self.assertEqual(data[3][0].strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
-            self.assertEqual(data[3][1], 0.36)
+            self.assertEqual(data[0].time.strftime("%Y-%m-%d %H:%M:%S"), '2015-01-02 00:00:00')
+            self.assertEqual(data[0].value, 0.02)
+            self.assertEqual(data[1].time.strftime("%Y-%m-%d %H:%M:%S"), '2015-01-05 00:00:00')
+            self.assertEqual(data[1].value, 0.03)
+            self.assertEqual(data[2].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-01 00:00:00')
+            self.assertEqual(data[2].value, 0.33)
+            self.assertEqual(data[3].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-02 00:00:00')
+            self.assertEqual(data[3].value, 0.36)
         finally:
             model_db.remove_model('3 Mo')
 

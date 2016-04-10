@@ -3,8 +3,8 @@ __author__ = 'hungtantran'
 
 import unittest
 
-from constants_config import Config
-import logger
+from Common.constants_config import Config
+import Common.logger
 from generic_model_database import GenericModelDatabase
 
 
