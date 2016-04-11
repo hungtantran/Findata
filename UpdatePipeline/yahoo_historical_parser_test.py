@@ -3,7 +3,7 @@ __author__ = 'hungtantran'
 
 import unittest
 
-import logger
+import Common.logger
 from yahoo_historical_parser import YahooHistoricalParser
 
 

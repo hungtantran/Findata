@@ -1,7 +1,7 @@
 __author__ = 'hungtantran'
 
 
-from yahoo_historical_parser import YahooHistoricalParser
+from UpdatePipeline.yahoo_historical_parser import YahooHistoricalParser
 from parser_to_file import ParserToFile
 
 

@@ -60,7 +60,7 @@ class UpdateFixedincomeUstreasuryBill(threading.Thread):
         current_year = datetime.datetime.now().year
         return self.update_year(current_year)
 
-    def _VerifyHeader(self, header_titles):
+    def _verify_header(self, header_titles):
         if len(header_titles) != (len(UpdateFixedincomeUstreasuryBill.HEADER_TITLES) + 1):
             logger.Logger.log(logger.LogLevel.WARN, 'There are %d header elements, %d expected' % (
                     len(header_titles), len(UpdateFixedincomeUstreasuryBill.HEADER_TITLES) + 1))
@@ -96,7 +96,7 @@ class UpdateFixedincomeUstreasuryBill(threading.Thread):
         header_elems = content_table_elem.find_all('th', attrs={'scope': 'col'})
         for header_elem in header_elems:
             header_titles.append(header_elem.get_text())
-        if not self._VerifyHeader(header_titles):
+        if not self._verify_header(header_titles):
             logger.Logger.log(logger.LogLevel.WARN, 'Failed to verify the correct header titles %s' % header_titles)
             return
 
@@ -157,6 +157,7 @@ class UpdateFixedincomeUstreasuryBill(threading.Thread):
 
         for key in num_value_update:
             logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (self.tablename[key], num_value_update[key]))
+
 
 def main():
     try:

@@ -2,7 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UpdatePipeline/__init__.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/external_test.cmd" afterPath="$PROJECT_DIR$/external_test.cmd" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.cmd" afterPath="$PROJECT_DIR$/test.cmd" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\Common\yahoo_historical_parser.py" afterPath="$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser.py" />
+      <change type="MOVED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\Common\yahoo_historical_parser_test.py" afterPath="$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser_test.py" />
+      <change type="MOVED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\QueryService\yahoo_historical_parser_to_file_service.py" afterPath="$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser_to_file_service.py" />
     </list>
     <ignored path="Models.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -35,24 +44,70 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="update_fixedincome_ustreasurybill_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py">
+      <file leaf-file-name="update_fixedincome_ustreasurybill.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="42" />
+              <caret line="131" column="93" selection-start-line="114" selection-start-column="12" selection-end-line="131" selection-end-column="93" />
+              <folding>
+                <element signature="e#29#44#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="update_exchange_index.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="1.9627072">
+              <caret line="158" column="51" selection-start-line="158" selection-start-column="51" selection-end-line="158" selection-end-column="51" />
+              <folding>
+                <element signature="e#29#44#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="update_exchange_index_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="42" column="69" selection-start-line="42" selection-start-column="69" selection-end-line="42" selection-end-column="69" />
+              <folding>
+                <element signature="e#29#44#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="yahoo_historical_parser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="54" selection-end-column="21" />
+              <folding>
+                <element signature="e#28#39#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="yahoo_historical_parser_to_file_service.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser_to_file_service.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="19" column="10" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="update_fixedincome_ustreasurybill.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py">
+      <file leaf-file-name="update_company _fundamentals.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_company _fundamentals.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.86878455">
-              <caret line="37" column="34" selection-start-line="37" selection-start-column="34" selection-end-line="37" selection-end-column="34" />
-              <folding>
-                <element signature="e#29#44#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -63,6 +118,18 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="94" selection-end-column="10" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="update_fixedincome_ustreasurybill_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="33" column="42" selection-start-line="0" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+              <folding>
+                <element signature="e#29#44#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -82,8 +149,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_file_retriever_test.py" />
         <option value="$PROJECT_DIR$/SEC/test_output_files/.gitignore" />
         <option value="$PROJECT_DIR$/SEC/test_output_files/sec_xbrl_processor.py" />
         <option value="$PROJECT_DIR$/Common/constants_config.py" />
@@ -126,13 +191,15 @@
         <option value="$PROJECT_DIR$/QueryService/model_data_service_test.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_company _fundamentals.py" />
-        <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py" />
         <option value="$PROJECT_DIR$/Database/timeline_model_database_test.py" />
         <option value="$PROJECT_DIR$/Common/logger.py" />
         <option value="$PROJECT_DIR$/Common/string_helper.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py" />
         <option value="$PROJECT_DIR$/Database/timeline_model_database.py" />
+        <option value="$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py" />
+        <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py" />
+        <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py" />
       </list>
     </option>
   </component>
@@ -321,6 +388,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Users\hungtantran\PycharmProjects\Models\UpdatePipeline" />
       <recent name="E:\Users\hungtantran\PycharmProjects\Models\Database" />
       <recent name="E:\Users\hungtantran\PycharmProjects\Models\SEC" />
       <recent name="E:\Users\hungtantran\PycharmProjects\Models\Common" />
@@ -464,7 +532,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18645833" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -516,32 +584,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Common/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="19" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/bloomberg_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18498367">
-          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-          <folding>
-            <element signature="e#29#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QueryService/yahoo_historical_parser_to_file_service.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.24047878">
-          <caret line="14" column="33" selection-start-line="14" selection-start-column="33" selection-end-line="14" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SEC/sec_file_retriever_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2241567">
@@ -828,7 +870,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common/yahoo_historical_parser_test.py">
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -844,22 +886,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_company _fundamentals.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DatabaseModel/timeline_model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -868,22 +894,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Common/yahoo_historical_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="46" column="36" selection-start-line="46" selection-start-column="25" selection-end-line="46" selection-end-column="36" />
-          <folding>
-            <element signature="e#28#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Database/timeline_model_database_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="27" column="42" selection-start-line="27" selection-start-column="42" selection-end-line="27" selection-end-column="42" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -962,18 +978,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py">
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_company _fundamentals.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="42" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser_to_file_service.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="10" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="54" selection-end-column="21" />
+          <folding>
+            <element signature="e#28#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-762174762/__builtin__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5676796">
+          <caret line="63" column="61" selection-start-line="63" selection-start-column="52" selection-end-line="63" selection-end-column="61" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.86878455">
-          <caret line="37" column="34" selection-start-line="37" selection-start-column="34" selection-end-line="37" selection-end-column="34" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="131" column="93" selection-start-line="114" selection-start-column="12" selection-end-line="131" selection-end-column="93" />
+          <folding>
+            <element signature="e#29#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="42" selection-start-line="0" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+          <folding>
+            <element signature="e#29#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="69" selection-start-line="42" selection-start-column="69" selection-end-line="42" selection-end-column="69" />
+          <folding>
+            <element signature="e#29#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.9627072">
+          <caret line="158" column="51" selection-start-line="158" selection-start-column="51" selection-end-line="158" selection-end-column="51" />
           <folding>
             <element signature="e#29#44#0" expanded="true" />
           </folding>

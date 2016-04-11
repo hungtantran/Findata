@@ -4,9 +4,9 @@ import time
 import urllib
 from bs4 import BeautifulSoup
 
-import logger
-from generic_parser import GenericParser
-from string_helper import StringHelper
+import Common.logger
+from Common.generic_parser import GenericParser
+from Common.string_helper import StringHelper
 
 class YahooHistoricalParser(GenericParser):
     def __init__(self, sleep_secs=5):
@@ -51,7 +51,7 @@ class YahooHistoricalParser(GenericParser):
         for i in range(1, len(titles_elem)):
             titles.append(StringHelper.clean_name(titles_elem[i].get_text()))
 
-        logger.Logger.log(logger.LogLevel.INFO, 'Found titles %s' % titles)
+        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Found titles %s' % titles)
         return titles
 
     def parse(self, source_name, max_num_results=0):
@@ -71,7 +71,7 @@ class YahooHistoricalParser(GenericParser):
             page += 1
 
             try:
-                logger.Logger.log(logger.LogLevel.INFO, 'link = %s' % link)
+                Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'link = %s' % link)
                 response = urllib.urlopen(link)
                 html_string = response.read()
                 html_elem = BeautifulSoup(html_string, self.parser_type)
@@ -79,12 +79,12 @@ class YahooHistoricalParser(GenericParser):
                 # Get the table html elem
                 content_table_elem = YahooHistoricalParser.get_content_table(html_elem)
                 if content_table_elem is None:
-                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no content table')
+                    Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Exit found no content table')
                     break
 
                 rows_elem = content_table_elem.findAll('tr')
                 if len(rows_elem) == 0:
-                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no row values left')
+                    Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Exit found no row values left')
                     break
 
                 # This is the first page, extract the title
@@ -92,17 +92,17 @@ class YahooHistoricalParser(GenericParser):
                     header_elem = rows_elem[0]
                     titles = YahooHistoricalParser.extract_titles(header_elem)
                     if titles is None:
-                        logger.Logger.log(logger.LogLevel.INFO, 'Exit found no title')
+                        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Exit found no title')
                         break
 
                     for i in range(len(titles)):
                         results.append([])
 
                 if len(titles) == 0:
-                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no title after first page')
+                    Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Exit found no title after first page')
                     break
 
-                logger.Logger.log(logger.LogLevel.INFO, 'Found %d row values on page %d' % (len(rows_elem) - 1, page))
+                Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Found %d row values on page %d' % (len(rows_elem) - 1, page))
                 # Iterate through each row in the table, extract date and value
                 for i in range(1, len(rows_elem)):
                     row_elem = rows_elem[i]
@@ -110,7 +110,7 @@ class YahooHistoricalParser(GenericParser):
 
                     # The +1 is to account for the Date column, not in titles array
                     if len(tds_elem) != len(titles) + 1:
-                        logger.Logger.log(logger.LogLevel.WARN, 'Row with num elem %d not match with num titles %d' %
+                        Common.logger.Logger.log(Common.logger.LogLevel.WARN, 'Row with num elem %d not match with num titles %d' %
                                           (len(tds_elem), len(titles)))
                         continue
 
@@ -127,14 +127,14 @@ class YahooHistoricalParser(GenericParser):
                 if done:
                     break
             except Exception as e:
-                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+                Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
                 num_fail += 1
                 if num_fail > 0:
                     break
                 else:
                     continue
 
-        logger.Logger.log(logger.LogLevel.INFO, 'Finish parsing. Found %d results' % len(dates))
+        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Finish parsing. Found %d results' % len(dates))
 
         return (titles, dates, results)
 
