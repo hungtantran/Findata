@@ -4,19 +4,25 @@ __author__ = 'hungtantran'
 import datetime
 import re
 import urllib
+import time
+import threading
 from bs4 import BeautifulSoup
 
 import logger
 import timeline_model
 import timeline_model_database
 from string_helper import StringHelper
+from Common.constants_config import Config
 
-class UpdateFixedincomeUstreasuryBill(object):
+class UpdateFixedincomeUstreasuryBill(threading.Thread):
     LINK_ALL = 'https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Pages/TextView.aspx?data=yieldAll'
     LINK_YEAR = 'https://www.treasury.gov/resource-center/data-chart-center/interest-rates/Pages/TextView.aspx?data=yieldYear&year=%d'
     HEADER_TITLES = ['1 mo', '3 mo', '6 mo', '1 yr', '2 yr', '3 yr', '5 yr', '7 yr', '10 yr', '20 yr', '30 yr']
 
     def __init__(self, db_type, username, password, server, database):
+        threading.Thread.__init__(self)
+        # 12-hour update frequency
+        self.update_frequency_seconds = 43200
         self.model_db = timeline_model_database.TimelineModelDatabase(db_type, username, password, server, database)
         self.data = {}
         for header_title in UpdateFixedincomeUstreasuryBill.HEADER_TITLES:
@@ -26,21 +32,31 @@ class UpdateFixedincomeUstreasuryBill(object):
         for key in self.data:
             self.tablename[key] = 'fixedincome_ustreasurybill_' + key.replace(' ', '_')
 
+    def run(self):
+        while True:
+            self.update_current_year()
+            self.update_database()
+            logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before updating again' % self.update_frequency_seconds)
+            time.sleep(self.update_frequency_seconds)
+
     def clear_data(self):
         for key in self.data:
             self.data[key] = []
 
     def update(self):
+        logger.Logger.log(logger.LogLevel.INFO, 'Update now')
         response = urllib.urlopen(UpdateFixedincomeUstreasuryBill.LINK_ALL)
         html_string = response.read()
         return self.update_from_html_content(html_string)
 
     def update_year(self, year):
+        logger.Logger.log(logger.LogLevel.INFO, 'Update year %d' % year)
         response = urllib.urlopen(UpdateFixedincomeUstreasuryBill.LINK_YEAR % year)
         html_string = response.read()
         return self.update_from_html_content(html_string)
 
     def update_current_year(self):
+        logger.Logger.log(logger.LogLevel.INFO, 'Update current year')
         current_year = datetime.datetime.now().year
         return self.update_year(current_year)
 
@@ -63,6 +79,8 @@ class UpdateFixedincomeUstreasuryBill(object):
         return True
 
     def update_from_html_content(self, html_string):
+        logger.Logger.log(logger.LogLevel.INFO, 'Update from html content')
+
         self.clear_data()
 
         html_elem = BeautifulSoup(html_string, 'html.parser')
@@ -114,6 +132,7 @@ class UpdateFixedincomeUstreasuryBill(object):
                 self.data[UpdateFixedincomeUstreasuryBill.HEADER_TITLES[i - 1]].append(value)
 
     def update_database(self):
+        logger.Logger.log(logger.LogLevel.INFO, 'Update database')
         current_latest_data = {}
         for key in self.data:
             latest_value = self.model_db.get_latest_model_data(self.tablename[key])
@@ -122,11 +141,38 @@ class UpdateFixedincomeUstreasuryBill(object):
         self._update_database_with_given_data(self.data, current_latest_data)
 
     def _update_database_with_given_data(self, data, current_latest_data):
+        logger.Logger.log(logger.LogLevel.INFO, 'Update database with given data')
         all_data = data
+
+        num_value_update = {}
         for name in all_data:
+            num_value_update[name] = 0
             data = all_data[name]
             for row in data:
                 # Only insert value later than the current latest value
                 # TODO make it more flexible than that
                 if (current_latest_data[name] is not None) and (row.time > current_latest_data[name].time):
                     self.model_db.insert_row(self.tablename[name], row)
+                    num_value_update[name] += 1
+
+        for key in num_value_update:
+            logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (self.tablename[key], num_value_update[key]))
+
+def main():
+    try:
+        update_obj = UpdateFixedincomeUstreasuryBill('mysql',
+                                                     Config.mysql_username,
+                                                     Config.mysql_password,
+                                                     Config.mysql_server,
+                                                     Config.mysql_database)
+        update_obj.daemon = True
+        update_obj.start()
+
+        while True:
+            time.sleep(1)
+    except Exception as e:
+        logger.Logger.log(logger.LogLevel.ERROR, e)
+
+
+if __name__ == '__main__':
+    main()

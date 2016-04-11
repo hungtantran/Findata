@@ -14,3 +14,5 @@ py SEC\sec_ticker_info_helper_test.py
 py SEC\sec_xbrl_database_helper_test.py
 py SEC\sec_xbrl_index_file_parser_test.py
 py SEC\sec_xbrl_processor_test.py
+
+py UpdatePipeline\update_fixedincome_ustreasurybill_test.py
