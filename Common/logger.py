@@ -27,9 +27,9 @@ class Logger(object):
     @staticmethod
     def log(level, msg):
         print_msg = ''
-        if type(msg) is Exception:
-            print_msg = msg.__str__
-        elif type(msg) is str:
+        if isinstance(msg, Exception):
+            print_msg = str(msg)
+        elif isinstance(msg, basestring):
             print_msg = msg
 
         traces = traceback.extract_stack()

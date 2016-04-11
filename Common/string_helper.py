@@ -63,6 +63,8 @@ class StringHelper(object):
         patterns['^[0-9][0-9]?-[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?-[0-9][0-9][0-9][0-9]$'] = '%d-%b-%Y'
         # 08-Mar-16
         patterns['^[0-9][0-9]?-[a-zA-Z][a-zA-Z][a-zA-Z][a-zA-Z]?-[0-9][0-9]$'] = '%d-%b-%y'
+        # 2016-03-02 01:02:03
+        patterns['^[0-9][0-9][0-9][0-9]-[0-9]+-[0-9]+ [0-9][0-9]:[0-9][0-9]:[0-9][0-9]$'] = '%Y-%m-%d %H:%M:%S'
 
         for pattern in patterns:
             prog = re.compile(pattern)

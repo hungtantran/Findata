@@ -64,24 +64,32 @@ class TimelineModelDatabase(object):
                                                        class_map=timeline_model.TimelineModel)
             new_table.create(self.engine, checkfirst=True)
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
 
-    def insert_value(self, model, time, value):
+    def insert_value(self, model, time, value, ignore_duplicate=False):
         try:
             s = self.session()
             self.get_timeline_table_object(model=model,
                                            class_map=timeline_model.TimelineModel)
             new_value = timeline_model.TimelineModel(time=StringHelper.convert_string_to_datetime(time),
-                                      value=value)
-            s.add(new_value)
+                                                     value=value)
+            if ignore_duplicate:
+                s.merge(new_value)
+            else:
+                s.add(new_value)
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
         finally:
             if s is not None:
                 s.commit()
                 s.close()
 
-    def insert_values(self, model, times, values):
+    def insert_row(self, model, timeline_model_obj):
+        return self.insert_value(model,
+                                 StringHelper.convert_datetime_to_string(timeline_model_obj.time),
+                                 timeline_model_obj.value)
+
+    def insert_values(self, model, times, values, ignore_duplicate=False):
         if len(times) != len(values):
             Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Mismatch number of times (%d) and values (%d)' %
                               (len(times), len(values)))
@@ -94,11 +102,11 @@ class TimelineModelDatabase(object):
             new_value_arr = []
             for i in range(len(times)):
                 new_value_arr.append(timeline_model.TimelineModel(time=StringHelper.convert_string_to_datetime(times[i]),
-                                                   value=values[i]))
+                                                                  value=values[i]))
 
             s.bulk_save_objects(new_value_arr)
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
         finally:
             if s is not None:
                 s.commit()
@@ -113,18 +121,33 @@ class TimelineModelDatabase(object):
                                                         class_map=timeline_model.TimelineModel)
             drop_model.drop(self.engine, checkfirst=False)
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
 
-    def get_model_data(self, model, lower_time_limit=None, class_map=timeline_model.TimelineModel):
+    def get_model_data(self, model, lower_time_limit=None):
         try:
             s = self.session()
             self.get_timeline_table_object(model=model,
-                                           class_map=class_map)
-            data = s.query(class_map).all()
+                                           class_map=timeline_model.TimelineModel)
+            data = s.query(timeline_model.TimelineModel).order_by(timeline_model.TimelineModel.time).all()
             s.expunge_all()
             return data
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
+        finally:
+            if s is not None:
+                s.commit()
+                s.close()
+
+    def get_latest_model_data(self, model):
+        try:
+            s = self.session()
+            self.get_timeline_table_object(model=model,
+                                           class_map=timeline_model.TimelineModel)
+            data = s.query(timeline_model.TimelineModel).order_by(timeline_model.TimelineModel.time.desc()).first()
+            s.expunge_all()
+            return data
+        except Exception as e:
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
         finally:
             if s is not None:
                 s.commit()
@@ -147,7 +170,7 @@ class TimelineModelDatabase(object):
             s.expunge_all()
             return avg[0][0]
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
         finally:
             if s is not None:
                 s.commit()
@@ -164,7 +187,7 @@ class TimelineModelDatabase(object):
             s.expunge_all()
             return avg[0][0]
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
         finally:
             if s is not None:
                 s.commit()
@@ -182,7 +205,7 @@ class TimelineModelDatabase(object):
             s.expunge_all()
             return avg[0][0]
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
         finally:
             if s is not None:
                 s.commit()
@@ -193,4 +216,4 @@ class TimelineModelDatabase(object):
             metadata = sqlalchemy.MetaData(bind=self.engine)
             return self.engine.table_names()
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
+            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
