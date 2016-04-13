@@ -50,5 +50,5 @@ def execute_query(query):
         except Exception as e:
             print e
 
-# write_query_to_file("show tables like '%NYSEMKT%open%'", 'tables.txt')
-# execute_query("INSERT IGNORE INTO ticker_info (ticker) VALUES ('AAMC')")
+#write_query_to_file("show tables like '%\_metrics%'", 'tables.txt')
+#execute_query("INSERT IGNORE INTO ticker_info (ticker) VALUES ('AAMC')")

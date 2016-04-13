@@ -89,7 +89,7 @@ class GenericModelDatabase(object):
             except Exception as e:
                 Common.logger.Logger.log(Common.logger.LogLevel.ERROR, 'Exception = %s' % e)
 
-    def insert_values(self, model, values, ignore_duplicated=False):
+    def insert_values(self, model, values, ignore_duplicated=False, update_duplicated=True):
         num_retries = 0
         while num_retries < GenericModelDatabase.MAX_NUM_RETRIES:
             num_retries += 1

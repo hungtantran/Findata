@@ -69,16 +69,33 @@ class TestSecXbrlProcessor(unittest.TestCase):
             self.assertTrue('Assets' in results)
             self.assertTrue('EarningsPerShareBasic' in results)
             self.assertTrue('EarningsPerShareDiluted' in results)
+            self.assertTrue('WeightedAverageNumberOfDilutedSharesOutstanding' in results)
 
             self.assertEqual(len(results['Liabilities']), 2)
             self.assertEqual(results['Liabilities'][0][0], 95939000000)
             self.assertEqual(results['Liabilities'][0][1].strftime("%Y-%m-%d %H:%M:%S"), '2008-12-31 00:00:00')
             self.assertEqual(results['Liabilities'][0][2].strftime("%Y-%m-%d %H:%M:%S"), '2008-12-31 00:00:00')
-            self.assertEqual(results['Liabilities'][0][3], 'http://xbrl.us/us-gaap/2009-01-31')
+            self.assertEqual(results['Liabilities'][0][3], 'iso4217:USD')
+            self.assertEqual(results['Liabilities'][0][4], 'http://xbrl.us/us-gaap/2009-01-31')
             self.assertEqual(results['Liabilities'][1][0], 88182000000)
             self.assertEqual(results['Liabilities'][1][1].strftime("%Y-%m-%d %H:%M:%S"), '2009-06-30 00:00:00')
             self.assertEqual(results['Liabilities'][1][2].strftime("%Y-%m-%d %H:%M:%S"), '2009-06-30 00:00:00')
-            self.assertEqual(results['Liabilities'][1][3], 'http://xbrl.us/us-gaap/2009-01-31')
+            self.assertEqual(results['Liabilities'][1][3], 'iso4217:USD')
+            self.assertEqual(results['Liabilities'][1][4], 'http://xbrl.us/us-gaap/2009-01-31')
+
+            self.assertEqual(len(results['WeightedAverageNumberOfDilutedSharesOutstanding']), 4)
+            self.assertEqual(results['WeightedAverageNumberOfDilutedSharesOutstanding'][0][0], 1402100000)
+            self.assertEqual(results['WeightedAverageNumberOfDilutedSharesOutstanding'][0][1].strftime("%Y-%m-%d %H:%M:%S"), '2008-04-01 00:00:00')
+            self.assertEqual(results['WeightedAverageNumberOfDilutedSharesOutstanding'][0][2].strftime("%Y-%m-%d %H:%M:%S"), '2008-06-30 00:00:00')
+            self.assertEqual(results['WeightedAverageNumberOfDilutedSharesOutstanding'][0][3], 'xbrli:shares')
+            self.assertEqual(results['WeightedAverageNumberOfDilutedSharesOutstanding'][0][4], 'http://xbrl.us/us-gaap/2009-01-31')
+
+            self.assertEqual(len(results['EarningsPerShareBasic']), 4)
+            self.assertEqual(results['EarningsPerShareBasic'][0][0], 2.01)
+            self.assertEqual(results['EarningsPerShareBasic'][0][1].strftime("%Y-%m-%d %H:%M:%S"), '2008-04-01 00:00:00')
+            self.assertEqual(results['EarningsPerShareBasic'][0][2].strftime("%Y-%m-%d %H:%M:%S"), '2008-06-30 00:00:00')
+            self.assertEqual(results['EarningsPerShareBasic'][0][3], 'iso4217:USD/xbrli:shares')
+            self.assertEqual(results['EarningsPerShareBasic'][0][4], 'http://xbrl.us/us-gaap/2009-01-31')
         finally:
             self.TearDown()
 
@@ -91,8 +108,8 @@ class TestSecXbrlProcessor(unittest.TestCase):
                     sec_ticker_info_helper=self.ticker_info_helper,
                     extracted_directory='SEC/test_output_files',
                     remove_extracted_file_after_done=False)
-            data = self.model_db.get_model_data('IBM_metrics')
-            self.assertEqual(len(data), 225)
+            data = self.model_db.get_model_data('company_fundamentals_ibm_metrics')
+            self.assertEqual(len(data), 240)
         finally:
             self.TearDown()
 
@@ -105,8 +122,8 @@ class TestSecXbrlProcessor(unittest.TestCase):
                     sec_ticker_info_helper=self.ticker_info_helper,
                     extracted_directory='SEC/test_output_files',
                     remove_extracted_file_after_done=False)
-            data = self.model_db.get_model_data('IBM_metrics')
-            self.assertEqual(len(data), 225)
+            data = self.model_db.get_model_data('company_fundamentals_ibm_metrics')
+            self.assertEqual(len(data), 240)
         finally:
             self.TearDown()
 

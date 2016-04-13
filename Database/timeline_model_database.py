@@ -23,7 +23,8 @@ class TimelineModelDatabase(object):
         self.server = server
         self.database = database
         self.engine = sqlalchemy.create_engine('%s://%s:%s@%s/%s?charset=utf8&use_unicode=0' %
-                                               (db_type, username, password, server, database))
+                                               (db_type, username, password, server, database),
+                                               pool_recycle=3600)
         self.session = sqlalchemy.orm.sessionmaker(bind=self.engine)
 
     @staticmethod

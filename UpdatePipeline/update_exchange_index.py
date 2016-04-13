@@ -14,6 +14,7 @@ import timeline_model_database
 from string_helper import StringHelper
 from Common.constants_config import Config
 
+
 class UpdateExchangeIndex(threading.Thread):
     SUMMARY_LINKS = {
         'nasdaq': 'http://finance.yahoo.com/q/hp?s=%5Eixic+historical+prices',

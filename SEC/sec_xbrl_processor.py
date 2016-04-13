@@ -65,7 +65,7 @@ class SecXbrlProcessor(object):
                     form_name=form_name,
                     parse_results=results)
 
-        table_name = '%s_metrics' % ticker
+        table_name = 'company_fundamentals_%s_metrics' % ticker.lower()
         sec_xbrl_database_helper.create_companies_metrics_table(table_name=table_name)
         sec_xbrl_database_helper.insert_company_metrics_table(values=converted_results, table_name=table_name)
 
@@ -84,25 +84,16 @@ class SecXbrlProcessor(object):
 
         return results
 
-    def parse_xbrl(self, xbrl_file):
-        logger.Logger.log(logger.LogLevel.INFO, 'Parsing xbrl file %s' % xbrl_file)
-
-        results = {}
-
-        try:
-            tree = etree.parse(xbrl_file)
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.INFO, e)
-            return results
-
-        root = tree.getroot()
-
+    def extract_context(self, root):
         # Gather all the context informaiton.
         # key = context id
         # value = [startdate, enddate]
         context = {}
         for child in root:
             try:
+                if not isinstance(child.tag, basestring):
+                    continue
+
                 if child.tag.find('context') == -1:
                     continue
 
@@ -136,6 +127,85 @@ class SecXbrlProcessor(object):
                 logger.Logger.log(logger.LogLevel.ERROR, e)
             finally:
                 pass
+        return context
+
+    def extract_unit(self, root):
+        # Gather all the unit informaiton.
+        # key = unit id
+        # value = unit measure
+        unit = {}
+        for child in root:
+            try:
+                if not isinstance(child.tag, basestring):
+                    continue
+
+                if child.tag.find('unit') == -1:
+                    continue
+
+                if 'id' not in child.attrib:
+                    continue
+
+                unit_id = child.attrib['id']
+                for grandchild in child:
+                    if grandchild.tag.find('measure') == -1 and grandchild.tag.find('divide') == -1:
+                        continue
+
+                    #<unit id="u001">
+                    #    <measure>xbrli:shares</measure>
+                    #</unit>
+                    if grandchild.tag.find('measure') != -1:
+                        unit[unit_id] = grandchild.text
+                    elif grandchild.tag.find('divide') != -1:
+                        # Example:
+                        #<unit id="u002">
+                        #<divide>
+                        #  <unitNumerator>
+                        #    <measure>iso4217:USD</measure>
+                        #  </unitNumerator>
+                        #  <unitDenominator>
+                        #    <measure>xbrli:shares</measure>
+                        #  </unitDenominator>
+                        #</divide>
+                        #</unit>
+                        numerator = None
+                        denominator = None
+                        for great_grandchild in grandchild:
+                            great_grandchild_tag = great_grandchild.tag.lower()
+                            if great_grandchild_tag.find('numerator') != -1:
+                                for greatgreat_grandchild in great_grandchild:
+                                    greatgreat_grandchild_tag = greatgreat_grandchild.tag.lower()
+                                    if greatgreat_grandchild_tag.find('measure') != -1:
+                                        numerator = greatgreat_grandchild.text
+                                        break
+                            elif great_grandchild_tag.find('denominator') != -1:
+                                for greatgreat_grandchild in great_grandchild:
+                                    if greatgreat_grandchild_tag.find('measure') != -1:
+                                        denominator = greatgreat_grandchild.text
+                                        break
+                        if numerator is not None and denominator is not None:
+                            unit[unit_id] = numerator + '/' + denominator
+
+            except Exception as e:
+                logger.Logger.log(logger.LogLevel.ERROR, e)
+            finally:
+                pass
+
+        return unit
+
+    def parse_xbrl(self, xbrl_file):
+        logger.Logger.log(logger.LogLevel.INFO, 'Parsing xbrl file %s' % xbrl_file)
+
+        results = {}
+
+        try:
+            tree = etree.parse(xbrl_file)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.INFO, e)
+            return results
+
+        root = tree.getroot()
+        context = self.extract_context(root)
+        unit = self.extract_unit(root)
 
         reverse_nsmap = {}
         for namespace in root.nsmap:
@@ -149,7 +219,7 @@ class SecXbrlProcessor(object):
 
                 if ((text_value is None) or (full_tag is None) or (attrib is None) or
                     ('unitRef' not in attrib) or ('contextRef' not in attrib) or
-                    ('USD'.lower() not in attrib['unitRef'].lower()) or (attrib['contextRef'] not in context)):
+                    (attrib['unitRef'] not in unit) or (attrib['contextRef'] not in context)):
                     continue
 
                 # Each tag should look like this {http://xbrl.us/us-gaap/2009-01-31}GrossProfit
@@ -168,10 +238,12 @@ class SecXbrlProcessor(object):
                     results[tag] = []
 
                 context_ref = attrib['contextRef']
-                # For ex: results['GrossProfit'] = [[1000, '2014-01-01', '2014-04-01', 'http://xbrl.us/us-gaap/2009-01-31']]
+                unit_ref = attrib['unitRef']
+                # For ex: results['GrossProfit'] = [[1000, '2014-01-01', '2014-04-01', 'iso4217:USD', 'http://xbrl.us/us-gaap/2009-01-31']]
                 results[tag].append([StringHelper.parse_value_string(text_value),
                                     context[context_ref][0],
                                     context[context_ref][1],
+                                    unit[unit_ref],
                                     namespace])
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, e)
