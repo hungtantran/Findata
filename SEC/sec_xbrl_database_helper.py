@@ -52,6 +52,6 @@ class SecXbrlDatabaseHelper(object):
                 end_date = metrics_result[2]
                 unit = metrics_result[3]
                 standard = metrics_result[4]
-                converted_result = [cik, ticker, year, quarter, start_date, end_date, form_name, metrics_name, value_float, value_string, unit, standard]
+                converted_result = [cik, ticker, year, quarter, start_date, end_date, form_name, metrics_name, value_float, value_string, 'USD', standard]
                 converted_results.append(converted_result)
         return converted_results

@@ -115,8 +115,6 @@ class TimelineModelDatabase(object):
 
     def remove_model(self, model):
         Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Drop model %s' % model)
-
-        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Create model %s' % model)
         try:
             drop_model = self.get_timeline_table_object(model=model,
                                                         class_map=timeline_model.TimelineModel)
