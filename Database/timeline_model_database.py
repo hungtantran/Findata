@@ -152,6 +152,7 @@ class TimelineModelDatabase(object):
                 s.commit()
                 s.close()
 
+    # TODO implement this
     def get_join_models_data(self, model1, model2, class_map1, class_map2, lower_time_limit=None, upper_time_limit=None):
         try:
             s = self.session()

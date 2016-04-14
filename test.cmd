@@ -17,3 +17,4 @@ py SEC\sec_xbrl_processor_test.py
 
 py UpdatePipeline\update_exchange_index_test.py
 py UpdatePipeline\update_fixedincome_ustreasurybill_test.py
+py UpdatePipeline\update_exchange_stockprice_test.py

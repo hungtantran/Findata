@@ -51,22 +51,31 @@ class UpdateExchangeIndex(threading.Thread):
             self.data[key] = []
 
     def update_nasdaq(self):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update nasdaq now')
-        response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['nasdaq'])
-        html_string = response.read()
-        return self.update_from_html_content('nasdaq', html_string)
+        try:
+            logger.Logger.log(logger.LogLevel.INFO, 'Update nasdaq now')
+            response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['nasdaq'])
+            html_string = response.read()
+            return self.update_from_html_content('nasdaq', html_string)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 
     def update_downjones(self):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update downjones now')
-        response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['dowjones'])
-        html_string = response.read()
-        return self.update_from_html_content('dowjones', html_string)
+        try:
+            logger.Logger.log(logger.LogLevel.INFO, 'Update downjones now')
+            response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['dowjones'])
+            html_string = response.read()
+            return self.update_from_html_content('dowjones', html_string)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 
     def update_sp500(self):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update sp500 now')
-        response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['sp500'])
-        html_string = response.read()
-        return self.update_from_html_content('sp500', html_string)
+        try:
+            logger.Logger.log(logger.LogLevel.INFO, 'Update sp500 now')
+            response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['sp500'])
+            html_string = response.read()
+            return self.update_from_html_content('sp500', html_string)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 
     def _yahoo_finance_get_content_table(self, html_elem):
         outer_content_table_elem = html_elem.findAll('table', attrs={'class': 'yfnc_datamodoutline1'})
@@ -131,7 +140,7 @@ class UpdateExchangeIndex(threading.Thread):
 
                     date = StringHelper.convert_string_to_datetime(tds_elem[0].get_text())
                     if date is None:
-                        logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to date' % cell_elems[0].get_text())
+                        logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to date' % tds_elem[0].get_text())
                         continue
 
                     for j in range(1, len(tds_elem)):

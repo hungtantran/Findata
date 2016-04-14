@@ -1,6 +1,5 @@
 __author__ = 'hungtantran'
 
-
 import datetime
 import re
 import urllib
@@ -10,7 +9,9 @@ from bs4 import BeautifulSoup
 
 import logger
 import timeline_model
+import ticker_info
 import timeline_model_database
+import ticker_info_database
 from string_helper import StringHelper
 from Common.constants_config import Config
 
@@ -19,54 +20,53 @@ class UpdateExchangeStockprice(threading.Thread):
     SUMMARY_LINKS_TEMPLATE = 'http://finance.yahoo.com/q/hp?s=%s+Historical+Prices'
     SUMMARY_DIMENSIONS = ['open', 'high', 'low', 'close', 'volume', 'adj_close']
     NUM_RETRIES_DOWNLOAD = 2
+    WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 3
 
     def __init__(self, db_type, username, password, server, database):
         threading.Thread.__init__(self)
         # 12-hour update frequency
         self.update_frequency_seconds = 43200
         self.model_db = timeline_model_database.TimelineModelDatabase(db_type, username, password, server, database)
+        self.ticker_info_db = ticker_info_database.TickerInfoDatabase(db_type, username, password, server, database)
         self.data = {}
         self.tablename = {}
 
+    def get_data_source_name(self, info, dimension):
+        return info.ticker.lower() + '_' + dimension.lower()
+
+    def sanitize_info(self, info):
+        info.ticker = info.ticker.lower()
+
     def run(self):
         while True:
+            self.clear_data()
 
-
-            for index in UpdateExchangeStockprice.SUMMARY_LINKS_TEMPLATE:
+            ticker_info = self.ticker_info_db.get_ticker_info_data()
+            for info in ticker_info:
+                self.sanitize_info(info)
+                # TODO make this more extensible
+                if not info.ticker.isalnum():
+                    continue
                 for dimension in UpdateExchangeStockprice.SUMMARY_DIMENSIONS:
-                    self.data[index + '_' + dimension] = []
+                    self.data[self.get_data_source_name(info, dimension)] = []
 
             for key in self.data:
-                self.tablename[key] = 'exchange_index_' + key
+                self.tablename[key] = 'exchange_stockprice_' + key
 
-            self.update_nasdaq()
-            self.update_downjones()
-            self.update_sp500()
-            self.update_database()
-            logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before updating again' % self.update_frequency_seconds)
+            for info in ticker_info:
+                self.update_ticker_price(info)
+                self.update_database(info)
+                logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before updating again' %
+                                  UpdateExchangeStockprice.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
+                time.sleep(UpdateExchangeStockprice.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
+
+            logger.Logger.log(logger.LogLevel.INFO,
+                              'Sleep for %d secs before updating again' % self.update_frequency_seconds)
             time.sleep(self.update_frequency_seconds)
 
     def clear_data(self):
         for key in self.data:
             self.data[key] = []
-
-    def update_nasdaq(self):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update nasdaq now')
-        response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['nasdaq'])
-        html_string = response.read()
-        return self.update_from_html_content('nasdaq', html_string)
-
-    def update_downjones(self):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update downjones now')
-        response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['dowjones'])
-        html_string = response.read()
-        return self.update_from_html_content('dowjones', html_string)
-
-    def update_sp500(self):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update sp500 now')
-        response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['sp500'])
-        html_string = response.read()
-        return self.update_from_html_content('sp500', html_string)
 
     def _yahoo_finance_get_content_table(self, html_elem):
         outer_content_table_elem = html_elem.findAll('table', attrs={'class': 'yfnc_datamodoutline1'})
@@ -94,7 +94,16 @@ class UpdateExchangeStockprice(threading.Thread):
         logger.Logger.log(logger.LogLevel.INFO, 'Found titles %s' % titles)
         return titles
 
-    def update_from_html_content(self, index, html_string):
+    def update_ticker_price(self, info):
+        try:
+            logger.Logger.log(logger.LogLevel.INFO, 'Update company %s now' % info.name)
+            response = urllib.urlopen(UpdateExchangeStockprice.SUMMARY_LINKS_TEMPLATE % info.ticker)
+            html_string = response.read()
+            return self.update_from_html_content(info, html_string)
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+
+    def update_from_html_content(self, info, html_string):
         num_fail = 0
         while True:
             try:
@@ -114,7 +123,7 @@ class UpdateExchangeStockprice(threading.Thread):
                 # Extract the title
                 header_elem = rows_elem[0]
                 titles = self._yahoo_finance_extract_titles(header_elem)
-                if (titles is None) or (len(titles) != len(UpdateExchangeIndex.SUMMARY_DIMENSIONS)):
+                if (titles is None) or (len(titles) != len(UpdateExchangeStockprice.SUMMARY_DIMENSIONS)):
                     logger.Logger.log(logger.LogLevel.INFO, 'Does not find the expected titles')
                     return
 
@@ -131,7 +140,7 @@ class UpdateExchangeStockprice(threading.Thread):
 
                     date = StringHelper.convert_string_to_datetime(tds_elem[0].get_text())
                     if date is None:
-                        logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to date' % cell_elems[0].get_text())
+                        logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to date' % tds_elem[0].get_text())
                         continue
 
                     for j in range(1, len(tds_elem)):
@@ -142,51 +151,62 @@ class UpdateExchangeStockprice(threading.Thread):
                             continue
 
                         value = timeline_model.TimelineModel(date, cell_value)
-                        self.data[index + '_' + UpdateExchangeIndex.SUMMARY_DIMENSIONS[j - 1]].append(value)
+                        self.data[
+                            self.get_data_source_name(info, UpdateExchangeStockprice.SUMMARY_DIMENSIONS[j - 1])].append(
+                            value)
                 break
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
                 num_fail += 1
-                if num_fail >= UpdateExchangeIndex.NUM_RETRIES_DOWNLOAD:
+                if num_fail >= UpdateExchangeStockprice.NUM_RETRIES_DOWNLOAD:
                     break
                 else:
                     continue
 
-    def update_database(self):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update database')
+    def update_database(self, info):
+        logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s' % info.name)
         current_latest_data = {}
         for key in self.data:
-            latest_value = self.model_db.get_latest_model_data(self.tablename[key])
-            current_latest_data[key] = latest_value
+            if key.startswith('%s_' % info.ticker):
+                latest_value = self.model_db.get_latest_model_data(self.tablename[key])
+                current_latest_data[key] = latest_value
 
-        self._update_database_with_given_data(self.data, current_latest_data)
+        self._update_database_with_given_data(self.data, current_latest_data, info)
 
-    def _update_database_with_given_data(self, data, current_latest_data):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update database with given data')
+    def _update_database_with_given_data(self, data, current_latest_data, info):
+        logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s with given data' % info.name)
         all_data = data
 
         num_value_update = {}
         for name in all_data:
-            num_value_update[name] = 0
-            data = all_data[name]
-            for row in data:
-                # Only insert value later than the current latest value
-                # TODO make it more flexible than that
-                if (current_latest_data[name] is not None) and (row.time > current_latest_data[name].time):
-                    self.model_db.insert_row(self.tablename[name], row)
-                    num_value_update[name] += 1
+            if name.startswith('%s_' % info.ticker):
+                num_value_update[name] = 0
+                data = all_data[name]
+                insert_rows = []
+                for row in data:
+                    # Only insert value later than the current latest value
+                    # TODO make it more flexible than that
+                    if (current_latest_data[name] is not None) and (row.time > current_latest_data[name].time):
+                        insert_rows.append(row)
+                        num_value_update[name] += 1
+
+                if len(insert_rows) > 0:
+                    times = [StringHelper.convert_datetime_to_string(row.time) for row in insert_rows]
+                    values = [row.value for row in insert_rows]
+                    self.model_db.insert_values(model=self.tablename[name], times=times, values=values)
 
         for key in num_value_update:
-            logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (self.tablename[key], num_value_update[key]))
+            logger.Logger.log(logger.LogLevel.INFO,
+                              'Update table %s with %d new values' % (self.tablename[key], num_value_update[key]))
 
 
 def main():
     try:
-        update_obj = UpdateExchangeIndex('mysql',
-                                         Config.mysql_username,
-                                         Config.mysql_password,
-                                         Config.mysql_server,
-                                         Config.mysql_database)
+        update_obj = UpdateExchangeStockprice('mysql',
+                                              Config.mysql_username,
+                                              Config.mysql_password,
+                                              Config.mysql_server,
+                                              Config.mysql_database)
         update_obj.daemon = True
         update_obj.start()
 

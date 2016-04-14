@@ -7,6 +7,7 @@ import logger
 from constants_config import Config
 from string_helper import StringHelper
 from sec_xbrl_processor import SecTickerInfoHelper
+from ticker_info_database import TickerInfoDatabase
 
 
 class TestSecTickerInfoHelper(unittest.TestCase):
@@ -17,8 +18,17 @@ class TestSecTickerInfoHelper(unittest.TestCase):
                                                       Config.test_mysql_server,
                                                       Config.test_mysql_database)
 
+        self.ticker_info_db = TickerInfoDatabase('mysql',
+                                            Config.test_mysql_username,
+                                            Config.test_mysql_password,
+                                            Config.test_mysql_server,
+                                            Config.test_mysql_database,
+                                            'ticker_info')
+        self.ticker_info_db.remove_ticker_info_table()
+        self.ticker_info_db.create_ticker_info_table()
+
     def TearDown(self):
-        pass
+        self.ticker_info_db.remove_ticker_info_table()
 
     def test_ticker_ti_cik(self):
         try:
