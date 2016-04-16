@@ -1,10 +1,13 @@
 __author__ = 'hungtantran'
 
+
 from mysql_dao_factory import MysqlDAOFactory
+from bigquery_dao_factory import BigQueryDAOFactory
 
 
 class DAOFactoryRepository(object):
-    dao_factory_dic = {'mysql': MysqlDAOFactory()}
+    dao_factory_dic = {'mysql': MysqlDAOFactory(),
+                       'bigquery': BigQueryDAOFactory()}
 
     @staticmethod
     def getInstance(type):

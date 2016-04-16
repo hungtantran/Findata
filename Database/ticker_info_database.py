@@ -18,11 +18,6 @@ class TickerInfoDatabase(object):
     max_num_reties = 1;
 
     def __init__(self, db_type, username, password, server, database, ticker_info_table_name=TICKER_INFO_TABLE_NAME):
-        self.dao_factory = DAOFactoryRepository.getInstance(db_type)
-        self.username = username
-        self.password = password
-        self.server = server
-        self.database = database
         self.engine = sqlalchemy.create_engine('%s://%s:%s@%s/%s?charset=utf8&use_unicode=0' %
                                                (db_type, username, password, server, database),
                                                pool_recycle=3600)
