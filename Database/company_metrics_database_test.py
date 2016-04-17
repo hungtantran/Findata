@@ -78,8 +78,7 @@ class TestCompanyMetricsDatabase(unittest.TestCase):
             self.assertEquals(metric.start_date.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-09 00:00:00')
             self.assertEquals(metric.end_date.strftime("%Y-%m-%d %H:%M:%S"), '2016-03-09 00:00:00')
         finally:
-            #metrics_db.remove_metric('msft_metrics')
-            pass
+            metrics_db.remove_metric()
 
 
 if __name__ == '__main__':

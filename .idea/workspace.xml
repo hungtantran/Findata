@@ -2,18 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DatabaseModel/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Database/bigquery_dao_factory.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Database/bigquery_dao_factory_test.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Database/company_metrics_database.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Database/company_metrics_database_test.py" />
-      <change type="DELETED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\Common\.gitignore" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/bigquery_client.py" afterPath="$PROJECT_DIR$/Database/bigquery_client.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DatabaseModel/company_metrics.py" afterPath="$PROJECT_DIR$/DatabaseModel/company_metrics.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/dao_factory_repo.py" afterPath="$PROJECT_DIR$/Database/dao_factory_repo.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/ticker_info_database.py" afterPath="$PROJECT_DIR$/Database/ticker_info_database.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/bigquery_dao_factory_test.py" afterPath="$PROJECT_DIR$/Database/bigquery_dao_factory_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/company_metrics_database_test.py" afterPath="$PROJECT_DIR$/Database/company_metrics_database_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.cmd" afterPath="$PROJECT_DIR$/test.cmd" />
     </list>
     <ignored path="Models.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -34,23 +26,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="company_metrics_database.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Database/company_metrics_database.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="114" column="63" selection-start-line="114" selection-start-column="63" selection-end-line="114" selection-end-column="63" />
-              <folding>
-                <element signature="e#28#43#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="company_metrics_database_test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Database/company_metrics_database_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.90215826">
-              <caret line="78" column="36" selection-start-line="78" selection-start-column="36" selection-end-line="78" selection-end-column="36" />
+            <state vertical-scroll-proportion="0.8561151">
+              <caret line="80" column="17" selection-start-line="80" selection-start-column="17" selection-end-line="80" selection-end-column="17" />
               <folding>
                 <element signature="e#29#44#0" expanded="true" />
               </folding>
@@ -58,21 +38,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="company_metrics.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DatabaseModel/company_metrics.py">
+      <file leaf-file-name="sec_xbrl_database_helper_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="20" column="98" selection-start-line="20" selection-start-column="98" selection-end-line="20" selection-end-column="98" />
+              <caret line="87" column="43" selection-start-line="87" selection-start-column="43" selection-end-line="87" selection-end-column="43" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="string_helper_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/string_helper_test.py">
+      <file leaf-file-name="sec_ticker_info_helper_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_ticker_info_helper_test.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="69" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="69" />
+              <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bigquery_dao_factory.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Database/bigquery_dao_factory.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="9" column="49" selection-start-line="9" selection-start-column="49" selection-end-line="9" selection-end-column="49" />
               <folding />
             </state>
           </provider>
@@ -82,7 +72,7 @@
         <entry file="file://$PROJECT_DIR$/Database/bigquery_dao_factory_test.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="55" column="46" selection-start-line="55" selection-start-column="46" selection-end-line="55" selection-end-column="46" />
+              <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
               <folding>
                 <element signature="e#28#43#0" expanded="true" />
               </folding>
@@ -90,21 +80,51 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="string_helper.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/string_helper.py">
+      <file leaf-file-name="sec_xbrl_helper.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_helper.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="71" column="78" selection-start-line="68" selection-start-column="8" selection-end-line="71" selection-end-column="78" />
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="timeline_model_database_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Database/timeline_model_database_test.py">
+      <file leaf-file-name="sec_xbrl_processor_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="38" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+              <caret line="124" column="81" selection-start-line="124" selection-start-column="81" selection-end-line="124" selection-end-column="81" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_xbrl_processor.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="67" column="43" selection-start-line="67" selection-start-column="43" selection-end-line="67" selection-end-column="43" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_xbrl_index_file_parser_test.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sec_xbrl_index_file_parser.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -125,7 +145,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Scripts/populate_ticker_info_table.py" />
         <option value="$PROJECT_DIR$/Scripts/get_all_xbrl_zip_files.py" />
         <option value="$PROJECT_DIR$/Scripts/get_all_xbrl_index_files.py" />
         <option value="$PROJECT_DIR$/Scripts/rename_sql_table.py" />
@@ -167,7 +186,6 @@
         <option value="$PROJECT_DIR$/Database/dao_factory_repo.py" />
         <option value="$PROJECT_DIR$/Common/constants_config.py" />
         <option value="$PROJECT_DIR$/Database/bigquery_client.py" />
-        <option value="$PROJECT_DIR$/Database/bigquery_dao_factory_test.py" />
         <option value="$PROJECT_DIR$/Database/stock_metrics_database.py" />
         <option value="$PROJECT_DIR$/QueryService/stock_metrics.py" />
         <option value="$PROJECT_DIR$/DatabaseModel/metrics.py" />
@@ -175,6 +193,8 @@
         <option value="$PROJECT_DIR$/DatabaseModel/stock_metrics.py" />
         <option value="$PROJECT_DIR$/DatabaseModel/company_metrics.py" />
         <option value="$PROJECT_DIR$/Database/company_metrics_database.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" />
+        <option value="$PROJECT_DIR$/Database/bigquery_dao_factory_test.py" />
         <option value="$PROJECT_DIR$/Database/company_metrics_database_test.py" />
       </list>
     </option>
@@ -575,34 +595,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Scripts/validate_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="59" column="47" selection-start-line="59" selection-start-column="47" selection-end-line="59" selection-end-column="47" />
-          <folding>
-            <element signature="e#29#43#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Database/generic_model_database_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.47940692">
-          <caret line="55" column="52" selection-start-line="55" selection-start-column="52" selection-end-line="55" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/cal_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.9126854">
-          <caret line="104" column="26" selection-start-line="104" selection-start-column="26" selection-end-line="104" selection-end-column="26" />
-          <folding>
-            <element signature="e#28#49#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/QueryService/model_data_service_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -687,26 +679,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6008287">
-          <caret line="84" column="33" selection-start-line="84" selection-start-column="33" selection-end-line="84" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Scripts/populate_ticker_info_table.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="51" column="104" selection-start-line="50" selection-start-column="145" selection-end-line="51" selection-end-column="104" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="67" column="43" selection-start-line="67" selection-start-column="43" selection-end-line="67" selection-end-column="43" />
           <folding />
         </state>
       </provider>
@@ -718,14 +694,6 @@
           <folding>
             <element signature="e#29#44#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="124" column="81" selection-start-line="124" selection-start-column="81" selection-end-line="124" selection-end-column="81" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -839,14 +807,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_ticker_info_helper_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38950276">
-          <caret line="33" column="12" selection-start-line="33" selection-start-column="12" selection-end-line="33" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Database/dao_factory_repo.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.39917126">
@@ -899,30 +859,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Database/bigquery_dao_factory.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="9" column="49" selection-start-line="9" selection-start-column="49" selection-end-line="9" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Database/bigquery_client.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-15.75862">
           <caret line="220" column="38" selection-start-line="220" selection-start-column="38" selection-end-line="220" selection-end-column="38" />
           <folding>
             <element signature="e#28#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Database/bigquery_dao_factory_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="55" column="46" selection-start-line="55" selection-start-column="46" selection-end-line="55" selection-end-column="46" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1001,10 +943,84 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="124" column="81" selection-start-line="124" selection-start-column="81" selection-end-line="124" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="67" column="43" selection-start-line="67" selection-start-column="43" selection-end-line="67" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_index_file_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_ticker_info_helper_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/bigquery_dao_factory.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="9" column="49" selection-start-line="9" selection-start-column="49" selection-end-line="9" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="87" column="43" selection-start-line="87" selection-start-column="43" selection-end-line="87" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/bigquery_dao_factory_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
+          <folding>
+            <element signature="e#28#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Database/company_metrics_database_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.90215826">
-          <caret line="78" column="36" selection-start-line="78" selection-start-column="36" selection-end-line="78" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.8561151">
+          <caret line="80" column="17" selection-start-line="80" selection-start-column="17" selection-end-line="80" selection-end-column="17" />
           <folding>
             <element signature="e#29#44#0" expanded="true" />
           </folding>

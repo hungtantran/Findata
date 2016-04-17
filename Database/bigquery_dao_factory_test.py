@@ -19,17 +19,19 @@ class TestBigqueryDAOFactory(unittest.TestCase):
         bigquery_cursor = bigquery_connection.cursor()
 
         try:
-            bigquery_cursor.delete_table('TEST1')
-            bigquery_cursor.delete_table('TEST2')
-            bigquery_cursor.execute("CREATE TABLE TEST1 (FIRST_NAME CHAR(20) NOT NULL, id INT, value FLOAT)")
-            bigquery_cursor.execute("CREATE TABLE TEST2 (FIRST_NAME STRING, id INTEGER, value FLOAT, time DATETIME)")
+            rand_tablename1 = 'TEST' + str(random.randint(1, 1000))
+            rand_tablename2 = 'TEST' + str(random.randint(1, 1000))
+            bigquery_cursor.delete_table(rand_tablename1)
+            bigquery_cursor.delete_table(rand_tablename2)
+            bigquery_cursor.execute("CREATE TABLE %s (FIRST_NAME CHAR(20) NOT NULL, id INT, value FLOAT)" % rand_tablename1)
+            bigquery_cursor.execute("CREATE TABLE %s (FIRST_NAME STRING, id INTEGER, value FLOAT, time DATETIME)" % rand_tablename2)
             tables = bigquery_cursor.list_table()
             self.assertEqual(2, len(tables))
-            self.assertEqual("TEST1", tables[0])
-            self.assertEqual("TEST2", tables[1])
+            self.assertTrue(rand_tablename1 in tables)
+            self.assertTrue(rand_tablename2 in tables)
         finally:
-            bigquery_cursor.delete_table('TEST1')
-            bigquery_cursor.delete_table('TEST2')
+            bigquery_cursor.delete_table(rand_tablename1)
+            bigquery_cursor.delete_table(rand_tablename2)
 
     def test_insert_select(self):
         bigquery_dao_factory = DAOFactoryRepository.getInstance('bigquery')
@@ -53,7 +55,7 @@ class TestBigqueryDAOFactory(unittest.TestCase):
             bigquery_cursor.insert(rand_tablename, values)
             results = bigquery_cursor.query('SELECT * FROM %s' % rand_tablename)
         finally:
-            #bigquery_cursor.delete_table(rand_tablename)
+            bigquery_cursor.delete_table(rand_tablename)
             pass
 
 
