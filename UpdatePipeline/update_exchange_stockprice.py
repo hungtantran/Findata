@@ -39,10 +39,9 @@ class UpdateExchangeStockprice(threading.Thread):
 
     def run(self):
         while True:
-            self.clear_data()
-
             ticker_info = self.ticker_info_db.get_ticker_info_data()
             for info in ticker_info:
+                self.clear_data()
                 self.sanitize_info(info)
                 # TODO make this more extensible
                 if not info.ticker.isalnum():
@@ -50,10 +49,9 @@ class UpdateExchangeStockprice(threading.Thread):
                 for dimension in UpdateExchangeStockprice.SUMMARY_DIMENSIONS:
                     self.data[self.get_data_source_name(info, dimension)] = []
 
-            for key in self.data:
-                self.tablename[key] = 'exchange_stockprice_' + key
+                for key in self.data:
+                    self.tablename[key] = 'exchange_stockprice_' + key
 
-            for info in ticker_info:
                 self.update_ticker_price(info)
                 self.update_database(info)
                 logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before updating again' %
@@ -67,6 +65,9 @@ class UpdateExchangeStockprice(threading.Thread):
     def clear_data(self):
         for key in self.data:
             self.data[key] = []
+
+        for key in self.tablename:
+            self.tablename[key] = []
 
     def _yahoo_finance_get_content_table(self, html_elem):
         outer_content_table_elem = html_elem.findAll('table', attrs={'class': 'yfnc_datamodoutline1'})

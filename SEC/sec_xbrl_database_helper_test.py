@@ -85,7 +85,7 @@ class TestSecXbrlDatabaseHelper(unittest.TestCase):
             self.database_helper.insert_company_metrics_table(values=converted_results, table_name='company_metrics')
 
             data = self.model_db.get_model_data('company_metrics')
-            self.assertEqual(len(data), 412)
+            self.assertEqual(len(data), 437)
         finally:
             self.model_db.remove_model('company_metrics')
             pass
