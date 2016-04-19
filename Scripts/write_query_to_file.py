@@ -51,4 +51,9 @@ def execute_query(query):
             print e
 
 #write_query_to_file("show tables like '%\_metrics%'", 'tables.txt')
-#execute_query("INSERT IGNORE INTO ticker_info (ticker) VALUES ('AAMC')")
+#write_query_to_file("select * from msft_metrics", 'metrics.txt')
+#write_query_to_file("select * from exchange_stockprice_msft_adj_close", 'adj_close.txt')
+#write_query_to_file("select * from exchange_stockprice_msft_volume", 'volume.txt')
+#write_query_to_file("select * from company_fundamentals_msft_metrics", 'fundamentals.txt')
+#write_query_to_file("show tables like 'a%\_metrics'", 'tables.txt')
+write_query_to_file("show tables where tables_in_models like 'exchange_stockprice%' and tables_in_models > ' exchange_stockprice_' and tables_in_models < 'exchange_stockprice_inn'", 'exchange_stockprice.txt')
