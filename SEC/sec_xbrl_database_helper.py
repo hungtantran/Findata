@@ -20,6 +20,7 @@ class SecXbrlDatabaseHelper(object):
     def create_companies_metrics_table(self, table_name=None):
         if table_name is None:
             table_name = 'Companies_Metrics'
+        print 'try to create %s' % table_name
         self.model_db.create_model(model=table_name,
                                    column_names=['cik', 'ticker', 'year', 'quarter', 'start_date', 'end_date', 'form_name', 'metrics_name', 'value_float', 'value_string', 'metrics_unit', 'standard'],
                                    column_types=['INTEGER', 'VARCHAR(32)', 'SMALLINT', 'SMALLINT', 'DATETIME', 'DATETIME', 'VARCHAR(255)', 'VARCHAR(255)', 'FLOAT', 'TEXT', 'VARCHAR(255)', 'VARCHAR(255)'],

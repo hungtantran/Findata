@@ -9,8 +9,8 @@ import threading
 from bs4 import BeautifulSoup
 
 import logger
-import timeline_model
-import timeline_model_database
+import metrics
+import metrics_database
 from string_helper import StringHelper
 from Common.constants_config import Config
 
@@ -23,25 +23,30 @@ class UpdateFixedincomeUstreasuryBill(threading.Thread):
         threading.Thread.__init__(self)
         # 12-hour update frequency
         self.update_frequency_seconds = 43200
-        self.model_db = timeline_model_database.TimelineModelDatabase(db_type, username, password, server, database)
-        self.data = {}
-        for header_title in UpdateFixedincomeUstreasuryBill.HEADER_TITLES:
-            self.data[header_title] = []
+        self.tablename = 'fixedincome_ustreasurybill_metrics'
+        self.metrics_db = metrics_database.MetricsDatabase(
+                db_type,
+                username,
+                password,
+                server,
+                database,
+                self.tablename)
 
-        self.tablename = {}
-        for key in self.data:
-            self.tablename[key] = 'fixedincome_ustreasurybill_' + key.replace(' ', '_')
+        self.data = None
 
     def run(self):
         while True:
+            self.data = []
             self.update_current_year()
             self.update_database()
             logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before updating again' % self.update_frequency_seconds)
             time.sleep(self.update_frequency_seconds)
 
+    def get_metric_name(self, header_title):
+        return '%s_yield' % (header_title.replace(' ', '_'))
+
     def clear_data(self):
-        for key in self.data:
-            self.data[key] = []
+        self.data = None
 
     def update(self):
         logger.Logger.log(logger.LogLevel.INFO, 'Update now')
@@ -80,8 +85,6 @@ class UpdateFixedincomeUstreasuryBill(threading.Thread):
 
     def update_from_html_content(self, html_string):
         logger.Logger.log(logger.LogLevel.INFO, 'Update from html content')
-
-        self.clear_data()
 
         html_elem = BeautifulSoup(html_string, 'html.parser')
 
@@ -128,35 +131,38 @@ class UpdateFixedincomeUstreasuryBill(threading.Thread):
                     logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to value' % cell_text)
                     continue
 
-                value = timeline_model.TimelineModel(date, cell_value)
-                self.data[UpdateFixedincomeUstreasuryBill.HEADER_TITLES[i - 1]].append(value)
+                value = metrics.Metrics(
+                        metric_name=self.get_metric_name(UpdateFixedincomeUstreasuryBill.HEADER_TITLES[i - 1]),
+                        start_date=date,
+                        end_date=date,
+                        unit='percent',
+                        value=cell_value)
+                self.data.append(value)
 
     def update_database(self):
         logger.Logger.log(logger.LogLevel.INFO, 'Update database')
-        current_latest_data = {}
-        for key in self.data:
-            latest_value = self.model_db.get_latest_model_data(self.tablename[key])
-            current_latest_data[key] = latest_value
+        latest_rows = self.metrics_db.get_metrics(max_num_results=1)
+        try:
+            latest_time = latest_rows[0].start_date
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            latest_time = None
 
-        self._update_database_with_given_data(self.data, current_latest_data)
+        self._update_database_with_given_data(self.data, latest_time)
 
-    def _update_database_with_given_data(self, data, current_latest_data):
+    def _update_database_with_given_data(self, data, latest_time):
         logger.Logger.log(logger.LogLevel.INFO, 'Update database with given data')
         all_data = data
 
-        num_value_update = {}
-        for name in all_data:
-            num_value_update[name] = 0
-            data = all_data[name]
-            for row in data:
-                # Only insert value later than the current latest value
-                # TODO make it more flexible than that
-                if (current_latest_data[name] is not None) and (row.time > current_latest_data[name].time):
-                    self.model_db.insert_row(self.tablename[name], row)
-                    num_value_update[name] += 1
+        num_value_update = 0
+        for row in data:
+            # Only insert value later than the current latest value
+            # TODO make it more flexible than that
+            if (latest_time is None or row.start_date > latest_time):
+                self.metrics_db.insert_metric(row)
+                num_value_update += 1
 
-        for key in num_value_update:
-            logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (self.tablename[key], num_value_update[key]))
+        logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (self.tablename, num_value_update))
 
 
 def main():

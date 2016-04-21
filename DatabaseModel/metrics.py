@@ -17,7 +17,7 @@ class CompanyFundamentals(object):
         self.metrics_unit = metrics_unit
         self.standard = standard
 
-class CompanyMetrics(object):
+class Metrics(object):
     def __init__(self, metric_name, id=None, start_date=None, end_date=None, unit=None, value=None, metadata=None):
         self.id = id
         self.metric_name = metric_name
