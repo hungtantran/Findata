@@ -66,7 +66,7 @@ def find_nonexisting_table():
             print e
 
 
-find_nonexisting_table()
-find_rogue_table()
+#find_nonexisting_table()
+#find_rogue_table()
 
 
