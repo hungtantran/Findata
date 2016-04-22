@@ -23,8 +23,7 @@ class TimelineModelDatabase(object):
         self.server = server
         self.database = database
         self.engine = sqlalchemy.create_engine('%s://%s:%s@%s/%s?charset=utf8&use_unicode=0' %
-                                               (db_type, username, password, server, database),
-                                               pool_recycle=3600)
+                                               (db_type, username, password, server, database))
         self.session = sqlalchemy.orm.sessionmaker(bind=self.engine)
 
     @staticmethod
@@ -86,6 +85,7 @@ class TimelineModelDatabase(object):
                 s.close()
 
     def insert_row(self, model, timeline_model_obj):
+        print 'here ' + StringHelper.convert_datetime_to_string(timeline_model_obj.time)
         return self.insert_value(model,
                                  StringHelper.convert_datetime_to_string(timeline_model_obj.time),
                                  timeline_model_obj.value)
@@ -115,6 +115,8 @@ class TimelineModelDatabase(object):
 
     def remove_model(self, model):
         Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Drop model %s' % model)
+
+        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Create model %s' % model)
         try:
             drop_model = self.get_timeline_table_object(model=model,
                                                         class_map=timeline_model.TimelineModel)
@@ -152,7 +154,6 @@ class TimelineModelDatabase(object):
                 s.commit()
                 s.close()
 
-    # TODO implement this
     def get_join_models_data(self, model1, model2, class_map1, class_map2, lower_time_limit=None, upper_time_limit=None):
         try:
             s = self.session()

@@ -6,7 +6,9 @@ import unittest
 from Common.constants_config import Config
 import Common.logger
 from update_exchange_index import UpdateExchangeIndex
-from timeline_model_database import TimelineModelDatabase
+import metrics
+from metrics_database import MetricsDatabase
+from string_helper import StringHelper
 
 
 class TestUpdateExchangeIndex(unittest.TestCase):
@@ -22,59 +24,58 @@ class TestUpdateExchangeIndex(unittest.TestCase):
                                          Config.test_mysql_password,
                                          Config.test_mysql_server,
                                          Config.test_mysql_database)
-        model_db = TimelineModelDatabase('mysql',
-                                         Config.test_mysql_username,
-                                         Config.test_mysql_password,
-                                         Config.test_mysql_server,
-                                         Config.test_mysql_database)
-
-        html_content = ''
-        with open('UpdatePipeline/test_files/exchange_index_dowjones.html') as f:
-            html_content = f.read()
-
-        data = update_obj.data
-        self.assertEquals(len(data), 18)
-        for index in TestUpdateExchangeIndex.SUMMARY_LINKS:
-            for title in TestUpdateExchangeIndex.SUMMARY_DIMENSIONS:
-                dim = index + '_' + title
-                self.assertTrue(dim in data)
-                self.assertEquals(len(data[dim]), 0)
-
-        update_obj.update_from_html_content('dowjones', html_content)
-        for index in TestUpdateExchangeIndex.SUMMARY_LINKS:
-            for title in TestUpdateExchangeIndex.SUMMARY_DIMENSIONS:
-                dim = index + '_' + title
-                if 'dowjones' in dim:
-                    self.assertEquals(len(data[dim]), 3)
-                else:
-                    self.assertEquals(len(data[dim]), 0)
-
-        self.assertEquals(data['dowjones_open'][0].value, 17555.39)
-        self.assertEquals(data['dowjones_open'][0].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-04-08 00:00:00')
-        self.assertEquals(data['dowjones_open'][1].value, 17687.28)
-        self.assertEquals(data['dowjones_open'][1].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-04-07 00:00:00')
-        self.assertEquals(data['dowjones_open'][2].value, 17605.45)
-        self.assertEquals(data['dowjones_open'][2].time.strftime("%Y-%m-%d %H:%M:%S"), '2016-04-06 00:00:00')
-
         try:
+            metrics_db = MetricsDatabase(
+                    'mysql',
+                    Config.test_mysql_username,
+                    Config.test_mysql_password,
+                    Config.test_mysql_server,
+                    Config.test_mysql_database,
+                    update_obj.tablename)
 
-            model_db.create_model('exchange_index_dowjones_open')
+            metrics_db.create_metric()
+            with open('UpdatePipeline/test_files/exchange_index_dowjones.html') as f:
+                html_content = f.read()
 
-            data = model_db.get_model_data('exchange_index_dowjones_open')
+            update_obj.data = []
+            update_obj.update_from_html_content('dowjones', html_content)
+            data = update_obj.data
+            self.assertEquals(len(data), 18)
+
+            dowjones_open = [row for row in data if row.metric_name == 'dowjones_open']
+            self.assertEquals(dowjones_open[0].value, 17555.39)
+            self.assertEquals(dowjones_open[0].start_date.strftime("%Y-%m-%d %H:%M:%S"), '2016-04-08 00:00:00')
+            self.assertEquals(dowjones_open[1].value, 17687.28)
+            self.assertEquals(dowjones_open[1].start_date.strftime("%Y-%m-%d %H:%M:%S"), '2016-04-07 00:00:00')
+            self.assertEquals(dowjones_open[2].value, 17605.45)
+            self.assertEquals(dowjones_open[2].start_date.strftime("%Y-%m-%d %H:%M:%S"), '2016-04-06 00:00:00')
+
+            data = metrics_db.get_metrics()
             self.assertEqual(len(data), 0)
 
-            times = ['2016-04-06', '2016-04-05']
-            values = [0.27, 0.28]
-            model_db.insert_values('exchange_index_dowjones_open', times, values)
-            data = model_db.get_model_data('exchange_index_dowjones_open')
+            values = []
+            values.append(metrics.Metrics(
+                    metric_name='dowjones_open',
+                    start_date=StringHelper.convert_string_to_datetime('2016-04-06'),
+                    end_date=StringHelper.convert_string_to_datetime('2016-04-06'),
+                    unit='point',
+                    value=0.27))
+            values.append(metrics.Metrics(
+                    metric_name='dowjones_open',
+                    start_date=StringHelper.convert_string_to_datetime('2016-04-05'),
+                    end_date=StringHelper.convert_string_to_datetime('2016-04-05'),
+                    unit='point',
+                    value=0.28))
+            metrics_db.insert_metrics(values)
+            data = metrics_db.get_metrics()
             self.assertEqual(len(data), 2)
 
             for i in range(2):
                 update_obj.update_database()
-                data = model_db.get_model_data('exchange_index_dowjones_open')
-                self.assertEqual(len(data), 4)
+                data = metrics_db.get_metrics()
+                self.assertEqual(len(data), 14)
         finally:
-            model_db.remove_model('exchange_index_dowjones_open')
+            metrics_db.remove_metric()
 
 if __name__ == '__main__':
     unittest.main()
