@@ -13,9 +13,10 @@
     "react-dom": "^15.0.1"
   },
   "devDependencies": {
+    "babel-core": "6.7.5",
+    "babel-generator": "6.7.5",
     "babel-preset-es2015-rollup": "^1.1.1",
     "babel-preset-react": "^6.5.0",
-    "npm": "^3.8.6",
     "rollup": "^0.25.8",
     "rollup-plugin-babel": "^2.4.0",
     "rollup-plugin-commonjs": "^2.2.1",
