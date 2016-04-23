@@ -1,8 +1,10 @@
-import Graph from './graph'
+import GraphContainer from './graphContainer'
 import ReactDOM from 'react-dom'
 import React from 'react' 
 
-console.log('Imported graph')
-
-ReactDOM.render(<Graph />, document.getElementById('content'));
-console.log('Rendered graph')
+ReactDOM.render(
+  <div>
+    <GraphContainer />
+    <GraphContainer />
+  </div>
+  , document.getElementById('content'));

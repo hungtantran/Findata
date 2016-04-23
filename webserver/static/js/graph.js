@@ -1,29 +1,36 @@
-import React from 'react'
+class Graph {
 
-class Graph extends React.Component {
+  constructor() { }
 
-  constructor(props) {
-    console.log('constructor');
-    super(props);
-  }
+  static draw(element) {
+    var data = new google.visualization.DataTable();
 
-  componentDidMount() {
-    console.log('componentDidMount');
-  }
+    data.addColumn('date', 'Date');
+    data.addColumn('number', 'Value');
+    data.addColumn('number', 'Value 2');
 
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-  }
+    var initTime = Date.now();
 
-  render() {
-    console.log('render');
-    return (
-      <div ref='graphContainer'>This is going to be a graph</div>
-    );
+    const dayOffset = 1000 * 60 * 60 * 24; // sec, min, hour, day
+
+    for(var i = 0; i < 100; i++)
+    {
+      data.addRow([new Date(initTime + i * dayOffset), Math.random(), Math.random()]);
+    }
+
+    var options = {
+      chart: {
+        title: 'Some Metrics',
+        subtitle: 'a subtitle',
+      },
+      width: 900,
+      height: 500,
+      hAxis: { format: 'M/d/yy'}
+    };
+
+    var chart = new google.charts.Line(element);
+    chart.draw(data, google.charts.Line.convertOptions(options));
   }
 }
-
-Graph.propTypes = {};
-Graph.defaultProps = {};
 
 export default Graph;
