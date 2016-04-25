@@ -5,7 +5,6 @@ import re
 import urllib
 import time
 import threading
-from bs4 import BeautifulSoup
 
 import logger
 import metrics
@@ -16,10 +15,7 @@ from string_helper import StringHelper
 from Common.constants_config import Config
 
 
-class UpdateExchangeStockprice(threading.Thread):
-    SUMMARY_LINKS_TEMPLATE = 'http://finance.yahoo.com/q/hp?s=%s+Historical+Prices'
-    DIVIDEND_LINK_TEMPLATE = 'http://finance.yahoo.com/q/hp?s=%s&g=v&z=66&y=%d'
-    SUMMARY_DIMENSIONS = ['open', 'high', 'low', 'close', 'volume', 'adj_close']
+class UpdateExchangeCompanyFundamentals(threading.Thread):
     NUM_RETRIES_DOWNLOAD = 2
     WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 1
 

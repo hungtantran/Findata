@@ -14,11 +14,13 @@ from sec_xbrl_processor import SecXbrlProcessor
 
 class TestSecXbrlDatabaseHelper(unittest.TestCase):
     def SetUp(self):
+        self.metric_table_name = 'msft_metrics'
         self.database_helper = SecXbrlDatabaseHelper('mysql',
                                                      Config.test_mysql_username,
                                                      Config.test_mysql_password,
                                                      Config.test_mysql_server,
-                                                     Config.test_mysql_database)
+                                                     Config.test_mysql_database,
+                                                     self.metric_table_name)
 
         self.model_db = GenericModelDatabase('mysql',
                                              Config.test_mysql_username,
@@ -26,68 +28,24 @@ class TestSecXbrlDatabaseHelper(unittest.TestCase):
                                              Config.test_mysql_server,
                                              Config.test_mysql_database)
 
-    def test_create_companies_metrics_table(self):
-        try:
-            self.SetUp()
-            self.model_db.remove_model('company_metrics')
-            self.database_helper.create_companies_metrics_table(table_name='company_metrics')
-
-            test_values = []
-            test_values.append([1,
-                                'MSFT',
-                                2014,
-                                None,
-                                StringHelper.convert_string_to_datetime('2014-03-03'),
-                                StringHelper.convert_string_to_datetime('2014-03-03'),
-                                None,
-                                'test_metrics',
-                                1,
-                                None,
-                                'USD',
-                                None])
-            self.model_db.insert_values('company_metrics', values=test_values)
-            data = self.model_db.get_model_data('company_metrics')
-            self.assertEqual(len(data), 1)
-            self.assertEqual(len(data[0]), 12)
-            self.assertEqual(data[0][0], 1)
-            self.assertEqual(data[0][1], "MSFT")
-            self.assertEqual(data[0][2], 2014)
-            self.assertEqual(data[0][3], None)
-            self.assertEqual(data[0][4].strftime("%Y-%m-%d %H:%M:%S"), '2014-03-03 00:00:00')
-            self.assertEqual(data[0][5].strftime("%Y-%m-%d %H:%M:%S"), '2014-03-03 00:00:00')
-            self.assertEqual(data[0][6], None)
-            self.assertEqual(data[0][7], 'test_metrics')
-            self.assertEqual(data[0][8], 1)
-            self.assertEqual(data[0][9], None)
-            self.assertEqual(data[0][10], 'USD')
-            self.assertEqual(data[0][11], None)
-        finally:
-            self.model_db.remove_model('company_metrics')
-
     def test_insert_company_metrics_table(self):
         try:
             self.SetUp()
-            self.model_db.remove_model('company_metrics')
-            self.database_helper.create_companies_metrics_table(table_name='company_metrics')
+            self.model_db.remove_model(self.metric_table_name)
+            self.database_helper.create_companies_metrics_table()
 
             xbrl_file = './SEC/test_files/msft-20140930.xml'
             processor = SecXbrlProcessor()
             results = processor.parse_xbrl(xbrl_file)
 
-            converted_results = self.database_helper.convert_processed_results_to_database_insert(
-                    cik=1,
-                    ticker='MSFT',
-                    year=2014,
-                    quarter=None,
-                    form_name='10Q',
-                    parse_results=results)
+            metrics = self.database_helper.convert_parse_results_to_metrics(parse_results=results)
 
-            self.database_helper.insert_company_metrics_table(values=converted_results, table_name='company_metrics')
+            self.database_helper.insert_company_metrics_table(values=metrics)
 
-            data = self.model_db.get_model_data('company_metrics')
-            self.assertEqual(len(data), 437)
+            data = self.model_db.get_model_data(self.metric_table_name)
+            self.assertEqual(len(data), 1236)
         finally:
-            self.model_db.remove_model('company_metrics')
+            self.model_db.remove_model(self.metric_table_name)
             pass
 
 

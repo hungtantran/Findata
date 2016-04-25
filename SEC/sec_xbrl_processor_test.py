@@ -15,11 +15,7 @@ from sec_ticker_info_helper import SecTickerInfoHelper
 
 class TestSecXbrlProcessor(unittest.TestCase):
     def SetUp(self):
-        self.sec_xbrl_database_helper = SecXbrlDatabaseHelper('mysql',
-                                                              Config.test_mysql_username,
-                                                              Config.test_mysql_password,
-                                                              Config.test_mysql_server,
-                                                              Config.test_mysql_database)
+        self.table_name = 'ibm_metrics'
         self.model_db = GenericModelDatabase('mysql',
                                              Config.test_mysql_username,
                                              Config.test_mysql_password,
@@ -30,11 +26,11 @@ class TestSecXbrlProcessor(unittest.TestCase):
                                                       Config.test_mysql_password,
                                                       Config.test_mysql_server,
                                                       Config.test_mysql_database)
-        self.model_db.remove_model('IBM_metrics')
+        self.model_db.remove_model(self.table_name)
         self.processor = SecXbrlProcessor()
 
     def TearDown(self):
-        self.model_db.remove_model('IBM_metrics')
+        self.model_db.remove_model(self.table_name)
 
     def test_extract_xbrl_zip_file(self):
         try:
@@ -102,13 +98,22 @@ class TestSecXbrlProcessor(unittest.TestCase):
     def test_process_xbrl_zip_file_and_push_database(self):
         try:
             self.SetUp()
+            self.model_db = GenericModelDatabase('mysql',
+                                             Config.test_mysql_username,
+                                             Config.test_mysql_password,
+                                             Config.test_mysql_server,
+                                             Config.test_mysql_database)
             self.processor.process_xbrl_zip_file_and_push_database(
+                    db_type='mysql',
+                    username=Config.test_mysql_username,
+                    password=Config.test_mysql_password,
+                    server=Config.test_mysql_server,
+                    database=Config.test_mysql_database,
                     zip_file_path='SEC/test_files/51143-2009-qtr3-10-Q-0001104659-09-045198-xbrl.zip',
-                    sec_xbrl_database_helper=self.sec_xbrl_database_helper,
                     sec_ticker_info_helper=self.ticker_info_helper,
                     extracted_directory='SEC/test_output_files',
                     remove_extracted_file_after_done=False)
-            data = self.model_db.get_model_data('company_fundamentals_ibm_metrics')
+            data = self.model_db.get_model_data(self.table_name)
             self.assertEqual(len(data), 240)
         finally:
             self.TearDown()
@@ -117,12 +122,16 @@ class TestSecXbrlProcessor(unittest.TestCase):
         try:
             self.SetUp()
             self.processor.process_xbrl_directory_and_push_database(
+                    db_type='mysql',
+                    username=Config.test_mysql_username,
+                    password=Config.test_mysql_password,
+                    server=Config.test_mysql_server,
+                    database=Config.test_mysql_database,
                     xbrl_zip_directory='SEC/test_files/',
-                    sec_xbrl_database_helper=self.sec_xbrl_database_helper,
                     sec_ticker_info_helper=self.ticker_info_helper,
                     extracted_directory='SEC/test_output_files',
                     remove_extracted_file_after_done=False)
-            data = self.model_db.get_model_data('company_fundamentals_ibm_metrics')
+            data = self.model_db.get_model_data(self.table_name)
             self.assertEqual(len(data), 240)
         finally:
             self.TearDown()

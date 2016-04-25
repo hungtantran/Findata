@@ -2,20 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="DELETED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\Database\company_metrics_database.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/test_files/exchange_stockprice_msft.html" afterPath="$PROJECT_DIR$/UpdatePipeline/test_files/exchange_stockprice_msft.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webserver/package.json" afterPath="$PROJECT_DIR$/webserver/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AnalyticPipeline/database_analytic.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/AnalyticPipeline/database_analytic_test.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_company_fundamentals.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py" afterPath="$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/timeline_model_database.py" afterPath="$PROJECT_DIR$/Database/timeline_model_database.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/setup.cmd" afterPath="$PROJECT_DIR$/setup.cmd" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice_test.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice_test.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MOVED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\DatabaseModel\company_metrics.py" afterPath="$PROJECT_DIR$/DatabaseModel/metrics.py" />
-      <change type="MOVED" beforePath="E:\Users\hungtantran\PycharmProjects\Models\Database\company_metrics_database_test.py" afterPath="$PROJECT_DIR$/Database/metrics_database_test.py" />
     </list>
     <ignored path="Models.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,102 +33,36 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="update_fixedincome_ustreasurybill.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="156" column="28" selection-start-line="156" selection-start-column="28" selection-end-line="156" selection-end-column="28" />
-              <folding>
-                <element signature="e#29#44#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sec_xbrl_processor_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="127" column="27" selection-start-line="127" selection-start-column="27" selection-end-line="127" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="update_exchange_index.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
-              <folding>
-                <element signature="e#29#44#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="update_exchange_stockprice.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.57734805">
-              <caret line="274" column="58" selection-start-line="274" selection-start-column="58" selection-end-line="274" selection-end-column="58" />
-              <folding>
-                <element signature="e#28#43#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="update_exchange_stockprice_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="139" column="0" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
-              <folding>
-                <element signature="e#28#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="update_exchange_index_test.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-              <folding>
-                <element signature="e#29#44#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="sec_xbrl_processor.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="62" column="30" selection-start-line="62" selection-start-column="30" selection-end-line="62" selection-end-column="30" />
+              <caret line="225" column="37" selection-start-line="225" selection-start-column="37" selection-end-line="225" selection-end-column="37" />
+              <folding>
+                <element signature="e#29#38#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="insert_xbrl_zip_file_to_database.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sec_ticker_info_helper.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SEC/sec_ticker_info_helper.py">
+      <file leaf-file-name="sec_xbrl_processor_test.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="37" column="8" selection-start-line="37" selection-start-column="8" selection-end-line="37" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="string_helper.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Common/string_helper.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="23" column="38" selection-start-line="23" selection-start-column="38" selection-end-line="23" selection-end-column="38" />
-              <folding />
+            <state vertical-scroll-proportion="2.1270719">
+              <caret line="129" column="57" selection-start-line="129" selection-start-column="57" selection-end-line="129" selection-end-column="57" />
+              <folding>
+                <element signature="e#29#43#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -151,10 +82,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Scripts/rename_sql_table.py" />
-        <option value="$PROJECT_DIR$/Scripts/backup_database_to_cloud_storage.py" />
-        <option value="$PROJECT_DIR$/Database/generic_model_database_test.py" />
-        <option value="$PROJECT_DIR$/Database/timeline_model.py" />
         <option value="$PROJECT_DIR$/Database/transaction_model.py" />
         <option value="$PROJECT_DIR$/Common/timeline_model_database_test.py" />
         <option value="$PROJECT_DIR$/Common/timeline_model_database.py" />
@@ -168,7 +95,6 @@
         <option value="$PROJECT_DIR$/Common/string_helper.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/yahoo_historical_parser.py" />
         <option value="$PROJECT_DIR$/Database/generic_model_database.py" />
-        <option value="$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py" />
         <option value="$PROJECT_DIR$/Database/timeline_model_database_test.py" />
         <option value="$PROJECT_DIR$/Database/ticker_info_database_test.py" />
         <option value="$PROJECT_DIR$/SEC/sec_ticker_info_helper_test.py" />
@@ -182,7 +108,6 @@
         <option value="$PROJECT_DIR$/QueryService/stock_metrics.py" />
         <option value="$PROJECT_DIR$/DatabaseModel/stock_metrics.py" />
         <option value="$PROJECT_DIR$/DatabaseModel/company_metrics.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" />
         <option value="$PROJECT_DIR$/Database/bigquery_dao_factory_test.py" />
         <option value="$PROJECT_DIR$/Database/company_metrics_database_test.py" />
         <option value="$PROJECT_DIR$/Scripts/validate_database.py" />
@@ -193,15 +118,21 @@
         <option value="$PROJECT_DIR$/DatabaseModel/metrics.py" />
         <option value="$PROJECT_DIR$/Database/metrics_database_test.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py" />
-        <option value="$PROJECT_DIR$/Database/metrics_database.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
-        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_index.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice_test.py" />
+        <option value="$PROJECT_DIR$/AnalyticPipeline/DatabaseAnalytic.py" />
+        <option value="$PROJECT_DIR$/AnalyticPipeline/database_analytic_test.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py" />
+        <option value="$PROJECT_DIR$/AnalyticPipeline/database_analytic.py" />
+        <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_company_fundamentals.py" />
+        <option value="$PROJECT_DIR$/Database/metrics_database.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" />
+        <option value="$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
+        <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
       </list>
     </option>
   </component>
@@ -237,6 +168,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -256,92 +188,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webserver" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webserver" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webserver" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webserver" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="static" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gen-py" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -397,34 +243,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="QueryService" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DatabaseModel" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="Database" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -443,10 +261,23 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AnalyticPipeline" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -613,17 +444,17 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20591341" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18479408" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -655,43 +486,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="28" column="97" selection-start-line="28" selection-start-column="97" selection-end-line="28" selection-end-column="97" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DatabaseModel/ticker_info.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09392265">
-          <caret line="4" column="78" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="78" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Python27/Lib/site-packages/oauth2client/tools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-22.034483">
-          <caret line="160" column="12" selection-start-line="160" selection-start-column="8" selection-end-line="160" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Common/logger.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7748619">
-          <caret line="35" column="104" selection-start-line="35" selection-start-column="104" selection-end-line="35" selection-end-column="104" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python27/Lib/site-packages/googleapiclient/discovery.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33287293">
           <caret line="152" column="4" selection-start-line="152" selection-start-column="4" selection-end-line="152" selection-end-column="4" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -703,22 +501,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Database/ticker_info_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="88" selection-start-line="33" selection-start-column="88" selection-end-line="33" selection-end-column="88" />
-          <folding>
-            <element signature="e#28#43#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Database/dao_factory_repo.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.39917126">
           <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
           <folding>
-            <element signature="e#29#74#0" expanded="true" />
+            <element signature="e#29#74#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -727,24 +515,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Database/ticker_info_database_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6712707">
-          <caret line="42" column="16" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="16" />
-          <folding>
-            <element signature="e#29#44#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Database/mysql_dao_factory_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="65" selection-start-line="0" selection-start-column="0" selection-end-line="68" selection-end-column="19" />
           <folding />
         </state>
       </provider>
@@ -771,7 +541,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="38" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -779,7 +548,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="25" column="69" selection-start-line="25" selection-start-column="8" selection-end-line="25" selection-end-column="69" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -787,7 +555,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="6" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -803,7 +570,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -819,7 +585,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -831,21 +596,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="87" column="43" selection-start-line="87" selection-start-column="43" selection-end-line="87" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Database/bigquery_dao_factory_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
-          <folding>
-            <element signature="e#28#43#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -853,7 +607,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.61049724">
           <caret line="34" column="42" selection-start-line="34" selection-start-column="42" selection-end-line="34" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -861,7 +614,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -869,9 +621,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.32872927">
           <caret line="23" column="60" selection-start-line="22" selection-start-column="11" selection-end-line="23" selection-end-column="60" />
-          <folding>
-            <element signature="e#29#43#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -879,7 +628,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.9060773">
           <caret line="58" column="207" selection-start-line="58" selection-start-column="207" selection-end-line="58" selection-end-column="207" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -887,9 +635,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="90" column="30" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
-          <folding>
-            <element signature="e#29#39#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -897,9 +642,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -907,7 +649,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -915,7 +656,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-3.4143646">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -949,7 +689,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -969,41 +708,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Database/metrics_database_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="77" column="43" selection-start-line="77" selection-start-column="43" selection-end-line="77" selection-end-column="43" />
-          <folding>
-            <element signature="e#29#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_fixedincome_ustreasurybill_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="71" column="27" selection-start-line="71" selection-start-column="25" selection-end-line="71" selection-end-column="27" />
-          <folding>
-            <element signature="e#29#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Database/metrics_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="80" selection-start-line="27" selection-start-column="80" selection-end-line="27" selection-end-column="80" />
-          <folding>
-            <element signature="e#28#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="62" column="30" selection-start-line="62" selection-start-column="30" selection-end-line="62" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1012,26 +720,18 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="156" column="28" selection-start-line="156" selection-start-column="28" selection-end-line="156" selection-end-column="28" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_index_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.6670294">
           <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="127" column="27" selection-start-line="127" selection-start-column="27" selection-end-line="127" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1043,17 +743,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.32872927">
-          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SEC/sec_ticker_info_helper.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.20457019">
           <caret line="37" column="8" selection-start-line="37" selection-start-column="8" selection-end-line="37" selection-end-column="8" />
           <folding />
         </state>
@@ -1064,7 +756,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="54" column="12" selection-start-line="54" selection-start-column="12" selection-end-line="54" selection-end-column="12" />
           <folding>
-            <element signature="e#29#44#0" expanded="true" />
+            <element signature="e#29#44#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1079,20 +771,138 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.38955387">
           <caret line="139" column="0" selection-start-line="139" selection-start-column="0" selection-end-line="139" selection-end-column="0" />
           <folding>
-            <element signature="e#28#39#0" expanded="true" />
+            <element signature="e#28#39#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnalyticPipeline/database_analytic_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5179543">
+          <caret line="43" column="32" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
+          <folding>
+            <element signature="e#29#44#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/ticker_info_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="88" selection-start-line="33" selection-start-column="88" selection-end-line="33" selection-end-column="88" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/ticker_info_database_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="24" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnalyticPipeline/database_analytic.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="187" column="61" selection-start-line="187" selection-start-column="61" selection-end-line="187" selection-end-column="61" />
+          <folding>
+            <element signature="e#29#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_company_fundamentals.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.61044616">
+          <caret line="33" column="38" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
+          <folding>
+            <element signature="e#28#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/metrics_database_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2600653">
+          <caret line="20" column="32" selection-start-line="14" selection-start-column="8" selection-end-line="20" selection-end-column="32" />
+          <folding>
+            <element signature="e#29#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/mysql_dao_factory_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5005441">
+          <caret line="47" column="63" selection-start-line="47" selection-start-column="63" selection-end-line="47" selection-end-column="63" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57734805">
-          <caret line="274" column="58" selection-start-line="274" selection-start-column="58" selection-end-line="274" selection-end-column="58" />
+        <state vertical-scroll-proportion="0.8121547">
+          <caret line="74" column="47" selection-start-line="74" selection-start-column="47" selection-end-line="74" selection-end-column="47" />
           <folding>
             <element signature="e#28#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/metrics_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8453039">
+          <caret line="67" column="46" selection-start-line="67" selection-start-column="46" selection-end-line="67" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.45994475">
+          <caret line="36" column="60" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.3522099">
+          <caret line="62" column="46" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="46" />
+          <folding>
+            <element signature="e#29#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="225" column="37" selection-start-line="225" selection-start-column="37" selection-end-line="225" selection-end-column="37" />
+          <folding>
+            <element signature="e#29#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.1270719">
+          <caret line="129" column="57" selection-start-line="129" selection-start-column="57" selection-end-line="129" selection-end-column="57" />
+          <folding>
+            <element signature="e#29#43#0" expanded="true" />
           </folding>
         </state>
       </provider>

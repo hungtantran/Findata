@@ -10,33 +10,37 @@ from lxml import etree
 import logger
 from string_helper import StringHelper
 from generic_model_database import GenericModelDatabase
+from metrics import Metrics
+from metrics_database import MetricsDatabase
 
 
 class SecXbrlDatabaseHelper(object):
-    def __init__(self, dbtype, username, password, server ,database):
-        self.model_db = GenericModelDatabase(dbtype, username, password,server, database)
-        pass
+    def __init__(self, dbtype, username, password, server, database, table_name):
+        self.dbtype = dbtype
+        self.username = username
+        self.password = password
+        self.server = server
+        self.database = database
+        self.table_name = table_name
+        self.metrics_db = MetricsDatabase(
+                self.dbtype,
+                self.username,
+                self.password,
+                self.server,
+                self.database,
+                table_name)
 
-    def create_companies_metrics_table(self, table_name=None):
-        if table_name is None:
-            table_name = 'Companies_Metrics'
-        print 'try to create %s' % table_name
-        self.model_db.create_model(model=table_name,
-                                   column_names=['cik', 'ticker', 'year', 'quarter', 'start_date', 'end_date', 'form_name', 'metrics_name', 'value_float', 'value_string', 'metrics_unit', 'standard'],
-                                   column_types=['INTEGER', 'VARCHAR(32)', 'SMALLINT', 'SMALLINT', 'DATETIME', 'DATETIME', 'VARCHAR(255)', 'VARCHAR(255)', 'FLOAT', 'TEXT', 'VARCHAR(255)', 'VARCHAR(255)'],
-                                   primary_key_columns=['cik', 'start_date', 'end_date', 'metrics_name'])
+    def create_companies_metrics_table(self):
+        print 'Try to create metrics table %s' % self.table_name
+        self.metrics_db.create_metric()
 
-    def insert_company_metrics_table(self, values, table_name=None):
-        if table_name is None:
-            table_name = 'Companies_Metrics'
-        self.model_db.insert_values(model=table_name,
-                                    values=values,
-                                    ignore_duplicated=True)
+    def insert_company_metrics_table(self, values):
+        self.metrics_db.insert_metrics(new_metrics=values)
 
-    def convert_processed_results_to_database_insert(self, cik, ticker, year, quarter, form_name, parse_results):
-        converted_results = []
-        for metrics_name in parse_results:
-            metrics_results = parse_results[metrics_name]
+    def convert_parse_results_to_metrics(self, parse_results):
+        metrics = []
+        for metric_name in parse_results:
+            metrics_results = parse_results[metric_name]
             for metrics_result in metrics_results:
                 value = metrics_result[0]
                 if (type(value) is float) or (type(value) is int):
@@ -53,6 +57,12 @@ class SecXbrlDatabaseHelper(object):
                 end_date = metrics_result[2]
                 unit = metrics_result[3]
                 standard = metrics_result[4]
-                converted_result = [cik, ticker, year, quarter, start_date, end_date, form_name, metrics_name, value_float, value_string, 'USD', standard]
-                converted_results.append(converted_result)
-        return converted_results
+
+                new_metric = Metrics(
+                        metric_name=metric_name,
+                        start_date=start_date,
+                        end_date=end_date,
+                        unit=unit,
+                        value=value_float)
+                metrics.append(new_metric)
+        return metrics

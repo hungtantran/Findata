@@ -10,6 +10,7 @@ import logger
 from string_helper import StringHelper
 from sec_xbrl_helper import SecXbrlHelper
 from sec_ticker_info_helper import SecTickerInfoHelper
+from sec_xbrl_database_helper import SecXbrlDatabaseHelper
 
 
 class SecXbrlProcessor(object):
@@ -28,20 +29,27 @@ class SecXbrlProcessor(object):
             return (int(match.group(1)), int(match.group(2)), int(match.group(3)), match.group(4))
         return None
 
-    def process_xbrl_directory_and_push_database(self, xbrl_zip_directory, sec_xbrl_database_helper, sec_ticker_info_helper,
-                                                 extracted_directory='.', remove_extracted_file_after_done=False):
+    def process_xbrl_directory_and_push_database(self, db_type, username, password, server, database, xbrl_zip_directory,
+                                                 sec_ticker_info_helper, extracted_directory='.',
+                                                 remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip directory %s and push to database' % xbrl_zip_directory)
         xbrl_zip_files = SecXbrlHelper.get_all_xbrl_zip_files_from_directory(xbrl_zip_directory)
 
         for xbrl_zip_file in xbrl_zip_files:
-            self.process_xbrl_zip_file_and_push_database(zip_file_path=xbrl_zip_file,
-                                                         sec_xbrl_database_helper=sec_xbrl_database_helper,
-                                                         sec_ticker_info_helper=sec_ticker_info_helper,
-                                                         extracted_directory=extracted_directory,
-                                                         remove_extracted_file_after_done=remove_extracted_file_after_done)
+            self.process_xbrl_zip_file_and_push_database(
+                    db_type=db_type,
+                    username=username,
+                    password=password,
+                    server=server,
+                    database=database,
+                    zip_file_path=xbrl_zip_file,
+                    sec_ticker_info_helper=sec_ticker_info_helper,
+                    extracted_directory=extracted_directory,
+                    remove_extracted_file_after_done=remove_extracted_file_after_done)
 
-    def process_xbrl_zip_file_and_push_database(self, zip_file_path, sec_xbrl_database_helper, sec_ticker_info_helper,
-                                                extracted_directory='.', remove_extracted_file_after_done=False):
+    def process_xbrl_zip_file_and_push_database(self, db_type, username, password, server, database, zip_file_path,
+                                                sec_ticker_info_helper, extracted_directory='.',
+                                                remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s and push to database' % zip_file_path)
 
         results = self.process_xbrl_zip_file(zip_file_path=zip_file_path,
@@ -57,17 +65,18 @@ class SecXbrlProcessor(object):
             logger.Logger.log(logger.LogLevel.WARN, 'Cannot find ticker for cik %d' % cik)
             return
 
-        converted_results = sec_xbrl_database_helper.convert_processed_results_to_database_insert(
-                    cik=cik,
-                    ticker=ticker,
-                    year=year,
-                    quarter=quarter,
-                    form_name=form_name,
-                    parse_results=results)
+        table_name = '%s_metrics' % ticker.lower()
+        sec_xbrl_database_helper = SecXbrlDatabaseHelper(dbtype=db_type,
+                                                         username=username,
+                                                         password=password,
+                                                         server=server,
+                                                         database=database,
+                                                         table_name=table_name)
 
-        table_name = 'company_fundamentals_%s_metrics' % ticker.lower()
-        sec_xbrl_database_helper.create_companies_metrics_table(table_name=table_name)
-        sec_xbrl_database_helper.insert_company_metrics_table(values=converted_results, table_name=table_name)
+        metrics = sec_xbrl_database_helper.convert_parse_results_to_metrics(parse_results=results)
+
+        sec_xbrl_database_helper.create_companies_metrics_table()
+        sec_xbrl_database_helper.insert_company_metrics_table(values=metrics)
 
     def process_xbrl_zip_file(self, zip_file_path, extracted_directory='.', remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s' % zip_file_path)
