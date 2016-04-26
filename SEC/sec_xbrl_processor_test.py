@@ -115,6 +115,11 @@ class TestSecXbrlProcessor(unittest.TestCase):
                     remove_extracted_file_after_done=False)
             data = self.model_db.get_model_data(self.table_name)
             self.assertEqual(len(data), 240)
+            # Check if metadata is there
+            self.assertTrue(data[0][6], None)
+            self.assertTrue('year' in data[0][6])
+            self.assertTrue('quarter' in data[0][6])
+            self.assertTrue('form_name' in data[0][6])
         finally:
             self.TearDown()
 
@@ -133,6 +138,11 @@ class TestSecXbrlProcessor(unittest.TestCase):
                     remove_extracted_file_after_done=False)
             data = self.model_db.get_model_data(self.table_name)
             self.assertEqual(len(data), 240)
+            # Check if metadata is there
+            self.assertTrue(data[0][6], None)
+            self.assertTrue('year' in data[0][6])
+            self.assertTrue('quarter' in data[0][6])
+            self.assertTrue('form_name' in data[0][6])
         finally:
             self.TearDown()
 

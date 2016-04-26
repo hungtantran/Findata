@@ -56,7 +56,6 @@ class SecXbrlDatabaseHelper(object):
                 start_date = metrics_result[1]
                 end_date = metrics_result[2]
                 unit = metrics_result[3]
-                standard = metrics_result[4]
 
                 new_metric = Metrics(
                         metric_name=metric_name,

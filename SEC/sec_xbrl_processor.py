@@ -4,6 +4,7 @@ __author__ = 'hungtantran'
 import os
 import re
 import zipfile
+import json
 from lxml import etree
 
 import logger
@@ -27,7 +28,7 @@ class SecXbrlProcessor(object):
         if match:
             # Return cik, year, quarter, form name
             return (int(match.group(1)), int(match.group(2)), int(match.group(3)), match.group(4))
-        return None
+        return None, None, None, None
 
     def process_xbrl_directory_and_push_database(self, db_type, username, password, server, database, xbrl_zip_directory,
                                                  sec_ticker_info_helper, extracted_directory='.',
@@ -52,14 +53,18 @@ class SecXbrlProcessor(object):
                                                 remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s and push to database' % zip_file_path)
 
+        (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(zip_file_path)
+        (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
+        if (cik is None or year is None or quarter is None or form_name is None):
+            logger.Logger.log(logger.LogLevel.WARN, 'Cannot extract information from zip file %s' % zip_file_path)
+            return
+
         results = self.process_xbrl_zip_file(zip_file_path=zip_file_path,
                                              extracted_directory=extracted_directory,
                                              remove_extracted_file_after_done=remove_extracted_file_after_done)
         if results is None:
             return
 
-        (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(zip_file_path)
-        (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
         ticker = sec_ticker_info_helper.cik_to_ticker(cik)
         if ticker is None:
             logger.Logger.log(logger.LogLevel.WARN, 'Cannot find ticker for cik %d' % cik)
@@ -74,6 +79,12 @@ class SecXbrlProcessor(object):
                                                          table_name=table_name)
 
         metrics = sec_xbrl_database_helper.convert_parse_results_to_metrics(parse_results=results)
+        metadata = {}
+        metadata['year'] = year
+        metadata['quarter'] = quarter
+        metadata['form'] = form_name
+        for metric in metrics:
+            metric.metadata = json.dumps(metadata)
 
         sec_xbrl_database_helper.create_companies_metrics_table()
         sec_xbrl_database_helper.insert_company_metrics_table(values=metrics)
