@@ -12,7 +12,7 @@ import time
 
 import logger
 from string_helper import StringHelper
-from dao_factory_repo import DAOFactoryRepository
+from ticker_info_database import TickerInfoDatabase
 
 
 class SecTickerInfoHelper(object):
@@ -21,17 +21,20 @@ class SecTickerInfoHelper(object):
         self.ticker_to_cik_map = {}
 
         try:
-            dao_factory = DAOFactoryRepository.getInstance(dbtype)
-            with dao_factory.create(username, password, server, database) as connection:
-                # TODO need to make this general
-                cursor = connection.cursor()
-                cursor.execute("SELECT * FROM ticker_info")
-                data = cursor.fetchall()
-                for row in data:
-                    if (row[0] is None) or (row[1] is None):
-                        continue
-                    self.cik_to_ticker_map[int(row[0])] = row[1]
-                    self.ticker_to_cik_map[row[1]] = int(row[0])
+            ticker_info_db = TickerInfoDatabase(
+                    dbtype,
+                    username,
+                    password,
+                    server,
+                    database,
+                    'ticker_info')
+
+            data = ticker_info_db.get_ticker_info_data()
+            for row in data:
+                if (row.cik is None) or (row.ticker is None):
+                    continue
+                self.cik_to_ticker_map[row.cik] = row.ticker
+                self.ticker_to_cik_map[row.ticker] = row.cik
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 

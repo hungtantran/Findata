@@ -10,11 +10,13 @@ from util import Util
 
 
 class SecFileRetriever(object):
-    MAX_TIME_FOR_REFRESH_IN_SECS = 60 * 30
+    MAX_TIME_FOR_REFRESH_IN_SECS = 60 * 10
+    MAX_ERROR_BEFORE_STOP = 50
 
     def __init__(self, link, full_index_path, xbrl_index_file=None):
         self.link = link
         self.full_index_path = full_index_path
+        self.num_error_download = 0
 
         if xbrl_index_file is None:
             self.xbrl_index_file = Config.sec_xbrl_index_file
@@ -103,6 +105,8 @@ class SecFileRetriever(object):
                 return target_file_path
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, e)
-        finally:
-            pass
+            self.num_error_download += 1
+
+            if self.num_error_download > SecFileRetriever.MAX_ERROR_BEFORE_STOP:
+                raise e
 

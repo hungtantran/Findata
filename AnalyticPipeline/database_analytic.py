@@ -13,7 +13,7 @@ from Common.constants_config import Config
 
 
 class DatabaseAnalytic(object):
-    def __init__(self, db_type, username, password, server, database, max_num_threads=20):
+    def __init__(self, db_type, username, password, server, database, max_num_threads=1):
         self.dao_factory = DAOFactoryRepository.getInstance(db_type)
         self.db_type = db_type
         self.username = username
@@ -130,6 +130,8 @@ class DatabaseAnalytic(object):
                     self.analytic_results[table_name] = result
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            finally:
+                self.q.task_done()
 
     def RunAnalytic(self):
         if self.analytic_func is None:
@@ -170,8 +172,13 @@ class DatabaseAnalytic(object):
 
 
 class UsEquityMetricsAnalytics(DatabaseAnalytic):
-    def __init__(self, db_type, username, password, server, database, max_num_threads=20):
+    def __init__(self, db_type, username, password, server, database, max_num_threads=5):
         super(UsEquityMetricsAnalytics, self).__init__(db_type, username, password, server, database, max_num_threads)
+        self.orderby_clause = 'start_date desc'
+        self.sector = None
+        self.industry = None
+
+    def RunAnalytic(self):
         try:
             ticker_info_db = ticker_info_database.TickerInfoDatabase(
                     self.db_type,
@@ -184,7 +191,9 @@ class UsEquityMetricsAnalytics(DatabaseAnalytic):
 
             self.table_names = []
             for ticker_info in data:
-                if ticker_info.ticker.isalnum():
+                if (ticker_info.ticker.isalnum() and
+                    (self.sector is None or (ticker_info.sector is not None and self.sector.lower() in ticker_info.sector.lower())) and
+                    (self.industry is None or (ticker_info.industry is not None and self.industry.lower() in ticker_info.industry.lower()))):
                     table_name = '%s_metrics' % ticker_info.ticker.lower()
                     self.table_names.append(table_name)
                     self.per_table_additional_data[table_name] = ticker_info
@@ -192,15 +201,19 @@ class UsEquityMetricsAnalytics(DatabaseAnalytic):
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
             raise e
 
-        self.orderby_clause = 'start_date desc'
+        super(UsEquityMetricsAnalytics, self).RunAnalytic()
+
+    def LimitSectorIndustry(self, sector, industry=None):
+        self.sector = sector
+        self.industry = industry
+        return self
 
     def LimitTableNames(self, table_names):
         logger.Logger.log(logger.LogLevel.WARN, 'UsEquityMetricsAnalytics does not support LimitTableNames. Use '
                                                 'QueryTableName if you need to limit tables')
         return self
 
-    @staticmethod
-    def CalculatePriceMovement(db_type, username, password, server, database, duration_in_days=10, max_num_threads=20):
+    def CalculatePriceMovement(self, duration_in_days=10):
         def CalPriceMovement(data, ticker_info):
             price_movement = []
             for i in range(1, len(data)):
@@ -208,32 +221,26 @@ class UsEquityMetricsAnalytics(DatabaseAnalytic):
                 price_movement.append(price_change)
             return price_movement
 
-        analytics = UsEquityMetricsAnalytics(
-                db_type=db_type,
-                username=username,
-                password=password,
-                server=server,
-                database=database,
-                max_num_threads=max_num_threads).\
-                Filter("metric_name = 'adj_close'").\
-                LimitResultPerTable(duration_in_days).\
-                Fields(['value, start_date']).\
-                AnalyticFunc(analytic_func=CalPriceMovement)
-        analytics.RunAnalytic()
-        results = analytics.GetAnalyticResults()
+
+        self.Filter("metric_name = 'adj_close'")
+        self.LimitResultPerTable(duration_in_days)
+        self.Fields(['value, start_date'])
+        self.AnalyticFunc(analytic_func=CalPriceMovement)
+        self.RunAnalytic()
+        results = self.GetAnalyticResults()
         return results
 
 
 if __name__ == '__main__':
-    results = UsEquityMetricsAnalytics.CalculatePriceMovement(
+    analytic_obj = UsEquityMetricsAnalytics(
             db_type='mysql',
             username=Config.mysql_username,
             password=Config.mysql_password,
             server=Config.mysql_server,
-            database=Config.mysql_database,
-            duration_in_days=10,
-            max_num_threads=20)
-    with open('result2.txt', 'w') as f:
+            database=Config.mysql_database).\
+            LimitSectorIndustry(sector='Technology', industry='Software')
+    results = analytic_obj.CalculatePriceMovement(duration_in_days=2)
+    with open('result.txt', 'w') as f:
         for table_name in results:
             results[table_name] = [str(value) for value in results[table_name]]
             line = table_name + ': ' + ','.join(results[table_name]) + '\n'

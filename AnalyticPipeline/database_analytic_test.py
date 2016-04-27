@@ -11,7 +11,7 @@ from generic_model_database import GenericModelDatabase
 
 class TestDatabaseAnalytic(unittest.TestCase):
     @staticmethod
-    def analytic_function(data):
+    def analytic_function(data, table_additional_data):
         sum = 0
         for row in data:
             sum += row[0]

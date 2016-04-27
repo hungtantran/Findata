@@ -24,6 +24,9 @@ class Config(object):
     bigquery_server = 'model-1256'
     bigquery_database = 'models'
 
+    gmail_client_userid = 'hungtantran@gmail.com'
+    gmail_secret_json = 'Key/client_secret_292129338715-tqmce99o5ejkehi7fpm59skmg81hvoh3.apps.googleusercontent.com.json'
+
     sec_ftp_link = 'ftp.sec.gov'
     sec_ftp_full_index_path = '/edgar/full-index'
     sec_xbrl_index_file = 'xbrl.idx'

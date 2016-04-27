@@ -2,3 +2,4 @@ webserver/node_modules
 webserver/static/bundle.*
 webserver/npm-debug.log
 npm-debug.log
+*.txt

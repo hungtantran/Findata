@@ -25,13 +25,15 @@ class Retrieve(object):
 
         count = 0
         while not self.q.empty():
-            cik, accession, target_file_path = self.q.get()
-            count += 1
-            print '(%s) Download file (%d): %s' % (threading.current_thread().name, count, target_file_path)
-            file_retriever.get_xbrl_zip_file(cik=cik,
-                                             accession=accession,
-                                             target_file_path=target_file_path)
-
+            try:
+                cik, accession, target_file_path = self.q.get()
+                count += 1
+                print '(%s) Download file (%d): %s' % (threading.current_thread().name, count, target_file_path)
+                file_retriever.get_xbrl_zip_file(cik=cik,
+                                                 accession=accession,
+                                                 target_file_path=target_file_path)
+            finally:
+                self.q.task_done()
 
     def retrieve_xbrl_zip_files(self, exclude_cik_list, cik_list, xbrl_index_dir, intermediate_file_dir='.'):
         xbrl_index_parser = SecXbrlIndexFileParser()
@@ -78,7 +80,7 @@ class Retrieve(object):
 
         # Start threads to download
         threads = []
-        for i in range(3):
+        for i in range(6):
             t = threading.Thread(target=self.retrieve_file)
             threads.append(t)
             t.start()
