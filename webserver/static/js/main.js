@@ -1,10 +1,7 @@
-import GraphContainer from './graphContainer'
 import ReactDOM from 'react-dom'
 import React from 'react' 
+import Workspace from './components/workspace'
 
 ReactDOM.render(
-  <div>
-    <GraphContainer />
-    <GraphContainer />
-  </div>
-  , document.getElementById('content'));
+  <Workspace />,
+  document.getElementById('content'));
