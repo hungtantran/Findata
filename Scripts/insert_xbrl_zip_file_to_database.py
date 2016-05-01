@@ -21,13 +21,21 @@ def process_xbrl_directory_and_push_database(xbrl_zip_directory, extracted_direc
     processor = SecXbrlProcessor()
 
     try:
-        processor.process_xbrl_directory_and_push_database(xbrl_zip_directory=xbrl_zip_directory,
-                                                           sec_ticker_info_helper=ticker_info_helper,
-                                                           extracted_directory=extracted_directory,
-                                                           remove_extracted_file_after_done=False)
+        processor.process_xbrl_directory_and_push_database(
+                db_type='mysql',
+                username=Config.mysql_username,
+                password=Config.mysql_password,
+                server=Config.mysql_server,
+                database=Config.mysql_database,
+                xbrl_zip_directory=xbrl_zip_directory,
+                sec_ticker_info_helper=ticker_info_helper,
+                extracted_directory=extracted_directory,
+                remove_extracted_file_after_done=False)
     except Exception as e:
         print e
 
 
-#process_xbrl_directory_and_push_database(xbrl_zip_directory='SEC/xbrl_zip_files',
-#                                         extracted_directory='SEC/xbrl_output_files')
+if __name__ == '__main__':
+    process_xbrl_directory_and_push_database(
+            xbrl_zip_directory='SEC/xbrl_zip_files',
+            extracted_directory='SEC/xbrl_output_files')

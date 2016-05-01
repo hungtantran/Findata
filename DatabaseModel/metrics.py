@@ -26,3 +26,13 @@ class Metrics(object):
         self.start_date = start_date
         self.end_date = end_date
         self.metadata = metadata
+
+    def to_string(self):
+        return '%s %s %s %s %s %s %s' % (
+                self.id,
+                self.metric_name,
+                self.value,
+                self.unit,
+                self.start_date,
+                self.end_date,
+                self.metadata)

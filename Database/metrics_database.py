@@ -16,20 +16,22 @@ import metrics
 class MetricsDatabase(object):
     max_num_reties = 1;
 
-    def __init__(self, db_type, username, password, server, database, metric):
+    def __init__(self, db_type, username, password, server, database, metric, use_orm=True):
         self.dao_factory = DAOFactoryRepository.getInstance(db_type)
         self.username = username
         self.password = password
         self.server = server
         self.database = database
-        self.engine = sqlalchemy.create_engine('%s://%s:%s@%s/%s?charset=utf8&use_unicode=0' %
-                                               (db_type, username, password, server, database),
-                                               pool_recycle=3600)
-        self.session = sqlalchemy.orm.sessionmaker(bind=self.engine, expire_on_commit=False)
         self.metric = metric
-        self.table = self.get_metrics_table_object(
-                metric=metric,
-                class_map=metrics.Metrics)
+
+        if use_orm:
+            self.engine = sqlalchemy.create_engine('%s://%s:%s@%s/%s?charset=utf8&use_unicode=0' %
+                                                   (db_type, username, password, server, database),
+                                                   pool_recycle=3600)
+            self.session = sqlalchemy.orm.sessionmaker(bind=self.engine, expire_on_commit=False)
+            self.table = self.get_metrics_table_object(
+                    metric=metric,
+                    class_map=metrics.Metrics)
 
     @staticmethod
     def create_metric_name(metric):
@@ -63,7 +65,8 @@ class MetricsDatabase(object):
                 sqlalchemy.Column('unit', sqlalchemy.String(32)),
                 sqlalchemy.Column('start_date', sqlalchemy.DateTime),
                 sqlalchemy.Column('end_date', sqlalchemy.DateTime),
-                sqlalchemy.Column('metadata', sqlalchemy.TEXT))
+                sqlalchemy.Column('metadata', sqlalchemy.TEXT),
+                sqlalchemy.UniqueConstraint('metric_name', 'start_date', 'end_date'))
         sqlalchemy.orm.clear_mappers()
         sqlalchemy.orm.mapper(class_map, metrics_table)
         return metrics_table
@@ -92,15 +95,40 @@ class MetricsDatabase(object):
 
     def insert_metrics(self, new_metrics, ignore_duplicate=False):
         try:
-            self.session.close_all()
-            s = self.session()
-            s.bulk_save_objects(new_metrics)
+            with self.dao_factory.create(self.username,
+                                         self.password,
+                                         self.server,
+                                         self.database) as connection:
+                # TODO need to make this general
+                # TODO seriously need to make this parametrized
+                cursor = connection.cursor()
+                values_arr = []
+
+                for metric in new_metrics:
+                    value_string = '('
+                    value_string += "'%s'," % metric.metric_name
+                    value_string += "%s," % metric.value
+                    value_string += "'%s'," % metric.unit
+                    value_string += "'%s'," % StringHelper.convert_datetime_to_string(metric.start_date)
+                    value_string += "'%s'," % StringHelper.convert_datetime_to_string(metric.end_date)
+
+                    if metric.metadata is None:
+                        value_string += "NULL"
+                    else:
+                        value_string += "'%s'" % metric.metadata
+
+                    value_string += ')'
+                    values_arr.append(value_string)
+
+                if len(values_arr) > 0:
+                    query_string = "INSERT "
+                    if ignore_duplicate:
+                        query_string += "IGNORE "
+                    query_string += "INTO %s (metric_name, value, unit, start_date, end_date, metadata) VALUES %s" % (self.metric, ','.join(values_arr))
+                    cursor.execute(query_string)
+                    connection.commit()
         except Exception as e:
             Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
-        finally:
-            if s is not None:
-                s.commit()
-                s.close()
 
     def remove_metric(self):
         Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Drop metric %s' % self.metric)

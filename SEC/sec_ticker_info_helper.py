@@ -48,7 +48,8 @@ class SecTickerInfoHelper(object):
             return self.ticker_to_cik_map[ticker]
         return None
 
-    def company_name_to_cik(self, company_name):
+    @staticmethod
+    def company_name_to_cik(company_name):
         try:
             sec_url = 'http://www.sec.gov/cgi-bin/cik_lookup'
             values = dict(company=company_name)

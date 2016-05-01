@@ -19,8 +19,8 @@ class TestTickerInfoDatabase(unittest.TestCase):
         try:
             ticker_info_db.remove_ticker_info_table()
             ticker_info_db.create_ticker_info_table()
-            ticker_info_db.insert_value(1, 'A', 'AA', 1991, 'AAA', 'AAAA', 'AAAAA')
-            ticker_info_db.insert_value(2, 'B', 'BB', 1992, 'BBB', 'BBBB', 'BBBBB')
+            ticker_info_db.insert_value(1, 'A', 'AA', 1991, 'AAA', 'AAAA', 'AAAAA', None, None)
+            ticker_info_db.insert_value(2, 'B', 'BB', 1992, 'BBB', 'BBBB', 'BBBBB', 123, 456)
 
             data = ticker_info_db.get_ticker_info_data()
             self.assertEqual(len(data), 2)
@@ -32,6 +32,8 @@ class TestTickerInfoDatabase(unittest.TestCase):
             self.assertEquals(data[0].sector, 'AAA')
             self.assertEquals(data[0].industry, 'AAAA')
             self.assertEquals(data[0].exchange, 'AAAAA')
+            self.assertEquals(data[0].sic, None)
+            self.assertEquals(data[0].naics, None)
 
             self.assertEquals(data[1].cik, 2)
             self.assertEquals(data[1].ticker, 'B')
@@ -40,6 +42,8 @@ class TestTickerInfoDatabase(unittest.TestCase):
             self.assertEquals(data[1].sector, 'BBB')
             self.assertEquals(data[1].industry, 'BBBB')
             self.assertEquals(data[1].exchange, 'BBBBB')
+            self.assertEquals(data[1].sic, 123)
+            self.assertEquals(data[1].naics, 456)
         finally:
             ticker_info_db.remove_ticker_info_table()
 

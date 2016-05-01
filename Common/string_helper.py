@@ -45,6 +45,10 @@ class StringHelper(object):
         return (directory, file_name)
 
     @staticmethod
+    def remove_all_non_space_non_alphanumeric(str):
+        return re.sub(r'([^\s\w]|_)+', '', str)
+
+    @staticmethod
     def convert_string_to_datetime(time_str):
         patterns = {}
         # 3/1/2016

@@ -41,5 +41,12 @@ class TestStringHelper(unittest.TestCase):
         self.assertEqual(directory, '.')
         self.assertEqual(file_name, 'file.zip')
 
+    def test_remove_all_non_space_non_alphanumeric(self):
+        self.assertEqual(StringHelper.remove_all_non_space_non_alphanumeric('@ROAD, INC'), 'ROAD INC')
+        self.assertEqual(StringHelper.remove_all_non_space_non_alphanumeric('24/7 REAL MEDIA INC'), '247 REAL MEDIA INC')
+        self.assertEqual(StringHelper.remove_all_non_space_non_alphanumeric('2-Track Global, Inc.'), '2Track Global Inc')
+        self.assertEqual(StringHelper.remove_all_non_space_non_alphanumeric('8X8 INC /DE/'), '8X8 INC DE')
+
+
 if __name__ == '__main__':
     unittest.main()

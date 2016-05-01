@@ -120,6 +120,7 @@ class DatabaseAnalytic(object):
                     logger.Logger.log(logger.LogLevel.INFO, 'Run analytic for table %s' % table_name)
 
                     query_string = self._ConstructPerTableQuery(table_name)
+                    print query_string
                     cursor.execute(query_string)
                     data = cursor.fetchall()
 
@@ -230,6 +231,36 @@ class UsEquityMetricsAnalytics(DatabaseAnalytic):
         results = self.GetAnalyticResults()
         return results
 
+    def CalculateFundamentalMovement(self, fundamental, quarterly=True, yearly=False):
+        def CalFundamentalMovement(data, ticker_info):
+            fund_movement = []
+            for i in range(1, len(data)):
+                fund_change = (data[i - 1][0] - data[i][0]) / data[i][0] * 100
+                fund_movement.append(fund_change)
+            return fund_movement
+
+        if ((quarterly and yearly) != False):
+            logger.Logger.log(logger.LogLevel.WARN, 'Need to specify either quarterly or yearly')
+            return None
+
+        if ((quarterly or yearly) == False):
+            logger.Logger.log(logger.LogLevel.WARN, 'Need to specify only one of quarterly or yearly')
+            return None
+
+        duration_filter = 'having duration < 100'
+        if yearly:
+            duration_filter = 'having duration > 100'
+        self.Filter("metric_name = '%s' %s" % (fundamental, duration_filter))
+
+        self.Fields(['value', 'DATEDIFF(end_date, start_date) as duration'])
+
+        self.AnalyticFunc(analytic_func=CalFundamentalMovement)
+        self.RunAnalytic()
+        results = self.GetAnalyticResults()
+        return results
+
+    """def select *, DATEDIFF(end_date, start_date) as duration from msft_metrics where metric_name like 'grossprofit' having duration < 100 order by end_date desc;"""
+
 
 if __name__ == '__main__':
     analytic_obj = UsEquityMetricsAnalytics(
@@ -239,7 +270,8 @@ if __name__ == '__main__':
             server=Config.mysql_server,
             database=Config.mysql_database).\
             LimitSectorIndustry(sector='Technology', industry='Software')
-    results = analytic_obj.CalculatePriceMovement(duration_in_days=2)
+    """results = analytic_obj.CalculatePriceMovement(duration_in_days=2)"""
+    results = analytic_obj.CalculateFundamentalMovement(fundamental='Revenues')
     with open('result.txt', 'w') as f:
         for table_name in results:
             results[table_name] = [str(value) for value in results[table_name]]

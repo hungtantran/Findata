@@ -3,12 +3,17 @@ __author__ = 'hungtantran'
 
 import filecmp
 import os
+import re
 import unittest
+import zipfile
 
 import logger
 from constants_config import Config
 from dao_factory_repo import DAOFactoryRepository
 from sec_ticker_info_helper import SecTickerInfoHelper
+from sec_xbrl_helper import SecXbrlHelper
+from string_helper import StringHelper
+from sec_xbrl_processor import SecXbrlProcessor
 
 
 # Assume the file has there columns:
@@ -57,8 +62,9 @@ def populate_ticker_info_table(company_info_file, exchange=None):
             print e
 
 
-def populate_cik():
-    sec_ticker_info_helper = SecTickerInfoHelper(dbtype=None, username=None, password=None, server=None, database=None)
+def populate_cik_from_xbrl_zip_directory(xbrl_zip_directory):
+    cik_to_file_map, ticker_to_cik_map = build_cik_ticker_map_from_xbrl_zip_directory(xbrl_zip_directory)
+
     dao_factory = DAOFactoryRepository.getInstance('mysql')
     with dao_factory.create(Config.mysql_username,
                             Config.mysql_password,
@@ -67,22 +73,31 @@ def populate_cik():
         try:
             # TODO need to make this general
             cursor = connection.cursor()
-            cursor.execute('SELECT DISTINCT name from ticker_info where cik is null')
+            cursor.execute('SELECT ticker, cik from ticker_info')
             data = cursor.fetchall()
+
+            cursor2 = connection.cursor()
             for row in data:
                 try:
-                    original_name = row[0]
-                    name = original_name.lower()
-                    name = name.replace(',', '')
-                    name = name.replace('.', '')
-                    name = name.replace('inc', '')
-                    name = name.replace('corporation', '')
-                    name = name.strip()
-                    name = name.replace('  ', ' ')
-                    cik = sec_ticker_info_helper.company_name_to_cik(company_name=name)
-                    print 'Update company %s (%s) with cik %s' % (original_name, name, cik)
-                    cursor2 = connection.cursor()
-                    cursor2.execute('UPDATE ticker_info SET cik=%s WHERE name=%s', (cik, original_name))
+                    ticker = row[0]
+                    cik = row[1]
+
+                    if ticker not in ticker_to_cik_map:
+                        continue
+
+                    found_cik = ticker_to_cik_map[ticker]
+                    if (found_cik != cik) and (cik is not None):
+                        print "%s %s %s" % (ticker, found_cik, cik)
+                        continue
+
+                    if (cik is not None) and (found_cik == cik):
+                        continue
+
+                    cik_int = int(found_cik)
+                    update_query = "UPDATE ticker_info SET cik=%d WHERE ticker='%s'" % (cik_int, ticker)
+                    print update_query
+
+                    cursor2.execute(update_query)
                     connection.commit()
                 except Exception as e:
                     print e
@@ -90,7 +105,49 @@ def populate_cik():
         except Exception as e:
             print e
 
-#populate_cik()
-#populate_ticker_info_table(company_info_file='Data/amex_company_list.csv', exchange='NYSEMKT')
-#populate_ticker_info_table(company_info_file='Data/nyse_company_list.csv', exchange='NYSE')
-#populate_ticker_info_table(company_info_file='Data/nasdaq_company_list.csv', exchange='NASDAQ')
+
+def build_cik_ticker_map_from_xbrl_zip_directory(xbrl_zip_directory):
+    xbrl_file_pattern = '^([a-zA-Z]+)-[0-9]+\.xml'
+
+    xbrl_zip_files = SecXbrlHelper.get_all_xbrl_zip_files_from_directory(xbrl_zip_directory)
+
+    cik_to_file_map = {}
+    for xbrl_zip_file in xbrl_zip_files:
+        (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(xbrl_zip_file)
+        (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
+
+        if cik is None:
+            continue
+
+        if cik in cik_to_file_map:
+            continue
+
+        try:
+            with zipfile.ZipFile(xbrl_zip_file) as zip_file:
+                files = zip_file.namelist()
+
+                for file in files:
+                    match = re.search(xbrl_file_pattern, file)
+
+                    if match:
+                        cik_to_file_map[cik] = match.group(1)
+                        break
+        except Exception as e:
+            print e
+
+    ticker_to_cik_map = {}
+    for cik in cik_to_file_map:
+        ticker_to_cik_map[cik_to_file_map[cik].upper()] = cik
+
+    return cik_to_file_map, ticker_to_cik_map
+
+
+def populate_cik_from_sec_link():
+    SEC_CIK_LINKS
+
+if __name__ == '__main__':
+    #populate_cik_from_xbrl_zip_directory('SEC/xbrl_zip_files')
+    #build_cik_ticker_map_from_xbrl_zip_directory('SEC/xbrl_zip_files')
+    #populate_ticker_info_table(company_info_file='Data/amex_company_list.csv', exchange='NYSEMKT')
+    #populate_ticker_info_table(company_info_file='Data/nyse_company_list.csv', exchange='NYSE')
+    #populate_ticker_info_table(company_info_file='Data/nasdaq_company_list.csv', exchange='NASDAQ')

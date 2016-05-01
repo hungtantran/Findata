@@ -80,7 +80,7 @@ class Retrieve(object):
 
         # Start threads to download
         threads = []
-        for i in range(6):
+        for i in range(4):
             t = threading.Thread(target=self.retrieve_file)
             threads.append(t)
             t.start()

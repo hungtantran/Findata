@@ -151,7 +151,7 @@ class UpdateExchangeStockprice(threading.Thread):
                 # Get the table html elem
                 content_table_elem = self._yahoo_finance_get_content_table(html_elem)
                 if content_table_elem is None:
-                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no content table')
+                    logger.Logger.log(logger.LogLevel.WARN, 'Exit found no content table')
                     return
 
                 rows_elem = content_table_elem.findAll('tr')

@@ -8,6 +8,8 @@ import json
 from lxml import etree
 
 import logger
+import Queue
+import threading
 from string_helper import StringHelper
 from sec_xbrl_helper import SecXbrlHelper
 from sec_ticker_info_helper import SecTickerInfoHelper
@@ -16,9 +18,10 @@ from sec_xbrl_database_helper import SecXbrlDatabaseHelper
 
 class SecXbrlProcessor(object):
     XBRL_FILE_PATTERN = '^[a-zA-Z]+-[0-9]+\.xml'
+    MAX_PROCESSING_THREADS = 10
 
     def __init__(self):
-        pass
+        self.q = Queue.Queue()
 
     @staticmethod
     def parse_xbrl_zip_file_name(xbrl_zip_file_name):
@@ -37,57 +40,89 @@ class SecXbrlProcessor(object):
         xbrl_zip_files = SecXbrlHelper.get_all_xbrl_zip_files_from_directory(xbrl_zip_directory)
 
         for xbrl_zip_file in xbrl_zip_files:
+            self.q.put(xbrl_zip_file)
+
+        # Start threads to download
+        threads = []
+        for i in range(SecXbrlProcessor.MAX_PROCESSING_THREADS):
+            t = threading.Thread(
+                    target=self.process_xbrl_zip_file_and_push_database,
+                    args=(db_type,
+                          username,
+                          password,
+                          server,
+                          database,
+                          sec_ticker_info_helper,
+                          extracted_directory,
+                          remove_extracted_file_after_done))
+            threads.append(t)
+            t.start()
+
+        for i in range(len(threads)):
+            wait_thread = threads[i]
+            logger.Logger.log(logger.LogLevel.INFO, 'Wait for thread %s' % wait_thread.name)
+            wait_thread.join()
+            logger.Logger.log(logger.LogLevel.INFO, 'Thread %s done' % wait_thread.name)
+
             self.process_xbrl_zip_file_and_push_database(
                     db_type=db_type,
                     username=username,
                     password=password,
                     server=server,
                     database=database,
-                    zip_file_path=xbrl_zip_file,
                     sec_ticker_info_helper=sec_ticker_info_helper,
                     extracted_directory=extracted_directory,
                     remove_extracted_file_after_done=remove_extracted_file_after_done)
 
-    def process_xbrl_zip_file_and_push_database(self, db_type, username, password, server, database, zip_file_path,
+    def process_xbrl_zip_file_and_push_database(self, db_type, username, password, server, database,
                                                 sec_ticker_info_helper, extracted_directory='.',
                                                 remove_extracted_file_after_done=False):
-        logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s and push to database' % zip_file_path)
+        count = 0
+        while not self.q.empty():
+            try:
+                count += 1
+                zip_file_path = self.q.get()
 
-        (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(zip_file_path)
-        (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
-        if (cik is None or year is None or quarter is None or form_name is None):
-            logger.Logger.log(logger.LogLevel.WARN, 'Cannot extract information from zip file %s' % zip_file_path)
-            return
+                logger.Logger.log(logger.LogLevel.INFO, '(%s) Processing xbrl zip file (%d) %s and push to database' % (
+                                  threading.current_thread().name, count, zip_file_path))
 
-        results = self.process_xbrl_zip_file(zip_file_path=zip_file_path,
-                                             extracted_directory=extracted_directory,
-                                             remove_extracted_file_after_done=remove_extracted_file_after_done)
-        if results is None:
-            return
+                (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(zip_file_path)
+                (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
+                if (cik is None or year is None or quarter is None or form_name is None):
+                    logger.Logger.log(logger.LogLevel.WARN, 'Cannot extract information from zip file %s' % zip_file_path)
+                    continue
 
-        ticker = sec_ticker_info_helper.cik_to_ticker(cik)
-        if ticker is None:
-            logger.Logger.log(logger.LogLevel.WARN, 'Cannot find ticker for cik %d' % cik)
-            return
+                ticker = sec_ticker_info_helper.cik_to_ticker(cik)
+                if ticker is None:
+                    logger.Logger.log(logger.LogLevel.WARN, 'Cannot find ticker for cik %d' % cik)
+                    continue
 
-        table_name = '%s_metrics' % ticker.lower()
-        sec_xbrl_database_helper = SecXbrlDatabaseHelper(dbtype=db_type,
-                                                         username=username,
-                                                         password=password,
-                                                         server=server,
-                                                         database=database,
-                                                         table_name=table_name)
+                results = self.process_xbrl_zip_file(zip_file_path=zip_file_path,
+                                                     extracted_directory=extracted_directory,
+                                                     remove_extracted_file_after_done=remove_extracted_file_after_done)
+                if results is None:
+                    logger.Logger.log(logger.LogLevel.WARN, 'Found no results from file %s' % zip_file_path)
+                    continue
 
-        metrics = sec_xbrl_database_helper.convert_parse_results_to_metrics(parse_results=results)
-        metadata = {}
-        metadata['year'] = year
-        metadata['quarter'] = quarter
-        metadata['form'] = form_name
-        for metric in metrics:
-            metric.metadata = json.dumps(metadata)
+                table_name = '%s_metrics' % ticker.lower()
+                sec_xbrl_database_helper = SecXbrlDatabaseHelper(dbtype=db_type,
+                                                                 username=username,
+                                                                 password=password,
+                                                                 server=server,
+                                                                 database=database,
+                                                                 table_name=table_name)
 
-        sec_xbrl_database_helper.create_companies_metrics_table()
-        sec_xbrl_database_helper.insert_company_metrics_table(values=metrics)
+                metrics = sec_xbrl_database_helper.convert_parse_results_to_metrics(parse_results=results)
+                metadata = {}
+                metadata['year'] = year
+                metadata['quarter'] = quarter
+                metadata['form'] = form_name
+                for metric in metrics:
+                    metric.metadata = json.dumps(metadata)
+
+                sec_xbrl_database_helper.insert_company_metrics_table(values=metrics)
+            finally:
+                self.q.task_done()
 
     def process_xbrl_zip_file(self, zip_file_path, extracted_directory='.', remove_extracted_file_after_done=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Processing xbrl zip file %s' % zip_file_path)
@@ -143,6 +178,8 @@ class SecXbrlProcessor(object):
                 if (startDate is not None) and (endDate is not None):
                     context[context_id] = [StringHelper.convert_string_to_datetime(startDate),
                                            StringHelper.convert_string_to_datetime(endDate)]
+                else:
+                    logger.Logger.log(logger.LogLevel.WARN, 'Context %s doesnot have either startdate %s or enddate' % (startDate, endDate))
             except Exception as e:
                 logger.Logger.log(logger.LogLevel.ERROR, e)
             finally:
