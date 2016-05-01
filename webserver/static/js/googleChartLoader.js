@@ -1,5 +1,5 @@
 import Q from 'q';
-import jQuery from 'jquery';
+import Network from './network';
 
 
 class _GoogleChartLoader {
@@ -22,7 +22,7 @@ class _GoogleChartLoader {
             url: "https://www.gstatic.com/charts/loader.js",
         }
 
-        jQuery.ajax(options).done(() => {
+        Network.sendGet(options, () => {
             google.charts.load('current', {'packages':['line']});
             google.charts.setOnLoadCallback(() => {
                 this.loaded = true;

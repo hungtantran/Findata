@@ -2,7 +2,7 @@ class Graph {
 
   constructor() { }
 
-  static draw(element) {
+  draw(element) {
     var data = new google.visualization.DataTable();
 
     data.addColumn('date', 'Date');
