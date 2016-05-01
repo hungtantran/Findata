@@ -3,6 +3,7 @@ import SearchBar from './searchbar'
 import Graph from './graph'
 import Table from './table'
 import jQuery from 'jquery';
+import {TableModel, GraphModel} from '../models/datamodels'
 
 class Workspace extends React.Component {
 
@@ -47,8 +48,8 @@ Workspace.propTypes = {
 }
 Workspace.defaultProps = {
     seearchUrlRoot: $SCRIPT_ROOT + '/search',
-    initialGraphModel: {},
-    initialTableModel: {}
+    initialGraphModel: new GraphModel(),
+    initialTableModel: new TableModel()
 }
 
 export default Workspace
