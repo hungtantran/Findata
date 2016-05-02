@@ -3,6 +3,8 @@ __author__ = 'hungtantran'
 
 import filecmp
 import os
+from os import listdir, rename
+from os.path import isfile, join
 import re
 import unittest
 import zipfile
@@ -63,7 +65,7 @@ def populate_ticker_info_table(company_info_file, exchange=None):
 
 
 def populate_cik_from_xbrl_zip_directory(xbrl_zip_directory):
-    cik_to_file_map, ticker_to_cik_map = build_cik_ticker_map_from_xbrl_zip_directory(xbrl_zip_directory)
+    cik_to_ticker_map, ticker_to_cik_map = build_cik_ticker_map_from_xbrl_zip_directory(xbrl_zip_directory)
 
     dao_factory = DAOFactoryRepository.getInstance('mysql')
     with dao_factory.create(Config.mysql_username,
@@ -86,12 +88,11 @@ def populate_cik_from_xbrl_zip_directory(xbrl_zip_directory):
                         continue
 
                     found_cik = ticker_to_cik_map[ticker]
-                    if (found_cik != cik) and (cik is not None):
-                        print "%s %s %s" % (ticker, found_cik, cik)
-                        continue
-
                     if (cik is not None) and (found_cik == cik):
                         continue
+
+                    if (found_cik != cik) and (cik is not None):
+                        print "%s %s %s" % (ticker, found_cik, cik)
 
                     cik_int = int(found_cik)
                     update_query = "UPDATE ticker_info SET cik=%d WHERE ticker='%s'" % (cik_int, ticker)
@@ -107,43 +108,35 @@ def populate_cik_from_xbrl_zip_directory(xbrl_zip_directory):
 
 
 def build_cik_ticker_map_from_xbrl_zip_directory(xbrl_zip_directory):
-    xbrl_file_pattern = '^([a-zA-Z]+)-[0-9]+\.xml'
+    xbrl_zip_files = [f for f in listdir(xbrl_zip_directory) if (isfile(join(xbrl_zip_directory, f)) and f.endswith('.zip'))]
 
-    xbrl_zip_files = SecXbrlHelper.get_all_xbrl_zip_files_from_directory(xbrl_zip_directory)
+    ticker_to_cik_info_map = {}
+    for zip_file in xbrl_zip_files:
+        (ticker, cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(zip_file)
 
-    cik_to_file_map = {}
-    for xbrl_zip_file in xbrl_zip_files:
-        (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(xbrl_zip_file)
-        (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
-
-        if cik is None:
+        if (ticker is None or cik is None or year is None or quarter is None or form_name is None):
+            #print zip_file
             continue
 
-        if cik in cik_to_file_map:
-            continue
-
-        try:
-            with zipfile.ZipFile(xbrl_zip_file) as zip_file:
-                files = zip_file.namelist()
-
-                for file in files:
-                    match = re.search(xbrl_file_pattern, file)
-
-                    if match:
-                        cik_to_file_map[cik] = match.group(1)
-                        break
-        except Exception as e:
-            print e
+        if ticker in ticker_to_cik_info_map:
+            info = ticker_to_cik_info_map[ticker]
+            if (info[0] != cik) and ((info[1] < year) or (
+                info[1] == year and info[2] < quarter)):
+                print 'Update cik for %s from %d to %d' % (ticker, info[0], cik)
+                ticker_to_cik_info_map[ticker] = [cik, year, quarter]
+        else:
+            ticker_to_cik_info_map[ticker] = [cik, year, quarter]
 
     ticker_to_cik_map = {}
-    for cik in cik_to_file_map:
-        ticker_to_cik_map[cik_to_file_map[cik].upper()] = cik
+    for ticker in ticker_to_cik_info_map:
+        ticker_to_cik_map[ticker.upper()] = ticker_to_cik_info_map[ticker][0]
 
-    return cik_to_file_map, ticker_to_cik_map
+    cik_to_ticker_map = {}
+    for ticker in ticker_to_cik_map:
+        cik_to_ticker_map[ticker_to_cik_map[ticker]] = ticker
 
+    return cik_to_ticker_map, ticker_to_cik_map
 
-def populate_cik_from_sec_link():
-    SEC_CIK_LINKS
 
 if __name__ == '__main__':
     #populate_cik_from_xbrl_zip_directory('SEC/xbrl_zip_files')

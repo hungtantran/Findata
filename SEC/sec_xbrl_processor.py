@@ -26,12 +26,12 @@ class SecXbrlProcessor(object):
     @staticmethod
     def parse_xbrl_zip_file_name(xbrl_zip_file_name):
         # TODO extend more than just 10Q, 10K
-        # The zip file name should look like this 51143-2009-qtr3-10-Q-0001104659-09-045198-xbrl.zip
-        match = re.search(r"(\d+)-(\d+)-qtr(\d)-(10-Q|10-K)-.+", xbrl_zip_file_name)
+        # The zip file name should look like this msft-51143-2009-qtr3-10-Q-0001104659-09-045198-xbrl.zip
+        match = re.search(r"([a-zA-Z]+)-(\d+)-(\d+)-qtr(\d)-(10-Q|10-K)-.+", xbrl_zip_file_name)
         if match:
-            # Return cik, year, quarter, form name
-            return (int(match.group(1)), int(match.group(2)), int(match.group(3)), match.group(4))
-        return None, None, None, None
+            # Return ticker, cik, year, quarter, form name
+            return (match.group(1), int(match.group(2)), int(match.group(3)), int(match.group(4)), match.group(5))
+        return None, None, None, None, None
 
     def process_xbrl_directory_and_push_database(self, db_type, username, password, server, database, xbrl_zip_directory,
                                                  sec_ticker_info_helper, extracted_directory='.',
@@ -87,16 +87,11 @@ class SecXbrlProcessor(object):
                                   threading.current_thread().name, count, zip_file_path))
 
                 (directory, xbrl_zip_file_name) = StringHelper.extract_directory_and_file_name_from_path(zip_file_path)
-                (cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
-                if (cik is None or year is None or quarter is None or form_name is None):
+                (ticker, cik, year, quarter, form_name) = SecXbrlProcessor.parse_xbrl_zip_file_name(xbrl_zip_file_name)
+                if (ticker is None or cik is None or year is None or quarter is None or form_name is None):
                     logger.Logger.log(logger.LogLevel.WARN, 'Cannot extract information from zip file %s' % zip_file_path)
                     continue
-
-                ticker = sec_ticker_info_helper.cik_to_ticker(cik)
-                if ticker is None:
-                    logger.Logger.log(logger.LogLevel.WARN, 'Cannot find ticker for cik %d' % cik)
-                    continue
-
+                print (ticker, cik, year, quarter, form_name)
                 results = self.process_xbrl_zip_file(zip_file_path=zip_file_path,
                                                      extracted_directory=extracted_directory,
                                                      remove_extracted_file_after_done=remove_extracted_file_after_done)
