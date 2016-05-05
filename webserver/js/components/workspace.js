@@ -2,8 +2,9 @@ import React from 'react'
 import SearchBar from './searchbar'
 import Graph from './graph'
 import Table from './table'
-import jQuery from 'jquery';
-import {TableModel, GraphModel} from '../models/datamodels'
+import jQuery from 'jquery'
+import TableModel from '../../models/tablemodel.json'
+import GraphModel from '../../models/graphmodel.json'
 
 class Workspace extends React.Component {
 
@@ -34,8 +35,8 @@ class Workspace extends React.Component {
         return(
             <div className="workspace">
                 <SearchBar onSearchSubmit={this.handleSearchSubmit} />
-                <Graph model={this.state.graphModel} />
-                <Table model={this.state.tableModel} />
+                <Graph {...this.state.graphModel} />
+                <Table {...this.state.tableModel} />
             </div>
         )
     }
@@ -48,8 +49,8 @@ Workspace.propTypes = {
 }
 Workspace.defaultProps = {
     seearchUrlRoot: $SCRIPT_ROOT + '/search',
-    initialGraphModel: new GraphModel(),
-    initialTableModel: new TableModel()
+    initialGraphModel: Object.assign({}, GraphModel),
+    initialTableModel: Object.assign({}, TableModel)
 }
 
 export default Workspace

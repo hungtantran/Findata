@@ -3,13 +3,18 @@ import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import replace from 'rollup-plugin-replace';
 import uglify from 'rollup-plugin-uglify';
+import json from 'rollup-plugin-json';
 
 var useSourceMaps = true;
 
 export default {
-  entry: 'static/js/main.js',
+  entry: 'js/main.js',
   sourceMap: useSourceMaps,
   plugins: [
+    json({
+        sourceMap: useSourceMaps,
+        include: 'models/**'
+    }),
     babel({
         exclude: 'node_modules/**',
         sourceMaps: useSourceMaps,

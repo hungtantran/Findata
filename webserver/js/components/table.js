@@ -1,21 +1,22 @@
 import React from 'react'
-import {TableModel} from '../models/datamodels'
+import TableModel from '../../models/tablemodel.json'
 
 class Table extends React.Component {
     constructor(props) {
         super(props)
+        console.log(props)
 
         this.generateHeaders = this.generateHeaders.bind(this)
         this.generateRows = this.generateRows.bind(this)
     }
 
     generateHeaders() {
-        return (<th>{this.props.model.title}</th>)
+        return (<th>{this.props.title}</th>)
     }
 
     generateRows() {
         return (
-            this.props.model.data.map(function(item){
+            this.props.data.map(function(item){
                 return (
                     <tr>
                         <td>{item[0]}</td>
@@ -36,7 +37,10 @@ class Table extends React.Component {
     }
 }
 
-Table.propTypes = {model: React.PropTypes.object};
-Table.defaultProps = {model: new TableModel()};
+Table.propTypes = {
+    title: React.PropTypes.string,
+    data: React.PropTypes.array
+}
+Table.defaultProps = Object.assign({}, TableModel)
 
 export default Table;

@@ -32,7 +32,7 @@ class SearchBar extends React.Component {
                 className="searchBar"
                 type="text"
                 value={this.state.search}
-                placeholder="Whatchu wanna know..."
+                placeholder={this.props.placeholderText}
                 onChange={this.handleChange}
                 onKeyPress={this.handleKeyPress}
             />
@@ -42,10 +42,12 @@ class SearchBar extends React.Component {
 
 SearchBar.propTypes = {
     initialSearch: React.PropTypes.string,
+    placeholderText: React.PropTypes.string,
     onSearchSubmit: React.PropTypes.func
 }
 SearchBar.defaultProps = {
     initialSearch: '',
+    placeholderText: 'Whatchu wanna know...',
     onSearchSubmit: function(submission){}
 }
 
