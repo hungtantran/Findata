@@ -28,14 +28,17 @@ defaultGraphModel = json.load(open('webserver/models/graphmodel.json', 'r'))
 
 @app.route('/search')
 def doSearch():
+    print "Running search..."
     graphModel = copy.deepcopy(defaultGraphModel)
     tableModel = copy.deepcopy(defaultTableModel)
     title = request.args.get('search', 'default title')
     graphModel["title"] = title
-    graphModel["data"] = [(x.start_date.isoformat(), x.value) for x in GetMetricsFromTicker(title)]
+    graphModel["data"] = [(x.start_date.isoformat(sep=' '), x.value) for x in GetMetricsFromTicker(title)]
     tableModel["title"] = title
     for num, item in enumerate(title.split()):
         tableModel["data"].append(("Key%s"%num, item))
+
+    print "FInishing search..."
     return '{"graphModel": %s, "tableModel": %s}' % (json.dumps(graphModel), json.dumps(tableModel))
 
 if __name__ == "__main__":

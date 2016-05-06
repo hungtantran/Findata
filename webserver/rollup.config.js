@@ -31,8 +31,7 @@ export default {
     replace({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         sourceMap: useSourceMaps
-    }),
-    uglify({sourceMap: useSourceMaps})
+    })
     ],
   dest: 'static/bundle.js',
   format: 'iife',

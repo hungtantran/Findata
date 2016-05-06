@@ -18,7 +18,7 @@ class Table extends React.Component {
         return (
             this.props.data.map(function(item){
                 return (
-                    <tr>
+                    <tr key={item[0]} >
                         <td>{item[0]}</td>
                         <td>{item[1]}</td>
                     </tr>
@@ -30,8 +30,8 @@ class Table extends React.Component {
     render() {
         return (
             <table className="table">
-                {this.generateHeaders()}
-                {this.generateRows()}
+                <thead> {this.generateHeaders()} </thead>
+                <tbody> {this.generateRows()} </tbody>
             </table>
         )
     }
