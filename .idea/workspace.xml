@@ -2,19 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="db2b4724-e3e1-4e40-855e-8990e79b1833" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AnalyticPipeline/database_analytic.py" afterPath="$PROJECT_DIR$/AnalyticPipeline/database_analytic.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Scripts/get_all_xbrl_zip_files.py" afterPath="$PROJECT_DIR$/Scripts/get_all_xbrl_zip_files.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py" afterPath="$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Common/logger.py" afterPath="$PROJECT_DIR$/Common/logger.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DatabaseModel/metrics.py" afterPath="$PROJECT_DIR$/DatabaseModel/metrics.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/metrics_database.py" afterPath="$PROJECT_DIR$/Database/metrics_database.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Scripts/populate_ticker_info_table.py" afterPath="$PROJECT_DIR$/Scripts/populate_ticker_info_table.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_ticker_info_helper.py" afterPath="$PROJECT_DIR$/SEC/sec_ticker_info_helper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_database_helper.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" afterPath="$PROJECT_DIR$/SEC/sec_xbrl_processor.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DatabaseModel/ticker_info.py" afterPath="$PROJECT_DIR$/DatabaseModel/ticker_info.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Scripts/write_query_to_file.py" afterPath="$PROJECT_DIR$/Scripts/write_query_to_file.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_exchange_fund.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_fund.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/UpdatePipeline/update_exchange_fund_test.py" afterPath="$PROJECT_DIR$/UpdatePipeline/update_exchange_fund_test.py" />
     </list>
     <ignored path="Models.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -34,52 +23,7 @@
     <favorites_list name="Models" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="populate_ticker_info_table.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Scripts/populate_ticker_info_table.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="164" column="26" selection-start-line="164" selection-start-column="26" selection-end-line="164" selection-end-column="26" />
-              <folding>
-                <element signature="e#29#43#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ticker_info.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DatabaseModel/ticker_info.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.073993474">
-              <caret line="4" column="85" selection-start-line="4" selection-start-column="85" selection-end-line="4" selection-end-column="85" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="insert_xbrl_zip_file_to_database.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="37" column="26" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sec_xbrl_processor.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-              <folding>
-                <element signature="e#29#38#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -121,7 +65,6 @@
         <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_stockprice.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_company_fundamentals.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_database_helper_test.py" />
-        <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_fund.py" />
         <option value="$PROJECT_DIR$/UpdatePipeline/update_exhcnage_fund_test.py" />
         <option value="$PROJECT_DIR$/SEC/sec_xbrl_processor_test.py" />
         <option value="$PROJECT_DIR$/Common/util.py" />
@@ -145,6 +88,7 @@
         <option value="$PROJECT_DIR$/SEC/sec_ticker_info_helper.py" />
         <option value="$PROJECT_DIR$/Scripts/populate_ticker_info_table.py" />
         <option value="$PROJECT_DIR$/DatabaseModel/ticker_info.py" />
+        <option value="$PROJECT_DIR$/UpdatePipeline/update_exchange_fund.py" />
       </list>
     </option>
   </component>
@@ -152,7 +96,7 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1928" />
+    <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
@@ -180,7 +124,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -303,6 +246,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -460,10 +404,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18645833" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18645833" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18479408" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
@@ -607,13 +551,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.45994475">
           <caret line="36" column="60" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_fund.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -841,24 +778,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-          <folding>
-            <element signature="e#29#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="37" column="26" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Scripts/populate_ticker_info_table.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -873,6 +792,32 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.073993474">
           <caret line="4" column="85" selection-start-line="4" selection-start-column="85" selection-end-line="4" selection-end-column="85" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Scripts/insert_xbrl_zip_file_to_database.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.53645265">
+          <caret line="37" column="26" selection-start-line="37" selection-start-column="26" selection-end-line="37" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SEC/sec_xbrl_processor.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
+          <folding>
+            <element signature="e#29#38#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/UpdatePipeline/update_exchange_fund.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="6.0119696">
+          <caret line="325" column="0" selection-start-line="325" selection-start-column="0" selection-end-line="325" selection-end-column="0" />
           <folding />
         </state>
       </provider>
