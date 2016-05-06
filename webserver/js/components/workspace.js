@@ -33,16 +33,17 @@ class Workspace extends React.Component {
 
     render() {
         console.log("Rendering workspace...")
-        var components = [<SearchBar onSearchSubmit={this.handleSearchSubmit} />]
+        var graphs = []
 
         if(this.state.googleChartsLoaded === true && this.state.graphModel.data.length > 0) {
             console.log("Adding graph")
-            components.push(<Graph {...this.state.graphModel} />)
+            graphs.push(<Graph {...this.state.graphModel} key={this.state.graphModel.title} />)
         }
 
         return(
             <div className="workspace">
-                {components}
+                <SearchBar onSearchSubmit={this.handleSearchSubmit} />
+                {graphs}
             </div>
         )
     }
