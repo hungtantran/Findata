@@ -43,7 +43,9 @@ class TestUpdateExchangeStockprice(unittest.TestCase):
                                      ipo_year=1986,
                                      sector='Technology',
                                      industry='Computer Software: Prepackaged Software',
-                                     exchange='NASDAQ')
+                                     exchange='NASDAQ',
+                                     sic=None,
+                                     naics=None)
             update_obj.sanitize_info(msft_ticker)
 
             update_obj.current_ticker = 'msft'
@@ -128,7 +130,9 @@ class TestUpdateExchangeStockprice(unittest.TestCase):
                                      ipo_year=1986,
                                      sector='Technology',
                                      industry='Computer Software: Prepackaged Software',
-                                     exchange='NASDAQ')
+                                     exchange='NASDAQ',
+                                     sic=None,
+                                     naics=None)
             update_obj.sanitize_info(msft_ticker)
 
             update_obj.current_ticker = 'msft'

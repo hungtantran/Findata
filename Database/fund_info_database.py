@@ -103,6 +103,8 @@ class FundInfoDatabase(object):
                     query_string = 'INSERT IGNORE INTO %s (ticker, name, family, class_share, fund_type, metadata) VALUES ' % self.fund_info_table_name
                     query_string += r'(%s, %s, %s, %s, %s, %s)'
                     cursor.execute(query_string, (tickers[i], names[i], families[i], class_shares[i], fund_types[i], metadatas[i]))
+                    if i % 100 == 0:
+                        connection.commit()
                 connection.commit()
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, e)

@@ -7,6 +7,7 @@ import time
 import threading
 from bs4 import BeautifulSoup
 import string
+import Queue
 
 import logger
 import metrics
@@ -23,6 +24,7 @@ class UpdateExchangeFund(threading.Thread):
     SUMMARY_DIMENSIONS = ['open', 'high', 'low', 'close', 'volume', 'adj_close']
     NUM_RETRIES_DOWNLOAD = 2
     WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 1
+    MAX_PROCESSING_THREADS = 10
 
 
     def __init__(self, db_type, username, password, server, database, update_history=False):
@@ -37,29 +39,58 @@ class UpdateExchangeFund(threading.Thread):
         # 12-hour update frequency
         self.update_frequency_seconds = 43200
         self.fund_info_db = fund_info_database.FundInfoDatabase(db_type, username, password, server, database)
-        self.current_fund = None
-        self.tablename = None
-        self.data = None
         self.update_history = update_history
+        self.q = Queue.Queue()
 
     def sanitize_info(self, info):
         info.ticker = info.ticker.lower()
 
     def run(self):
         while True:
-            fund_list = self.get_latest_fund_list()
-            self.update_fund_list(fund_list)
+            # TODO diff the two list
+            fund_list = self.fund_info_db.get_fund_info_data()
+            if self.update_history:
+                fund_list = self.get_latest_fund_list()
+                self.update_fund_list(fund_list)
 
             for fund in fund_list:
-                self.clear_data()
+                self.q.put(fund)
+
+            # Start threads to update
+            threads = []
+            for i in range(UpdateExchangeFund.MAX_PROCESSING_THREADS):
+                t = threading.Thread(target=self.update_funds)
+                threads.append(t)
+                t.start()
+
+            for i in range(len(threads)):
+                wait_thread = threads[i]
+                logger.Logger.log(logger.LogLevel.INFO, 'Wait for thread %s' % wait_thread.name)
+                wait_thread.join()
+                logger.Logger.log(logger.LogLevel.INFO, 'Thread %s done' % wait_thread.name)
+
+            logger.Logger.log(logger.LogLevel.INFO,
+                    'Sleep for %d secs before updating again' % self.update_frequency_seconds)
+            # TODO make it sleep through weekend
+            time.sleep(self.update_frequency_seconds)
+
+    def update_funds(self):
+        count = 0
+        while not self.q.empty():
+            try:
+                count += 1
+                fund = self.q.get()
+
+                logger.Logger.log(logger.LogLevel.INFO, '(%s) Processing fund %s (%s) and push to database' % (
+                                  threading.current_thread().name, fund.name, fund.ticker))
+
                 self.sanitize_info(fund)
                 # TODO make this more extensible
                 if not fund.ticker.isalnum():
                     continue
 
-                self.current_fund = fund.ticker
-                self.data = []
-                self.tablename = 'fund_%s_metrics' % self.current_fund
+                current_fund = fund.ticker
+                tablename = 'fund_%s_metrics' % current_fund
 
                 metrics_db = metrics_database.MetricsDatabase(
                         self.db_type,
@@ -67,35 +98,40 @@ class UpdateExchangeFund(threading.Thread):
                         self.password,
                         self.server,
                         self.database,
-                        self.tablename)
-                # Create table metric if it's 'update_history' mode
-                if self.update_history:
-                    metrics_db.create_metric()
+                        tablename)
+                metrics_db.create_metric()
 
                 # Normal case
-                self.update_fund_price(fund)
-                self.update_database(fund, metrics_db)
+                upper_bound_page = 1000
+                for i in range(upper_bound_page):
+                    page_num = i
+                    data = self.update_fund_price(fund, page_num)
+                    if len(data) == 0:
+                        logger.Logger.log(logger.LogLevel.INFO, 'Found no more data for fund %s (%s) at page %d' % (fund.name, fund.ticker, page_num))
+                        break
+
+                    num_update = self.update_database(fund, metrics_db, data, tablename)
+                    if num_update == 0:
+                        logger.Logger.log(logger.LogLevel.INFO, 'Update to the latest data for fund %s (%s) at page %d' % (fund.name, fund.ticker, page_num))
+                        break
+
                 logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before updating again' %
                         UpdateExchangeFund.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
                 time.sleep(UpdateExchangeFund.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
-
-            logger.Logger.log(logger.LogLevel.INFO,
-                    'Sleep for %d secs before updating again' % self.update_frequency_seconds)
-            # TODO make it sleep through weekend
-            time.sleep(self.update_frequency_seconds)
-
-    def clear_data(self):
-        self.data = None
-        self.tablename = None
+            finally:
+                self.q.task_done()
 
     def get_latest_fund_list(self):
         fund_list = []
         for letter in string.ascii_uppercase:
             cur_link = UpdateExchangeFund.FUND_LIST_LINK_TEMPLATE % letter
             logger.Logger.log(logger.LogLevel.INFO, 'Get latest fund list from link %s' % cur_link)
+
             response = urllib.urlopen(cur_link)
             html_string = response.read()
-            fund_list.extend(self.parse_fund_list_from_html(html_string))
+            new_fund_list = self.parse_fund_list_from_html(html_string)
+            logger.Logger.log(logger.LogLevel.INFO, 'Found %d funds' % len(new_fund_list))
+            fund_list.extend(new_fund_list)
         return fund_list
 
     def parse_fund_list_from_html(self, html_string):
@@ -149,22 +185,13 @@ class UpdateExchangeFund(threading.Thread):
 
         return fund_list
 
-    def update_fund_price(self, info):
+    def update_fund_price(self, info, page_num):
         try:
-            upper_bound_page = 1
-            if self.update_history:
-                upper_bound_page = 1000
-
-            for i in range(upper_bound_page):
-                page_num = i + 1
-                logger.Logger.log(logger.LogLevel.INFO, 'Update fund %s (%s) now for page %d' % (info.name, info.ticker, page_num))
-                response = urllib.urlopen(UpdateExchangeFund.SUMMARY_LINKS_TEMPLATE % (info.ticker, 66 * page_num))
-                html_string = response.read()
-                data = self.update_from_html_content(html_string)
-                self.data.extend(data)
-                if len(data) == 0:
-                    logger.Logger.log(logger.LogLevel.INFO, 'Found no more data for fund %s (%s) at page %d' % (info.name, info.ticker, page_num))
-                    break
+            logger.Logger.log(logger.LogLevel.INFO, 'Update fund %s (%s) now for page %d' % (info.name, info.ticker, page_num))
+            response = urllib.urlopen(UpdateExchangeFund.SUMMARY_LINKS_TEMPLATE % (info.ticker, 66 * page_num))
+            html_string = response.read()
+            data = self.update_from_html_content(html_string)
+            return data
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 
@@ -284,9 +311,10 @@ class UpdateExchangeFund(threading.Thread):
             return data
 
     def update_fund_list(self, fund_list):
+    	self.fund_info_db.create_fund_info_table()
         self.fund_info_db.insert_rows(fund_list)
 
-    def update_database(self, info, metrics_db):
+    def update_database(self, info, metrics_db, data, tablename):
         logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s' % info.name)
 
         # TODO this pull out the latest metrics, not necessary latest stock price, fix it
@@ -297,9 +325,9 @@ class UpdateExchangeFund(threading.Thread):
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
             latest_time = None
-        self._update_database_with_given_data(self.data, latest_time, info, metrics_db)
+        return self._update_database_with_given_data(data, latest_time, info, metrics_db, tablename)
 
-    def _update_database_with_given_data(self, data, latest_time, info, metrics_db):
+    def _update_database_with_given_data(self, data, latest_time, info, metrics_db, tablename):
         logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s with given data' % info.name)
         all_data = data
 
@@ -316,7 +344,8 @@ class UpdateExchangeFund(threading.Thread):
                 metrics_db.insert_metrics(insert_rows)
 
         logger.Logger.log(logger.LogLevel.INFO,
-                          'Update table %s with %d new values' % (self.tablename, num_value_update))
+                          'Update table %s with %d new values' % (tablename, num_value_update))
+        return num_value_update
 
 
 def main():
@@ -326,7 +355,8 @@ def main():
                 Config.mysql_username,
                 Config.mysql_password,
                 Config.mysql_server,
-                Config.mysql_database)
+                Config.mysql_database,
+                update_history=False)
         update_obj.daemon = True
         update_obj.start()
 

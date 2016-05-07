@@ -64,16 +64,6 @@ class SecXbrlProcessor(object):
             wait_thread.join()
             logger.Logger.log(logger.LogLevel.INFO, 'Thread %s done' % wait_thread.name)
 
-            self.process_xbrl_zip_file_and_push_database(
-                    db_type=db_type,
-                    username=username,
-                    password=password,
-                    server=server,
-                    database=database,
-                    sec_ticker_info_helper=sec_ticker_info_helper,
-                    extracted_directory=extracted_directory,
-                    remove_extracted_file_after_done=remove_extracted_file_after_done)
-
     def process_xbrl_zip_file_and_push_database(self, db_type, username, password, server, database,
                                                 sec_ticker_info_helper, extracted_directory='.',
                                                 remove_extracted_file_after_done=False):

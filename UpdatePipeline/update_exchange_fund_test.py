@@ -118,10 +118,16 @@ class TestUpdateExchangeFund(unittest.TestCase):
             data = self.metrics_db.get_metrics()
             self.assertEqual(len(data), 2)
 
-            for i in range(3):
-                self.update_obj.update_database(fake_fund_info, self.metrics_db)
-                data = self.metrics_db.get_metrics()
-                self.assertEqual(len(data), 14)
+            
+            num_update = self.update_obj.update_database(fake_fund_info, self.metrics_db)
+            data = self.metrics_db.get_metrics()
+            self.assertEqual(len(data), 14)
+            self.assertEqual(num_update, 12)
+
+            num_update = self.update_obj.update_database(fake_fund_info, self.metrics_db)
+            data = self.metrics_db.get_metrics()
+            self.assertEqual(len(data), 14)
+            self.assertEqual(num_update, 0)
         finally:
             self.TearDown()
 

@@ -67,8 +67,6 @@ class MetricsDatabase(object):
                 sqlalchemy.Column('end_date', sqlalchemy.DateTime),
                 sqlalchemy.Column('metadata', sqlalchemy.TEXT),
                 sqlalchemy.UniqueConstraint('metric_name', 'start_date', 'end_date'))
-        sqlalchemy.orm.clear_mappers()
-        sqlalchemy.orm.mapper(class_map, metrics_table)
         return metrics_table
 
     def create_metric(self, insert_to_data_store=False):
@@ -141,21 +139,23 @@ class MetricsDatabase(object):
 
     def get_metrics(self, metric_name=None, max_num_results=None):
         try:
-            s = self.session()
-            query = s.query(metrics.Metrics)
-            if metric_name:
-                query = query.filter_by(metric_name=metric_name)
-            query = query.order_by(sqlalchemy.desc(metrics.Metrics.start_date))
-
-            if max_num_results:
-                data = query.limit(max_num_results)
-            else:
-                data = query.all()
-            s.expunge_all()
-            return data
+            with self.dao_factory.create(
+                    self.username,
+                    self.password,
+                    self.server,
+                    self.database) as connection:
+                query_string = 'SELECT * FROM %s' % self.metric
+                cursor = connection.cursor()
+                cursor.execute(query_string)
+                data = cursor.fetchall()
+                metric_list = [metrics.Metrics(
+                        id=row[0],
+                        metric_name=row[1],
+                        value=row[2],
+                        unit=row[3],
+                        start_date=row[4],
+                        end_date=row[5],
+                        metadata=row[6]) for row in data]
+                return metric_list
         except Exception as e:
             Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
-        finally:
-            if s is not None:
-                s.commit()
-                s.close()
