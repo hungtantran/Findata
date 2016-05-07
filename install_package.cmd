@@ -1,1 +1,1 @@
-pip install --upgrade google-api-python-client
+pip install -r python_package.txt
