@@ -3,3 +3,4 @@ webserver/static/bundle.*
 webserver/npm-debug.log
 npm-debug.log
 *.txt
+*.pyc

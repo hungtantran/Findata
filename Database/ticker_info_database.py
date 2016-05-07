@@ -141,7 +141,8 @@ class TickerInfoDatabase(object):
             try:
                 cursor = connection.cursor()
                 # TODO make the update clause to include more fields
-                update_query = "UPDATE ticker_info SET cik=%s, sic=%s, naics=%s WHERE ticker='%s'" % (
+                update_query = "UPDATE %s SET cik=%s, sic=%s, naics=%s WHERE ticker='%s'" % (
+                    self.ticker_info_table_name,
                     ticker_info_obj.cik if ticker_info_obj.cik is not None else 'NULL',
                     ticker_info_obj.sic if ticker_info_obj.sic is not None else 'NULL',
                     ticker_info_obj.naics if ticker_info_obj.naics is not None else 'NULL',

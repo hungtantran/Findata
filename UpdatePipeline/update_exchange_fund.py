@@ -152,6 +152,7 @@ class UpdateExchangeFund(threading.Thread):
 
                 # Normal case: only update first page. Special case: update all pages later than latest and earlier than earliest
                 crawl_pages = [0]
+                marked_days = []
                 if self.update_history:
                     crawl_pages, marked_days = self.get_list_of_crawl_pages(latest_time, earliest_time)
 
