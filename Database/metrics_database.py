@@ -137,7 +137,7 @@ class MetricsDatabase(object):
         except Exception as e:
             Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
 
-    def get_metrics(self, metric_name=None, max_num_results=None):
+    def get_metrics(self, metric_name=None, max_num_results=None, reverse_order=False):
         try:
             with self.dao_factory.create(
                     self.username,
@@ -145,6 +145,15 @@ class MetricsDatabase(object):
                     self.server,
                     self.database) as connection:
                 query_string = 'SELECT * FROM %s' % self.metric
+                if metric_name is not None:
+                    query_string += ' WHERE metric_name = \'%s\'' % metric_name
+                if reverse_order:
+                    query_string += ' ORDER BY start_date'
+                else:
+                    query_string += ' ORDER BY start_date DESC'
+                if max_num_results is not None:
+                    query_string += ' LIMIT %d' % max_num_results 
+
                 cursor = connection.cursor()
                 cursor.execute(query_string)
                 data = cursor.fetchall()

@@ -27,7 +27,7 @@ class UpdateExchangeFund(threading.Thread):
     MAX_PROCESSING_THREADS = 10
 
 
-    def __init__(self, db_type, username, password, server, database, update_history=False):
+    def __init__(self, db_type, username, password, server, database, update_fund_list=False, update_history=False):
         threading.Thread.__init__(self)
 
         self.db_type = db_type
@@ -39,6 +39,7 @@ class UpdateExchangeFund(threading.Thread):
         # 12-hour update frequency
         self.update_frequency_seconds = 43200
         self.fund_info_db = fund_info_database.FundInfoDatabase(db_type, username, password, server, database)
+        self.update_fund_list = update_fund_list
         self.update_history = update_history
         self.q = Queue.Queue()
 
@@ -49,7 +50,7 @@ class UpdateExchangeFund(threading.Thread):
         while True:
             # TODO diff the two list
             fund_list = self.fund_info_db.get_fund_info_data()
-            if self.update_history:
+            if self.update_fund_list:
                 fund_list = self.get_latest_fund_list()
                 self.update_fund_list(fund_list)
 
@@ -73,6 +74,51 @@ class UpdateExchangeFund(threading.Thread):
                     'Sleep for %d secs before updating again' % self.update_frequency_seconds)
             # TODO make it sleep through weekend
             time.sleep(self.update_frequency_seconds)
+
+    def get_earliest_and_latest_time(self, metrics_db):
+        # Find the latest and earliest time
+        latest_rows = metrics_db.get_metrics(max_num_results=1)
+        latest_time = None
+        try:
+            latest_time = latest_rows[0].start_date
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            latest_time = None
+
+        earliest_rows = metrics_db.get_metrics(max_num_results=1, reverse_order=True)
+        earliest_time = None
+        try:
+            earliest_time = earliest_rows[0].start_date
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            earliest_time = None
+
+        return latest_time, earliest_time
+
+    def get_list_of_crawl_pages(self, latest_time, earliest_time):
+        crawl_pages = []
+        today = datetime.datetime.today()
+
+        latest_diff = None
+        if latest_time is not None:
+            latest_diff = today - latest_time
+            # 66 trading days per page = (approx) 90 normal days
+            crawl_pages.extend(range(int(latest_diff.days/90) + 1))
+
+        earliest_diff = None
+        if earliest_time is not None:
+            earliest_diff = today - earliest_time
+            crawl_pages.extend(range(int(earliest_diff.days/90), 1000))
+
+        if len(crawl_pages) == 0:
+            crawl_pages = range(1000)
+
+        crawl_pages = list(set(crawl_pages))
+        crawl_pages.sort()
+        # Marked days are days that we might already crawl but we recrawl to make sure we don't
+        # miss any data
+        marked_days = [int(latest_diff.days/90), int(earliest_diff.days/90)]
+        return crawl_pages, marked_days
 
     def update_funds(self):
         count = 0
@@ -101,17 +147,28 @@ class UpdateExchangeFund(threading.Thread):
                         tablename)
                 metrics_db.create_metric()
 
-                # Normal case
-                upper_bound_page = 1000
-                for i in range(upper_bound_page):
-                    page_num = i
+                latest_time, earliest_time = self.get_earliest_and_latest_time(metrics_db)
+                logger.Logger.log(logger.LogLevel.INFO, 'Found for fund %s (%s) latest time: %s, earliest time: %s' % (fund.name, fund.ticker, latest_time, earliest_time))
+
+                # Normal case: only update first page. Special case: update all pages later than latest and earlier than earliest
+                crawl_pages = [0]
+                if self.update_history:
+                    crawl_pages, marked_days = self.get_list_of_crawl_pages(latest_time, earliest_time)
+
+                for page_num in crawl_pages:
                     data = self.update_fund_price(fund, page_num)
                     if len(data) == 0:
                         logger.Logger.log(logger.LogLevel.INFO, 'Found no more data for fund %s (%s) at page %d' % (fund.name, fund.ticker, page_num))
                         break
 
-                    num_update = self.update_database(fund, metrics_db, data, tablename)
-                    if num_update == 0:
+                    num_update = self._update_database_with_given_data(
+                            data=data,
+                            info=fund,
+                            metrics_db=metrics_db,
+                            tablename=tablename,
+                            latest_time=latest_time,
+                            earliest_time=earliest_time)
+                    if num_update == 0 and page_num not in marked_days:
                         logger.Logger.log(logger.LogLevel.INFO, 'Update to the latest data for fund %s (%s) at page %d' % (fund.name, fund.ticker, page_num))
                         break
 
@@ -314,20 +371,7 @@ class UpdateExchangeFund(threading.Thread):
     	self.fund_info_db.create_fund_info_table()
         self.fund_info_db.insert_rows(fund_list)
 
-    def update_database(self, info, metrics_db, data, tablename):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s' % info.name)
-
-        # TODO this pull out the latest metrics, not necessary latest stock price, fix it
-        latest_rows = metrics_db.get_metrics(max_num_results=1)
-        latest_time = None
-        try:
-            latest_time = latest_rows[0].start_date
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-            latest_time = None
-        return self._update_database_with_given_data(data, latest_time, info, metrics_db, tablename)
-
-    def _update_database_with_given_data(self, data, latest_time, info, metrics_db, tablename):
+    def _update_database_with_given_data(self, data, info, metrics_db, tablename, latest_time, earliest_time):
         logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s with given data' % info.name)
         all_data = data
 
@@ -336,7 +380,8 @@ class UpdateExchangeFund(threading.Thread):
             insert_rows = []
             # Only insert value later than the current latest value
             # TODO make it more flexible than that
-            if (latest_time is None or row.start_date > latest_time):
+            if ((latest_time is None or row.start_date > latest_time) or 
+                (earliest_time is None or row.start_date < earliest_time)):
                 insert_rows.append(row)
                 num_value_update += 1
 
@@ -356,7 +401,7 @@ def main():
                 Config.mysql_password,
                 Config.mysql_server,
                 Config.mysql_database,
-                update_history=False)
+                update_history=True)
         update_obj.daemon = True
         update_obj.start()
 
