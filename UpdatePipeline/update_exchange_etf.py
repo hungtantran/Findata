@@ -10,17 +10,17 @@ import string
 import Queue
 
 import logger
-import metrics
 import ticker_info_database
+import metrics
 import metrics_database
 from string_helper import StringHelper
 from Common.constants_config import Config
 from update_yahoo_finance import UpdateYahooFinance
 
 
-class UpdateExchangeStockprice(UpdateYahooFinance):
+class UpdateExchangeETF(UpdateYahooFinance):
     def __init__(self, db_type, username, password, server, database, max_num_threads=None, update_frequency_seconds=None, update_history=False):
-        super(UpdateExchangeStockprice, self).__init__(
+        super(UpdateExchangeETF, self).__init__(
                 db_type=db_type,
                 username=username,
                 password=password,
@@ -30,23 +30,16 @@ class UpdateExchangeStockprice(UpdateYahooFinance):
                 update_frequency_seconds=update_frequency_seconds,
                 update_history=update_history)
 
-        self.ticker_info_db = ticker_info_database.TickerInfoDatabase(
-                self.db_type,
-                self.username,
-                self.password,
-                self.server,
-                self.database)
-
     def populate_work_queue(self):
-        stock_list = self.ticker_info_db.get_ticker_info_data(ticker_type='stock')
+        etf_list = self.ticker_info_db.get_ticker_info_data(ticker_type='etf')
 
-        for stock in stock_list:
-            self.q.put(stock)
+        for etf in etf_list:
+            self.q.put(etf)
 
 
 def main():
     try:
-        update_obj = UpdateExchangeStockprice(
+        update_obj = UpdateExchangeETF(
                 'mysql',
                 Config.mysql_username,
                 Config.mysql_password,

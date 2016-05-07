@@ -37,23 +37,6 @@ class MetricsDatabase(object):
     def create_metric_name(metric):
         return metric.replace(' ', '_')
 
-    @staticmethod
-    def get_time_limit(lower_time_limit, upper_time_limit):
-        lower_time_object = datetime.datetime(1900, 1, 1, 0, 0)
-        if lower_time_limit is not None:
-            if type(lower_time_limit) is datetime.datetime:
-                lower_time_object = lower_time_limit
-            elif type(lower_time_limit) is str:
-                lower_time_object = StringHelper.convert_string_to_datetime(lower_time_limit)
-
-        upper_time_object = datetime.datetime(9999, 12, 31, 0, 0)
-        if upper_time_limit is not None:
-            if type(upper_time_limit) is datetime.datetime:
-                upper_time_object = upper_time_limit
-            elif type(upper_time_object) is str:
-                upper_time_object = StringHelper.convert_string_to_datetime(upper_time_limit)
-        return (lower_time_object, upper_time_object)
-
     def get_metrics_table_object(self, metric, class_map):
         metric_name = MetricsDatabase.create_metric_name(metric)
         metadata = sqlalchemy.MetaData(bind=self.engine)

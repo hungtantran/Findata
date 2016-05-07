@@ -59,4 +59,6 @@ if __name__ == '__main__':
     #write_query_to_file("show tables like 'a%\_metrics'", 'tables.txt')
     #write_query_to_file("show tables where tables_in_models like 'exchange_stockprice%' and tables_in_models > ' exchange_stockprice_' and tables_in_models < 'exchange_stockprice_inn'", 'exchange_stockprice.txt')
     #write_query_to_file("select lower(ticker) from ticker_info where ticker REGEXP '^[A-Za-z0-9]+$'", 'metric_tables.txt')
-    write_query_to_file("select count(*) as num, name from ticker_info group by name order by num desc", 'ticker_name_and_count.txt')
+    #write_query_to_file("select count(*) as num, name from ticker_info group by name order by num desc", 'ticker_name_and_count.txt')
+    #write_query_to_file(r"show tables like '%fund%'", 'fund.txt')
+    #write_query_to_file(r"show tables like '%metrics%'", 'metric.txt')

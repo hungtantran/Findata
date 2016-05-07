@@ -11,6 +11,7 @@ import Common.logger
 from dao_factory_repo import DAOFactoryRepository
 from Common.string_helper import StringHelper
 import timeline_model
+from database_helper import DatabaseHelper
 
 
 class TimelineModelDatabase(object):
@@ -29,23 +30,6 @@ class TimelineModelDatabase(object):
     @staticmethod
     def create_model_name(model):
         return model.replace(' ', '_')
-
-    @staticmethod
-    def get_time_limit(lower_time_limit, upper_time_limit):
-        lower_time_object = datetime.datetime(1900, 1, 1, 0, 0)
-        if lower_time_limit is not None:
-            if type(lower_time_limit) is datetime.datetime:
-                lower_time_object = lower_time_limit
-            elif type(lower_time_limit) is str:
-                lower_time_object = StringHelper.convert_string_to_datetime(lower_time_limit)
-
-        upper_time_object = datetime.datetime(9999, 12, 31, 0, 0)
-        if upper_time_limit is not None:
-            if type(upper_time_limit) is datetime.datetime:
-                upper_time_object = upper_time_limit
-            elif type(upper_time_object) is str:
-                upper_time_object = StringHelper.convert_string_to_datetime(upper_time_limit)
-        return (lower_time_object, upper_time_object)
 
     def get_timeline_table_object(self, model, class_map):
         model_name = TimelineModelDatabase.create_model_name(model)
@@ -161,7 +145,7 @@ class TimelineModelDatabase(object):
                                            class_map=class_map1)
             self.get_timeline_table_object(model=model2,
                                            class_map=class_map2)
-            lower_time_object, upper_time_object = self.get_time_limit(lower_time_limit, upper_time_limit)
+            lower_time_object, upper_time_object = DatabaseHelper.get_time_limit(lower_time_limit, upper_time_limit)
             q = session.query(lower_time_object).\
                 join(User.addresses).filter(Address.email.like('q%'))
 
@@ -182,7 +166,7 @@ class TimelineModelDatabase(object):
             s = self.session()
             self.get_timeline_table_object(model=model,
                                            class_map=timeline_model.TimelineModel)
-            lower_time_object, upper_time_object = self.get_time_limit(lower_time_limit, upper_time_limit)
+            lower_time_object, upper_time_object = DatabaseHelper.get_time_limit(lower_time_limit, upper_time_limit)
             avg = s.query(sqlalchemy.sql.func.avg(timeline_model.TimelineModel.value).label('average')).filter(
                     timeline_model.TimelineModel.time >= lower_time_object).filter(timeline_model.TimelineModel.time <= upper_time_object)
             s.expunge_all()
@@ -199,7 +183,7 @@ class TimelineModelDatabase(object):
             s = self.session()
             self.get_timeline_table_object(model=model,
                                            class_map=timeline_model.TimelineModel)
-            lower_time_object, upper_time_object = self.get_time_limit(lower_time_limit, upper_time_limit)
+            lower_time_object, upper_time_object = DatabaseHelper.get_time_limit(lower_time_limit, upper_time_limit)
             avg = s.query(sqlalchemy.sql.func.std(timeline_model.TimelineModel.value).label('std')).filter(
                     timeline_model.TimelineModel.time >= lower_time_object).filter(
                     timeline_model.TimelineModel.time <= upper_time_object)
