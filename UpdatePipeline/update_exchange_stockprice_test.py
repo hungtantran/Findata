@@ -164,6 +164,7 @@ class TestUpdateExchangeStockprice(unittest.TestCase):
         finally:
             metrics_db.remove_metric()
 
+
 if __name__ == '__main__':
     unittest.main()
 

@@ -78,26 +78,6 @@ class UpdateYahooFinance(threading.Thread):
     def get_metric_table_name(self, metric):
         return '%s_metrics' % metric.ticker
 
-    def get_earliest_and_latest_time(self, metrics_db):
-        # Find the latest and earliest time
-        latest_rows = metrics_db.get_metrics(max_num_results=1)
-        latest_time = None
-        try:
-            latest_time = latest_rows[0].start_date
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-            latest_time = None
-
-        earliest_rows = metrics_db.get_metrics(max_num_results=1, reverse_order=True)
-        earliest_time = None
-        try:
-            earliest_time = earliest_rows[0].start_date
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-            earliest_time = None
-
-        return latest_time, earliest_time
-
     def get_list_of_crawl_pages(self, latest_time, earliest_time):
         crawl_pages = []
         today = datetime.datetime.today()
@@ -142,7 +122,6 @@ class UpdateYahooFinance(threading.Thread):
                     continue
 
                 tablename = self.get_metric_table_name(metric)
-
                 metrics_db = metrics_database.MetricsDatabase(
                         self.db_type,
                         self.username,
@@ -152,7 +131,7 @@ class UpdateYahooFinance(threading.Thread):
                         tablename)
                 metrics_db.create_metric()
 
-                latest_time, earliest_time = self.get_earliest_and_latest_time(metrics_db)
+                latest_time, earliest_time = metrics_db.get_earliest_and_latest_time()
                 logger.Logger.log(logger.LogLevel.INFO, 'Found for metric %s (%s) latest time: %s, earliest time: %s' % (metric.name, metric.ticker, latest_time, earliest_time))
 
                 # Normal case: only update first page. Special case: update all pages later than latest and earlier than earliest
@@ -167,11 +146,9 @@ class UpdateYahooFinance(threading.Thread):
                         logger.Logger.log(logger.LogLevel.INFO, 'Found no more data for metric %s (%s) at page %d' % (metric.name, metric.ticker, page_num))
                         break
 
-                    num_update = self._update_database_with_given_data(
+                    logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s with given data' % metric.name)
+                    num_update= metrics_db.update_database_with_given_data(
                             data=data,
-                            info=metric,
-                            metrics_db=metrics_db,
-                            tablename=tablename,
                             latest_time=latest_time,
                             earliest_time=earliest_time)
                     if num_update == 0 and page_num not in marked_days:
@@ -308,23 +285,3 @@ class UpdateYahooFinance(threading.Thread):
             logger.Logger.log(logger.LogLevel.ERROR, e)
         finally:
             return data
-
-    def _update_database_with_given_data(self, data, info, metrics_db, tablename, latest_time, earliest_time):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s with given data' % info.name)
-        all_data = data
-
-        num_value_update = 0
-        for row in all_data:
-            insert_rows = []
-            # Only insert value later than the current latest value
-            # TODO make it more flexible than that
-            if ((latest_time is None or row.start_date > latest_time) or 
-                (earliest_time is None or row.start_date < earliest_time)):
-                insert_rows.append(row)
-                num_value_update += 1
-
-            if len(insert_rows) > 0:
-                metrics_db.insert_metrics(insert_rows)
-
-        logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (tablename, num_value_update))
-        return num_value_update

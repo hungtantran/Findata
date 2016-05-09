@@ -71,7 +71,7 @@ class TickerInfoDatabase(object):
     def remove_ticker_info_table(self):
         logger.Logger.log(logger.LogLevel.INFO, 'Drop ticker_info_table %s' % self.ticker_info_table_name)
         try:
-            drop_ticker_info_table = self.get_ticker_info_table_object(class_map=ticker_info.TickerInfo)
+            drop_ticker_info_table = self.get_ticker_info_table_object()
             drop_ticker_info_table.drop(self.engine, checkfirst=False)
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, e)

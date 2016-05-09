@@ -34,6 +34,7 @@ class UpdateExchangeFund(UpdateYahooFinance):
 
     def populate_work_queue(self):
         if self.update_list:
+            # TODO add update_fund_list
             fund_list = self.get_latest_fund_list()
             self.update_fund_list(fund_list)
         else:

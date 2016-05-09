@@ -7,7 +7,7 @@ import sqlalchemy.orm
 import sqlalchemy.sql
 from time import sleep
 
-import Common.logger
+import logger
 from dao_factory_repo import DAOFactoryRepository
 from Common.string_helper import StringHelper
 import metrics
@@ -53,11 +53,11 @@ class MetricsDatabase(object):
         return metrics_table
 
     def create_metric(self, insert_to_data_store=False):
-        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Create metric %s' % self.metric)
+        logger.Logger.log(logger.LogLevel.INFO, 'Create metric %s' % self.metric)
         try:
             self.table.create(self.engine, checkfirst=True)
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
+            logger.Logger.log(logger.LogLevel.ERROR, e)
 
     def insert_metric(self, new_metric, ignore_duplicate=False):
         try:
@@ -68,7 +68,7 @@ class MetricsDatabase(object):
             else:
                 s.add(new_metric)
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
+            logger.Logger.log(logger.LogLevel.ERROR, e)
         finally:
             if s is not None:
                 s.commit()
@@ -109,16 +109,16 @@ class MetricsDatabase(object):
                     cursor.execute(query_string)
                     connection.commit()
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
+            logger.Logger.log(logger.LogLevel.ERROR, e)
 
     def remove_metric(self):
-        Common.logger.Logger.log(Common.logger.LogLevel.INFO, 'Drop metric %s' % self.metric)
+        logger.Logger.log(logger.LogLevel.INFO, 'Drop metric %s' % self.metric)
         # TODO figure out why this make update_exchange_stockprice_test deadlock
         try:
             self.session.close_all()
             self.table.drop(self.engine, checkfirst=False)
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
+            logger.Logger.log(logger.LogLevel.ERROR, e)
 
     def get_metrics(self, metric_name=None, max_num_results=None, reverse_order=False):
         try:
@@ -150,4 +150,48 @@ class MetricsDatabase(object):
                         metadata=row[6]) for row in data]
                 return metric_list
         except Exception as e:
-            Common.logger.Logger.log(Common.logger.LogLevel.ERROR, e)
+            logger.Logger.log(logger.LogLevel.ERROR, e)
+
+    def get_earliest_time(self):
+        earliest_rows = self.get_metrics(max_num_results=1, reverse_order=True)
+        earliest_time = None
+        try:
+            earliest_time = earliest_rows[0].start_date
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            earliest_time = None
+        return earliest_time
+
+    def get_latest_time(self):
+        latest_rows = self.get_metrics(max_num_results=1)
+        latest_time = None
+        try:
+            latest_time = latest_rows[0].start_date
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            latest_time = None
+        return latest_time
+
+    def get_earliest_and_latest_time(self):
+        # Find the latest and earliest time
+        latest_time = self.get_latest_time()
+        earliest_time = self.get_earliest_time()
+
+        return latest_time, earliest_time
+
+    def update_database_with_given_data(self, data, latest_time, earliest_time):
+        num_value_update = 0
+        for row in data:
+            insert_rows = []
+            # Only insert value later than the current latest value
+            # TODO make it more flexible than that
+            if ((latest_time is None or row.start_date > latest_time) or 
+                (earliest_time is None or row.start_date < earliest_time)):
+                insert_rows.append(row)
+                num_value_update += 1
+
+            if len(insert_rows) > 0:
+                self.insert_metrics(insert_rows)
+
+        logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (self.metric, num_value_update))
+        return num_value_update

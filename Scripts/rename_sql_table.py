@@ -37,6 +37,8 @@ def rename_table():
         except Exception as e:
             print e
 
-#rename_table()
+
+if __name__ == '__main__':
+    #rename_table()
 
 
