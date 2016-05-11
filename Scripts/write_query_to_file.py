@@ -4,6 +4,7 @@ __author__ = 'hungtantran'
 import datetime
 import re
 from time import sleep
+import sys
 
 import logger
 from dao_factory_repo import DAOFactoryRepository
@@ -62,3 +63,4 @@ if __name__ == '__main__':
     #write_query_to_file("select count(*) as num, name from ticker_info group by name order by num desc", 'ticker_name_and_count.txt')
     #write_query_to_file(r"show tables like '%fund%'", 'fund.txt')
     #write_query_to_file(r"show tables like '%metrics%'", 'metric.txt')
+    #write_query_to_file(r"select ticker from ticker_info where ticker_type = 'stock' or ticker_type = 'etf'", 'ticker.txt')
