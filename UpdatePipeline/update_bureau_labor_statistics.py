@@ -27,8 +27,8 @@ class UpdateBureauLaborStatistics(threading.Thread):
     HOME_PAGE = 'http://www.bls.gov/data/'
     DATA_PAGE = 'http://api.bls.gov/publicAPI/v2/timeseries/data/'
     NUM_RETRIES_DOWNLOAD = 2
-    WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 1
-    MAX_PROCESSING_THREADS = 1
+    WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 5
+    MAX_PROCESSING_THREADS = 2
     UPDATE_FREQUENCY_SECONDS = 43200
     API_KEY = '510cd0884a714325bc6b88cf122f0632'
 
@@ -198,12 +198,18 @@ class UpdateBureauLaborStatistics(threading.Thread):
                 self.database,
                 tablename)
         metrics_db.create_metric()
+        latest_time, earliest_time = metrics_db.get_earliest_and_latest_time()
 
         headers = {'Content-type': 'application/json'}
         today = datetime.datetime.today()
         current_year = (today.year - 1) if not update_history else 1900
         while current_year <= today.year:
             end_year = min(current_year + 20, today.year)
+            # Skip year in the middle of earliest and latest time
+            if latest_time is not None and earliest_time is not None and current_year >= earliest_time.year and current_year <= latest_time.year:
+                current_year += 20
+                continue
+
             logger.Logger.log(logger.LogLevel.INFO, 'Update %s (%s) (%s) from year %d to year %d' % (economics_info.name, economics_info.category, economics_info.type, current_year, end_year))
 
             values = {
@@ -219,8 +225,6 @@ class UpdateBureauLaborStatistics(threading.Thread):
                 response = rsp.read()
                 new_measures = self.parse_json_time_series(metadata['series_id'], metric_name, response)
 
-                latest_time, earliest_time = metrics_db.get_earliest_and_latest_time()
-
                 logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s (%s) (%s) with given data' % (economics_info.name, economics_info.category, economics_info.type))
                 metrics_db.update_database_with_given_data(
                         data=new_measures,
@@ -231,7 +235,7 @@ class UpdateBureauLaborStatistics(threading.Thread):
 
             logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before downloading json again' %
                             UpdateBureauLaborStatistics.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
-            current_year+=20
+            current_year += 20
 
     def get_start_end_date_from_period_info(self, year, periodName, period):
         start_date = None
@@ -283,7 +287,7 @@ class UpdateBureauLaborStatistics(threading.Thread):
         measures = []
         json_data = json.loads(json_text)
         if json_data['status'] != 'REQUEST_SUCCEEDED':
-            logger.Logger.log(logger.LogLevel.ERROR, "Fail to get results for series %s" % series_id)
+            logger.Logger.log(logger.LogLevel.ERROR, "Fail to get results for series %s json %s" % (series_id, json_data))
             return measures
 
         results = json_data['Results']['series'][0]

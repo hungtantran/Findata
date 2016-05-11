@@ -46,3 +46,23 @@ class Logger(object):
             Logger.WARN_FILE.write(log_msg)
 
         print(log_msg)
+
+    @staticmethod
+    def trace(msg):
+        return Logger.log(LogLevel.TRACE, msg)
+
+    @staticmethod
+    def debug(msg):
+        return Logger.log(LogLevel.DEBUG, msg)
+
+    @staticmethod
+    def info(msg):
+        return Logger.log(LogLevel.INFO, msg)
+
+    @staticmethod
+    def warn(msg):
+        return Logger.log(LogLevel.WARN, msg)
+
+    @staticmethod
+    def error(msg):
+        return Logger.log(LogLevel.ERROR, msg)

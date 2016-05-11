@@ -2,6 +2,11 @@ __author__ = 'hungtantran'
 
 
 class Config(object):
+    # https://developers.google.com/api-client-library/python/apis/
+    # Google cloud project id
+    cloud_projectid = 'model-1256'
+    cloud_clientsecret = 'Key/model-5798ace788b3.json'
+
     # Mysql config
     test_mysql_username = 'root'
     test_mysql_password = 'test'
@@ -12,6 +17,13 @@ class Config(object):
     mysql_password = 'test'
     mysql_server = '104.154.40.63'
     mysql_database = 'models'
+
+    # Cloud Sql config
+    cloudsql_instanceid = 'models'
+    cloudsql_secret_json = 'Key/client_secret_292129338715-tqmce99o5ejkehi7fpm59skmg81hvoh3.apps.googleusercontent.com.json'
+
+    # Cloud Storage config 
+    cloudstorage_bucket = 'market_data_analysis'
 
     # Bigquery config
     test_bigquery_username = None
@@ -24,6 +36,7 @@ class Config(object):
     bigquery_server = 'model-1256'
     bigquery_database = 'models'
 
+    # Gmail config
     gmail_client_userid = 'hungtantran@gmail.com'
     gmail_secret_json = 'Key/client_secret_292129338715-tqmce99o5ejkehi7fpm59skmg81hvoh3.apps.googleusercontent.com.json'
 

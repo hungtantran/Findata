@@ -24,7 +24,7 @@ class MetricsDatabase(object):
         self.database = database
         self.metric = metric
 
-        if use_orm:
+        if use_orm and metric is not None:
             self.engine = sqlalchemy.create_engine('%s://%s:%s@%s/%s?charset=utf8&use_unicode=0' %
                                                    (db_type, username, password, server, database),
                                                    pool_recycle=3600)
@@ -74,7 +74,7 @@ class MetricsDatabase(object):
                 s.commit()
                 s.close()
 
-    def insert_metrics(self, new_metrics, ignore_duplicate=False):
+    def insert_metrics(self, new_metrics, ignore_duplicate=True):
         try:
             with self.dao_factory.create(self.username,
                                          self.password,
@@ -149,6 +149,22 @@ class MetricsDatabase(object):
                         end_date=row[5],
                         metadata=row[6]) for row in data]
                 return metric_list
+        except Exception as e:
+            logger.Logger.log(logger.LogLevel.ERROR, e)
+
+    def get_all_metrics_tables(self):
+        try:
+            with self.dao_factory.create(
+                    self.username,
+                    self.password,
+                    self.server,
+                    self.database) as connection:
+                cursor = connection.cursor()
+                query_string = r"SHOW TABLES LIKE '%metrics'"
+                cursor.execute(query_string)
+                data = cursor.fetchall()
+                metrics_table_list = [row[0] for row in data]
+                return metrics_table_list
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, e)
 

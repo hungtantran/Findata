@@ -15,7 +15,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 class BigQueryClient(object):
     SCOPES = ['https://www.googleapis.com/auth/bigquery']
     CLIENT_SECRETS = 'Key/model-5798ace788b3.json'
-    PROJECT_ID = 'model-1256'
 
     def __init__(self, project_id, dataset_id):
         self.credentials = ServiceAccountCredentials.from_json_keyfile_name(
