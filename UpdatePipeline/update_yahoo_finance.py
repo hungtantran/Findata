@@ -22,7 +22,7 @@ class UpdateYahooFinance(threading.Thread):
     SUMMARY_DIMENSIONS = ['open', 'high', 'low', 'close', 'volume', 'adj_close']
     NUM_RETRIES_DOWNLOAD = 2
     WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 1
-    MAX_PROCESSING_THREADS = 15
+    MAX_PROCESSING_THREADS = 5
     UPDATE_FREQUENCY_SECONDS = 43200
 
 
@@ -139,6 +139,13 @@ class UpdateYahooFinance(threading.Thread):
                 marked_days = []
                 if self.update_history:
                     crawl_pages, marked_days = self.get_list_of_crawl_pages(latest_time, earliest_time)
+                # If the lastest time is Friday of this week and today is Saturday or Sunday, skip the entry since we already have the latest value
+                else:
+                    today = datetime.datetime.today()
+                    delta_day = today - latest_time
+                    if (latest_time.weekday() == 4 and today.weekday() >= 4 and delta_day.days < 7):
+                        logger.Logger.log(logger.LogLevel.INFO, 'Already have the latest data for %s at date %s, skip' % (metric.ticker, latest_time))
+                        continue
 
                 for page_num in crawl_pages:
                     data = self.update_metric_value(metric, page_num)

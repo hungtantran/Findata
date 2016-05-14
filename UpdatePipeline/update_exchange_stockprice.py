@@ -52,7 +52,7 @@ def main():
                 Config.mysql_password,
                 Config.mysql_server,
                 Config.mysql_database,
-                update_history=True)
+                update_history=False)
         update_obj.daemon = True
         update_obj.start()
 

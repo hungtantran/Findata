@@ -60,19 +60,7 @@ class MetricsDatabase(object):
             logger.Logger.log(logger.LogLevel.ERROR, e)
 
     def insert_metric(self, new_metric, ignore_duplicate=False):
-        try:
-            self.session.close_all()
-            s = self.session()
-            if ignore_duplicate:
-                s.merge(new_metric)
-            else:
-                s.add(new_metric)
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, e)
-        finally:
-            if s is not None:
-                s.commit()
-                s.close()
+    	return self.insert_metrics([new_metric])
 
     def insert_metrics(self, new_metrics, ignore_duplicate=True):
         try:

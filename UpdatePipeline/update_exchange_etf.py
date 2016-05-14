@@ -45,7 +45,8 @@ def main():
                 Config.mysql_password,
                 Config.mysql_server,
                 Config.mysql_database,
-                update_history=True)
+                update_history=True,
+                max_num_threads=2)
         update_obj.daemon = True
         update_obj.start()
 
