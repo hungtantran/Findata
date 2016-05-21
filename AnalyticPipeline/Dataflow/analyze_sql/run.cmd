@@ -1,1 +1,0 @@
-mvn compile exec:java -Dexec.mainClass=SqlWordCount -Dexec.args="--project=model-1256 --stagingLocation=gs://market_data_analysis_staging/ --runner=BlockingDataflowPipelineRunner"

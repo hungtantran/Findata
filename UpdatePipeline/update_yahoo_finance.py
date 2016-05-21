@@ -140,7 +140,7 @@ class UpdateYahooFinance(threading.Thread):
                 if self.update_history:
                     crawl_pages, marked_days = self.get_list_of_crawl_pages(latest_time, earliest_time)
                 # If the lastest time is Friday of this week and today is Saturday or Sunday, skip the entry since we already have the latest value
-                else:
+                elif latest_time is not None:
                     today = datetime.datetime.today()
                     delta_day = today - latest_time
                     if (latest_time.weekday() == 4 and today.weekday() >= 4 and delta_day.days < 7):
