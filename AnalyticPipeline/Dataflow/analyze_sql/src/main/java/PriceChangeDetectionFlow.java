@@ -10,17 +10,12 @@ import com.google.cloud.dataflow.sdk.options.PipelineOptionsFactory;
 import com.google.cloud.dataflow.sdk.transforms.*;
 import com.google.cloud.dataflow.sdk.values.KV;
 import com.google.cloud.dataflow.sdk.values.PCollection;
-import com.google.cloud.dataflow.sdk.values.PCollectionList;
 
-import java.awt.*;
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import java.util.concurrent.TimeUnit;
 
 
 public class PriceChangeDetectionFlow {
@@ -36,50 +31,15 @@ public class PriceChangeDetectionFlow {
     }
   }
 
-  static class ExtractValues extends DoFn<String, KV<String, ArrayList<MetricValue>>> {
-    @Override
-    public void processElement(ProcessContext c) {
-      DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-      String line = c.element();
-      String[] parts = line.split(";");
-      if (parts.length == 0) {
-        return;
-      }
-
-      String ticker = parts[0];
-      if (ticker.length() == 0) {
-        return;
-      }
-
-      ArrayList<MetricValue> vals = new ArrayList<MetricValue>();
-      for (int i = 1; i < parts.length; ++i) {
-        MetricValue value = new MetricValue();
-        String[] valParts = parts[i].split(",");
-        if (valParts.length != 2) {
-          continue;
-        }
-
-        try {
-          value.date = format.parse(valParts[0]);
-          value.value = Float.parseFloat(valParts[1]);
-        } catch (Exception e) {
-          continue;
-        }
-
-        vals.add(value);
-      }
-
-      c.output(KV.of(ticker, vals));
-    }
-  }
-
   static class FindSuddenPriceMovementPerStock extends DoFn<String, KV<String, String>> {
-    Date[] dates;
+    String dateString;
     Float threshold;
+    Integer timeFrameInDays;
 
-    public FindSuddenPriceMovementPerStock(Date[] dates, Float threshold) {
-      this.dates = dates;
+    public FindSuddenPriceMovementPerStock(String dateString, Float threshold, Integer timeFrameInDays) {
+      this.dateString = dateString;
       this.threshold = threshold;
+      this.timeFrameInDays = timeFrameInDays;
     }
 
     public ArrayList<MetricValue> parseLine(String[] parts) {
@@ -105,6 +65,20 @@ public class PriceChangeDetectionFlow {
       return values;
     }
 
+    public ArrayList<Date> parseDateString(String[] parts) {
+      DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+      ArrayList<Date> values = new ArrayList<Date>();
+      for (int i = 0; i < parts.length; ++i) {
+        try {
+          values.add(format.parse(parts[i]));
+        } catch (Exception e) {
+          continue;
+        }
+      }
+
+      return values;
+    }
+
     @Override
     public void processElement(ProcessContext c) {
       String line = c.element();
@@ -119,36 +93,59 @@ public class PriceChangeDetectionFlow {
       }
 
       ArrayList<MetricValue> values = this.parseLine(parts);
+      ArrayList<Date> dates = this.parseDateString(this.dateString.split(","));
 
       int totalDate = 0;
-      int index = 0;
-      ArrayList<MetricValue> metricFound = new ArrayList<MetricValue>();
-      StringBuilder resultStr = new StringBuilder();
-      for (int i = 0; i < values.size() - 1; ++i) {
-        if (index >= this.dates.length) {
+      int index = 0, i = 0;
+      ArrayList<MetricValue> increaseFound = new ArrayList<MetricValue>();
+      ArrayList<MetricValue> decreaseFound = new ArrayList<MetricValue>();
+      StringBuilder equalStr = new StringBuilder();
+      for (i = 0; i < values.size();) {
+        if (index >= dates.size()) {
           break;
         }
 
-        if (values.get(i).date.compareTo(this.dates[index]) < 0) {
-          continue;
-        }
-
-        if (values.get(i).date.compareTo(this.dates[index]) > 0) {
+        if (values.get(i).date.compareTo(dates.get(index)) > 0) {
           index++;
           continue;
         }
 
-        totalDate++;
-        Float priceChange = (values.get(i + 1).value - values.get(i).value) / values.get(i).value * 100;
-        if (priceChange > this.threshold) {
-          metricFound.add(new MetricValue(priceChange, values.get(i).date));
-          resultStr.append(values.get(i).date.toString() + "," + priceChange + ";");
+        if (values.get(i).date.compareTo(dates.get(index)) < 0) {
+          i++;
+          continue;
         }
+
+        int diff = 1;
+        while (i + diff < values.size()) {
+          long diffTime = values.get(i + diff).date.getTime() - values.get(i).date.getTime();
+          long diffDays = TimeUnit.DAYS.convert(diffTime, TimeUnit.MILLISECONDS);
+
+          if (diffDays >= this.timeFrameInDays) {
+            totalDate++;
+            Float priceChange = (values.get(i + diff).value - values.get(i).value) / values.get(i).value * 100;
+            if (priceChange > this.threshold) {
+              increaseFound.add(new MetricValue(priceChange, values.get(i).date));
+            } else if (priceChange < -this.threshold) {
+              decreaseFound.add(new MetricValue(priceChange, values.get(i).date));
+            }
+
+            break;
+          }
+
+          diff++;
+        }
+
+        index++;
+        i++;
       }
 
-      //KV<String, String> result = KV.of(ticker, metricFound.size() + ";" + totalDate + ";" + resultStr.toString());
-      KV<String, String> result = KV.of(ticker, metricFound.size() + ";" + totalDate);
+      float percentIncrease = (float)increaseFound.size() / (float)totalDate;
+      float percentDecrease = (float)decreaseFound.size() / (float)totalDate;
+
+      KV<String, String> result = KV.of(ticker, "Increase;" + increaseFound.size() + ";" + totalDate + ";" + percentIncrease + ";" + values.size());
       c.output(result);
+      KV<String, String> result2 = KV.of(ticker, "Decrease;" + decreaseFound.size() + ";" + totalDate + ";" + percentDecrease + ";" + values.size());
+      c.output(result2);
     }
   }
 
@@ -159,38 +156,29 @@ public class PriceChangeDetectionFlow {
     }
   }
 
-  public static class ParseLine extends PTransform<PCollection<String>,
-      PCollection<KV<String, ArrayList<MetricValue>>>> {
-    @Override
-    public PCollection<KV<String, ArrayList<MetricValue>>> apply(PCollection<String> lines) {
-      PCollection<KV<String, ArrayList<MetricValue>>> parsedLines = lines.apply(
-          ParDo.of(new ExtractValues()));
-
-      return parsedLines;
-    }
-  }
-
   public static class FindSuddenPriceMovement extends
           PTransform<PCollection<String>, PCollection<KV<String, String>>> {
-    Date[] dates;
+    String dateString;
     Float threshold;
+    Integer timeFrameInDays;
 
-    public FindSuddenPriceMovement(Date[] dates, Float threshold) {
-      this.dates = dates;
+    public FindSuddenPriceMovement(String dateString, Float threshold, Integer timeFrameInDays) {
+      this.dateString = dateString;
       this.threshold = threshold;
+      this.timeFrameInDays = timeFrameInDays;
     }
 
     @Override
     public PCollection<KV<String, String>> apply(PCollection<String> lines) {
       PCollection<KV<String, String>> results = lines.apply(ParDo.of(
-              new FindSuddenPriceMovementPerStock(this.dates, this.threshold)));
+              new FindSuddenPriceMovementPerStock(this.dateString, this.threshold, this.timeFrameInDays)));
       return results;
     }
   }
 
   public static interface SqlWordCountOptions extends PipelineOptions {
     @Description("Path of the file to read from")
-    @Default.String("/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/output.txt*")
+    @Default.String("/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/result.txt*")
     String getInputFile();
     void setInputFile(String value);
 
@@ -204,32 +192,27 @@ public class PriceChangeDetectionFlow {
     void setDateString(String dateString);
 
     @Description("The threshold to consider sudden price movement")
-    @Default.Float(1)
+    @Default.Float(0)
     Float getPriceChangePercentageThreshold();
     void setPriceChangePercentageThreshold(Float threshold);
+
+    @Description("The time frame in days to consider")
+    @Default.Integer(1)
+    Integer getTimeFrameInDays();
+    void setTimeFrameInDays(Integer timeFrameInDays);
   }
 
   public static void main(String[] args) {
     try {
       SqlWordCountOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
               .as(SqlWordCountOptions.class);
-      String[] dateArr = options.getDateString().split(",");
-      DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-      Date[] dates = new Date[dateArr.length];
-      for (int i = 0; i < dateArr.length; ++i) {
-        dates[i] = format.parse(dateArr[i]);
-      }
-
-      if (dates.length == 0) {
-        System.out.println("Found no date");
-        return;
-      }
-
-      System.out.println("Found " + dates.length + " dates");
 
       Pipeline p = Pipeline.create(options);
       p.apply(TextIO.Read.named("ReadLines").from(options.getInputFile()))
-              .apply(new FindSuddenPriceMovement(dates, options.getPriceChangePercentageThreshold()))
+              .apply(new FindSuddenPriceMovement(
+                      options.getDateString(),
+                      options.getPriceChangePercentageThreshold(),
+                      options.getTimeFrameInDays()))
               .apply(ParDo.of(new FormatAsTextFn()))
               .apply(TextIO.Write.named("WriteCounts").to(options.getOutputFile()));
       p.run();

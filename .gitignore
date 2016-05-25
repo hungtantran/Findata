@@ -4,4 +4,6 @@ webserver/npm-debug.log
 npm-debug.log
 *.txt
 *.pyc
+*.swp
+.fuse_hidden*
 !python_package.txt

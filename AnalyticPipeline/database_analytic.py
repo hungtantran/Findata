@@ -4,7 +4,9 @@ __author__ = 'hungtantran'
 import Queue
 import re
 import threading
+import time
 import os
+import sys
 
 import logger
 import ticker_info_database
@@ -302,7 +304,9 @@ def FindDatesWithLargePriceChangeForStock(table_name,
     return analytic_obj.GetAnalyticResults()[table_name]
 
 def FindStockWithLargePriceChangeWithGivenDates(
-        dates, price_change_percentage_threshold, dataflow_local=True):
+        dates, price_change_percentage_threshold,
+        time_frame_in_days,
+        dataflow_local=True):
     dateString = ','.join(dates)
 
     # Dataflow command
@@ -317,14 +321,14 @@ def FindStockWithLargePriceChangeWithGivenDates(
         staging_location ='--stagingLocation=%s' % 'gs://market_data_analysis_staging/'
 
     # Input file location
-    inputFile = '--inputFile=%s' % '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/output.txt*'
+    input_file = '--inputFile=%s' % '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/result.txt'
     if not dataflow_local:
-        inputFile = '--inputFile=%s' % 'gs://market_data_analysis/result/result.txt*'
+        input_file = '--inputFile=%s' % 'gs://market_data_analysis/result/result.txt*'
 
     # Output file location
-    outputFile = '--outputFile=%s' % '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/price_output.txt'
+    output_file = '--outputFile=%s' % '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/price_output.txt'
     if not dataflow_local:
-        outputFile = '--outputFile=%s' % 'gs://market_data_analysis/price_change_result/result.txt'
+        output_file = '--outputFile=%s.%s.txt' % ('gs://market_data_analysis/price_change_result/result', time.time())
 
     # Runner
     runner = '--runner=%s' % 'DirectPipelineRunner'
@@ -334,12 +338,15 @@ def FindStockWithLargePriceChangeWithGivenDates(
     # Price change threshold
     price_change = '--priceChangePercentageThreshold=%d' % price_change_percentage_threshold
 
+    # The time frame to consider price change
+    time_frame = '--timeFrameInDays=%d' % time_frame_in_days
+
     # Dates
     date_string = '--dateString=%s' % dateString
 
-    dataflow_cmd = '%s"%s %s %s %s %s %s %s"' % (
-            dataflow_cmd, project, staging_location, inputFile, outputFile,
-            runner, price_change, date_string)
+    dataflow_cmd = '%s"%s %s %s %s %s %s %s %s"' % (
+            dataflow_cmd, project, staging_location, input_file, output_file,
+            runner, price_change, date_string, time_frame)
     print dataflow_cmd
     os.system(dataflow_cmd)
 
@@ -358,12 +365,22 @@ if __name__ == '__main__':
             line = table_name + ': ' + ','.join(results[table_name]) + '\n'
             f.write(line)"""
 
-    dates = FindDatesWithLargePriceChangeForStock('msft_metrics', 1)
+    local = False
+    metric = 'msft'
+    time_frame_in_days = 1
+    price_change_percentage_threshold = 0
+
+    if len(sys.argv) >= 2:
+        local = True if sys.argv[1] == 'True' else False
+
+    if len(sys.argv) >= 3:
+        metric = sys.argv[2]
+
+    if len(sys.argv) >= 4:
+        time_frame_in_days = int(sys.argv[3])
+
+    dates = FindDatesWithLargePriceChangeForStock('%s_metrics' % metric, 1)
     FindStockWithLargePriceChangeWithGivenDates(
-        dates, price_change_percentage_threshold=1,
-        dataflow_local=False)
-
-
-
-
-
+        dates, price_change_percentage_threshold,
+        time_frame_in_days,
+        dataflow_local=local)
