@@ -309,26 +309,38 @@ def FindStockWithLargePriceChangeWithGivenDates(
         dataflow_local=True):
     dateString = ','.join(dates)
 
+    local_project_root = '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/'
+
     # Dataflow command
-    dataflow_cmd = 'mvn compile -f AnalyticPipeline/Dataflow/analyze_sql/pom.xml exec:java -Dexec.mainClass=PriceChangeDetectionFlow -Dexec.args='
+    dataflow_cmd = 'mvn compile -f %sAnalyticPipeline/Dataflow/analyze_sql/pom.xml exec:java -Dexec.mainClass=PriceChangeDetectionFlow -Dexec.args=' % project_root
 
     # Project
     project = '--project=%s' % 'model-1256'
 
     # Staging location
-    staging_location = '--stagingLocation=%s' % '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/'
+    staging_location = '--stagingLocation=%s%s' % (
+            local_project_root,
+            'AnalyticPipeline/Dataflow/analyze_sql/src/test/')
     if not dataflow_local:
-        staging_location ='--stagingLocation=%s' % 'gs://market_data_analysis_staging/'
+        staging_location ='--stagingLocation=%s' % (
+                'gs://market_data_analysis_staging/')
 
     # Input file location
-    input_file = '--inputFile=%s' % '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/result.txt'
+    input_file = '--inputFile=%s%s' % (
+            local_project_root,
+            'AnalyticPipeline/Dataflow/analyze_sql/src/test/result.txt')
     if not dataflow_local:
-        input_file = '--inputFile=%s' % 'gs://market_data_analysis/result/result.txt*'
+        input_file = '--inputFile=%s' % (
+                'gs://market_data_analysis/result/result.txt*')
 
     # Output file location
-    output_file = '--outputFile=%s' % '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/price_output.txt'
+    output_file = '--outputFile=%s' % (
+            local_project_root,
+            'AnalyticPipeline/Dataflow/analyze_sql/src/test/price_output.txt')
     if not dataflow_local:
-        output_file = '--outputFile=%s.%s.txt' % ('gs://market_data_analysis/price_change_result/result', time.time())
+        output_file = '--outputFile=%s.%s.txt' % (
+                'gs://market_data_analysis/price_change_result/result',
+                time.time())
 
     # Runner
     runner = '--runner=%s' % 'DirectPipelineRunner'
@@ -336,7 +348,8 @@ def FindStockWithLargePriceChangeWithGivenDates(
         runner = '--runner=%s' % 'BlockingDataflowPipelineRunner'
 
     # Price change threshold
-    price_change = '--priceChangePercentageThreshold=%d' % price_change_percentage_threshold
+    price_change = '--priceChangePercentageThreshold=%d' % (
+            price_change_percentage_threshold)
 
     # The time frame to consider price change
     time_frame = '--timeFrameInDays=%d' % time_frame_in_days

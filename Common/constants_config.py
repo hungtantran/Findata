@@ -20,10 +20,12 @@ class Config(object):
 
     # Cloud Sql config
     cloudsql_instanceid = 'models'
-    cloudsql_secret_json = 'Key/client_secret_292129338715-tqmce99o5ejkehi7fpm59skmg81hvoh3.apps.googleusercontent.com.json'
+    cloudsql_secret_json = 'Key/model-5798ace788b3.json'
 
-    # Cloud Storage config 
+    # Cloud Storage config
+    cloudstorage_secret_json = 'Key/model-5798ace788b3.json'
     cloudstorage_bucket = 'market_data_analysis'
+    cloudstorage_bucket_test = 'market_data_analysis_test'
 
     # Bigquery config
     test_bigquery_username = None

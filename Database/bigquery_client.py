@@ -38,11 +38,14 @@ class BigQueryClient(object):
 
     def create_table(self, tablename, column_names, types):
         if len(column_names) != len(types):
-            logger.Logger.log(logger.LogLevel.WARN, 'Mismatch number of column names (%d) and types (%d)' %
-                              (len(column_names), len(types)))
+            logger.Logger.log(
+                    logger.LogLevel.WARN,
+                    'Mismatch number of column names (%d) and types (%d)' %
+                    (len(column_names), len(types)))
             return
 
-        # Since bigquery doesn't support delete, we implement delete by append a column indicate delete or not
+        # Since bigquery doesn't support delete, we implement delete by append
+        # a column indicate delete or not
         column_names.append('deleted')
         types.append('BOOLEAN')
 
@@ -59,7 +62,10 @@ class BigQueryClient(object):
                          'projectId': self.project_id}
             table = {'tableReference': table_ref,
                      'schema': schema}
-            logger.Logger.log(logger.LogLevel.INFO, 'Create table %s with column names %s, type %s' % (tablename, column_names, types))
+            logger.Logger.log(
+                    logger.LogLevel.INFO,
+                    'Create table %s with column names %s, type %s' %
+                    (tablename, column_names, types))
             self.bigquery_service.tables().insert(projectId=self.project_id,
                                                   datasetId=self.dataset_id,
                                                   body=table).execute()
@@ -76,10 +82,17 @@ class BigQueryClient(object):
 
     def list_table(self):
         try:
-            results = self.bigquery_service.tables().list(projectId=self.project_id,
-                                                          datasetId=self.dataset_id).execute()
+            results = self.bigquery_service.tables().list(
+                    projectId=self.project_id,
+                    datasetId=self.dataset_id).execute()
             # Sample results:
-            # {u'totalItems': 1, u'tables': [{u'kind': u'bigquery#table', u'type': u'TABLE', u'id': u'model-1256:test_models.TEST1', u'tableReference': {u'projectId': u'model-1256', u'tableId': u'TEST1', u'datasetId': u'test_models'}}], u'kind': u'bigquery#tableList', u'etag': u'"oGMCLvGjZO7RB3oFjn17umMEDU4/dMsP55IY4G3Dzk4m2IL7cRkp9SY"'}
+            # {u'totalItems': 1, u'tables': [
+            # {u'kind': u'bigquery#table', u'type': u'TABLE',
+            # u'id': u'model-1256:test_models.TEST1',
+            # u'tableReference': {u'projectId': u'model-1256',
+            # u'tableId': u'TEST1', u'datasetId': u'test_models'}}],
+            # u'kind': u'bigquery#tableList',
+            # u'etag': u'"oGMCLvGjZO7RB3oFjn17umMEDU4/dMsP55IY4G3D...."'}
             tables_json = results['tables']
             table_names = []
             for table_json in tables_json:
@@ -99,9 +112,10 @@ class BigQueryClient(object):
 
     def describe_table(self, tablename):
         try:
-            results = self.bigquery_service.tables().get(projectId=self.project_id,
-                                                         datasetId=self.dataset_id,
-                                                         tableId=tablename).execute()
+            results = self.bigquery_service.tables().get(
+                    projectId=self.project_id,
+                    datasetId=self.dataset_id,
+                    tableId=tablename).execute()
             return self._extract_schema_from_json(results)
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
@@ -115,7 +129,8 @@ class BigQueryClient(object):
             rows = []
             for value in values:
                 json = {}
-                # The last column of a table is always 'deleted', mark new row as not deleted
+                # The last column of a table is always 'deleted', mark new row
+                # as not deleted
                 value.append(False)
                 for i, column_name in enumerate(column_names):
                     json[column_name] = value[i]
@@ -125,11 +140,14 @@ class BigQueryClient(object):
                 rows.append(row)
             body = {"rows": rows}
 
-            logger.Logger.log(logger.LogLevel.INFO, 'Insert %d rows into table %s' % (len(rows), tablename))
-            response = self.bigquery_service.tabledata().insertAll(projectId=self.project_id,
-                                                                   datasetId=self.dataset_id,
-                                                                   tableId=tablename,
-                                                                   body=body).execute()
+            logger.Logger.log(
+                    logger.LogLevel.INFO,
+                    'Insert %d rows into table %s' % (len(rows), tablename))
+            response = self.bigquery_service.tabledata().insertAll(
+                    projectId=self.project_id,
+                    datasetId=self.dataset_id,
+                    tableId=tablename,
+                    body=body).execute()
             print response
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
@@ -141,14 +159,18 @@ class BigQueryClient(object):
             if match:
                 tablename = match.group(1)
                 full_tablename = '[%s.%s]' % (self.dataset_id, tablename)
-                query_string = query_string.replace(tablename, full_tablename, 1)
+                query_string = query_string.replace(
+                        tablename, full_tablename, 1)
             else:
-                logger.Logger.log(logger.LogLevel.WARN, 'Cannot find table name from query %s' % query_string)
+                logger.Logger.log(
+                        logger.LogLevel.WARN,
+                        'Cannot find table name from query %s' % query_string)
                 return None
 
             query_data = {'query': query_string}
-            query_response = self.bigquery_service.jobs().query(projectId=self.project_id,
-                                                                body=query_data).execute()
+            query_response = self.bigquery_service.jobs().query(
+                    projectId=self.project_id,
+                    body=query_data).execute()
             print query_response
             # Empty result set
             if 'rows' not in query_response:
@@ -157,12 +179,17 @@ class BigQueryClient(object):
             column_names, types = self._extract_schema_from_json(query_response)
             if column_names[-1] != 'deleted' or types[-1] != 'BOOLEAN':
                 print 'here % %' % (column_names[-1], types[-1])
-                logger.Logger.log(logger.LogLevel.WARN, 'Unrecognize table format column names %s types %s' % (column_names, types))
+                logger.Logger.log(
+                        logger.LogLevel.WARN,
+                        'Unrecognize table format column names %s types %s' %
+                        (column_names, types))
                 return []
 
             rows = query_response['rows']
             results = []
-            # Each row look like this {u'f': [{u'v': u'test1'}, {u'v': u'2'}, {u'v': u'3.0'}, {u'v': u'1.4573088E9'}, {u'v': u'false'}]}
+            # Each row look like this
+            # {u'f': [{u'v': u'test1'}, {u'v': u'2'}, {u'v': u'3.0'},
+            # {u'v': u'1.4573088E9'}, {u'v': u'false'}]}
             for row in rows:
                 result = []
                 for i, field in enumerate(row['f']):
@@ -171,8 +198,10 @@ class BigQueryClient(object):
                     elif (types[i] == 'FLOAT'):
                         result.append(float(field['v']))
                     elif (types[i] == 'TIMESTAMP'):
-                        # We convert timestamp to float first because of scientific notation like 1.4573088E9
-                        result.append(datetime.datetime.fromtimestamp(int(float(field['v']))))
+                        # We convert timestamp to float first because of
+                        # scientific notation like 1.4573088E9
+                        result.append(datetime.datetime.fromtimestamp(
+                                int(float(field['v']))))
                     elif (types[i] == 'BOOLEAN'):
                         if field['v'] == 'false':
                             result.append(False)
@@ -219,7 +248,9 @@ class BigQueryClient(object):
                 elif 'time' in type.lower():
                     type = 'TIMESTAMP'
                 else:
-                    logger.Logger.log(logger.LogLevel.WARN, 'Cannot recognize type %s' % type)
+                    logger.Logger.log(
+                            logger.LogLevel.WARN,
+                            'Cannot recognize type %s' % type)
                     return None, None, None
                 types.append(type)
 
@@ -232,7 +263,8 @@ class BigQueryClient(object):
         if query_string_lower.startswith('select'):
             return self.query(query_string)
         elif query_string_lower.startswith('create table'):
-            tablename, column_names, types = self._parse_create_query(query_string)
+            tablename, column_names, types = (
+                    self._parse_create_query(query_string))
             if (tablename is None or
                 column_names is None or
                 types is None):
@@ -242,5 +274,7 @@ class BigQueryClient(object):
                                      column_names=column_names,
                                      types=types)
 
-        logger.Logger.log(logger.LogLevel.WARN, 'Cannot recognize query %s' % query_string)
+        logger.Logger.log(
+                logger.LogLevel.WARN,
+                'Cannot recognize query %s' % query_string)
         return None
