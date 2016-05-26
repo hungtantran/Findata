@@ -3,6 +3,8 @@ __author__ = 'hungtantran'
 import unittest
 import time
 import random
+import os
+import os.path
 
 from constants_config import Config
 import logger
@@ -70,11 +72,21 @@ class TestCloudStorageHelper(unittest.TestCase):
             self.setUp()
 
             out_filename="Database/test_files/test_data_20160511.txt"
+            try:
+                os.remove(out_filename)
+            except Exception:
+                pass
+
+            self.assertFalse(os.path.isfile(out_filename))
+
             with open(out_filename, "w") as out_file:
                 self.storage_client.get_object(
                         bucket="market_data_analysis_test",
                         filename="test_data_20160511.txt",
                         out_file=out_file)
+
+            with open(out_filename, "r") as out_file:
+                self.assertEqual(out_file.read(), "test\ntest\ntest\n")
         finally:
             self.tearDown()
 
