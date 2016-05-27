@@ -31,6 +31,13 @@ class CloudStorageObject(object):
         self.size = size
 
 
+class CloudStorageDataflowObject(object):
+    def __init__(self, name, size, cloud_storage_objects):
+        self.name = name
+        self.size = size
+        self.cloud_storage_objects = cloud_storage_objects
+
+
 class CloudStorageHelper(object):
     # Read more at https://developers.google.com/resources/api-libraries/documentation/storage/v1/python/latest/
     SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
@@ -81,8 +88,8 @@ class CloudStorageHelper(object):
 
                 index = name.rfind("/")
                 object_directory = ""
-                if not is_directory:
-                    object_directory = name[:index+1]
+                if (not is_directory) and (index != -1):
+                    object_directory = name[:index]
                     name = name[index+1:]
 
                 objects.append(CloudStorageObject(
@@ -97,16 +104,66 @@ class CloudStorageHelper(object):
 
         return None
 
-    def get_object(self, bucket, filename, out_file):
-        req = self.storage_service.objects().get_media(
-                bucket=bucket, object=filename)
-        downloader = http.MediaIoBaseDownload(out_file, req)
+    def list_dataflow_result(self, bucket, directory):
+        objects = self.list_objects(bucket, directory)
+        dataflow_obj_map = {}
 
-        done = False
-        while done is False:
-            status, done = downloader.next_chunk()
-            print("Download {}%.".format(int(status.progress() * 100)))
-        return out_file
+        for obj in objects:
+            if obj.directory != directory:
+                continue
+
+            # result.1464158881.07.txt-00000-of-00006
+            match = re.search(r"(result.*)-([0-9]+)-of-([0-9]+)", obj.name)
+            if match:
+                # Return file name and part number
+                file_name = match.group(1)
+                part_number = int(match.group(2))
+                total_parts = int(match.group(3))
+                if file_name not in dataflow_obj_map:
+                    dataflow_obj_map[file_name] = CloudStorageDataflowObject(
+                            name=file_name,
+                            size=total_parts,
+                            cloud_storage_objects=[obj])
+                else:
+                    dataflow_obj_map[file_name].cloud_storage_objects.append(
+                            obj)
+            else:
+                continue
+
+        results = []
+        for file_name in dataflow_obj_map:
+            results.append(dataflow_obj_map[file_name])
+        return results
+
+    def get_object(self, bucket, filename, out_filename):
+        with open(out_filename, "w") as out_file:
+            req = self.storage_service.objects().get_media(
+                    bucket=bucket, object=filename)
+            downloader = http.MediaIoBaseDownload(out_file, req)
+
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+                logger.Logger.info("Download %d%% to %s" % (
+                        int(status.progress() * 100),
+                        out_filename))
+
+    def get_dataflow_object(self, bucket, dataflow_obj, out_filename):
+        with open(out_filename, "a") as out_file:
+            for obj in dataflow_obj.cloud_storage_objects:
+                filename = '%s/%s' % (obj.directory, obj.name)
+                if filename[0] == '/':
+                    filename = filename[1:]
+                req = self.storage_service.objects().get_media(
+                        bucket=bucket, object=filename)
+                downloader = http.MediaIoBaseDownload(out_file, req)
+
+                done = False
+                while done is False:
+                    status, done = downloader.next_chunk()
+                    logger.Logger.info("Download %d%% to %s" % (
+                        int(status.progress() * 100),
+                        out_filename))
 
     def delete_object(self, bucket, filename):
         req = self.storage_service.objects().delete(

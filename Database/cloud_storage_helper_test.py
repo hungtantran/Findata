@@ -22,19 +22,17 @@ class TestCloudStorageHelper(unittest.TestCase):
 
     def test_listbuckets(self):
         try:
-            self.setUp()
             buckets = self.storage_client.list_buckets()
-            self.assertEqual(len(buckets), 3)
+            self.assertEqual(len(buckets), 4)
             self.assertEqual(buckets[0].name, 'market_data_analysis')
             self.assertEqual(buckets[1].name, 'market_data_analysis_staging')
             self.assertEqual(buckets[2].name, 'market_data_analysis_test')
+            self.assertEqual(buckets[3].name, 'market_data_analysis_test_2')
         finally:
             self.tearDown()
 
-
     def test_listobjects(self):
         try:
-            self.setUp()
             objects = self.storage_client.list_objects(
                     'market_data_analysis_test',
                     'test_data_20160511.txt')
@@ -60,7 +58,7 @@ class TestCloudStorageHelper(unittest.TestCase):
             self.assertEqual(objects[1].size, 0)
 
             self.assertEqual(objects[2].name, "result.txt")
-            self.assertEqual(objects[2].directory, "test_dir/")
+            self.assertEqual(objects[2].directory, "test_dir")
             self.assertEqual(objects[2].bucket, "market_data_analysis_test")
             self.assertEqual(objects[2].is_directory, False)
             self.assertGreater(objects[2].size, 0)
@@ -69,8 +67,6 @@ class TestCloudStorageHelper(unittest.TestCase):
 
     def test_getobject(self):
         try:
-            self.setUp()
-
             out_filename="Database/test_files/test_data_20160511.txt"
             try:
                 os.remove(out_filename)
@@ -79,14 +75,46 @@ class TestCloudStorageHelper(unittest.TestCase):
 
             self.assertFalse(os.path.isfile(out_filename))
 
-            with open(out_filename, "w") as out_file:
-                self.storage_client.get_object(
-                        bucket="market_data_analysis_test",
-                        filename="test_data_20160511.txt",
-                        out_file=out_file)
+            self.storage_client.get_object(
+                bucket="market_data_analysis_test",
+                filename="test_data_20160511.txt",
+                out_filename=out_filename)
 
             with open(out_filename, "r") as out_file:
                 self.assertEqual(out_file.read(), "test\ntest\ntest\n")
+        finally:
+            self.tearDown()
+
+
+    def test_getdataflowobject(self):
+        try:
+            objects = self.storage_client.list_dataflow_result(
+                    'market_data_analysis_test_2', "")
+            self.assertEqual(len(objects), 1)
+            self.assertEqual(objects[0].name, "result.1464158881.07.txt")
+            self.assertEqual(objects[0].size, 6)
+            self.assertEqual(len(objects[0].cloud_storage_objects), 6)
+
+            for i, obj in enumerate(objects[0].cloud_storage_objects):
+                self.assertEqual(
+                        obj.name,
+                        "result.1464158881.07.txt-0000%d-of-00006" % i)
+                self.assertEqual(obj.directory, "")
+                self.assertEqual(obj.bucket, "market_data_analysis_test_2")
+                self.assertEqual(obj.is_directory, False)
+                self.assertGreater(obj.size, 0)
+
+            out_filename="Database/test_files/result.1464158881.07.txt"
+            try:
+                os.remove(out_filename)
+            except Exception:
+                pass
+            self.storage_client.get_dataflow_object(
+                    bucket="market_data_analysis_test_2",
+                    dataflow_obj=objects[0],
+                    out_filename=out_filename)
+            with open(out_filename, "r") as out_file:
+                self.assertEqual(out_file.read(), "a\nb\nc\nd\ne\nf\n")
         finally:
             self.tearDown()
 
