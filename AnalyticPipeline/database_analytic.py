@@ -12,7 +12,8 @@ import logger
 import ticker_info_database
 from dao_factory_repo import DAOFactoryRepository
 from string_helper import StringHelper
-from Common.constants_config import Config
+from constants_config import Config
+from cloud_storage_helper import CloudStorageHelper
 
 
 class DatabaseAnalytic(object):
@@ -125,7 +126,7 @@ class DatabaseAnalytic(object):
                                       'Run analytic for table %s' % table_name)
 
                     query_string = self._ConstructPerTableQuery(table_name)
-                    print query_string
+                    logger.Logger.info(query_string)
                     cursor.execute(query_string)
                     data = cursor.fetchall()
 
@@ -306,13 +307,15 @@ def FindDatesWithLargePriceChangeForStock(table_name,
 def FindStockWithLargePriceChangeWithGivenDates(
         dates, price_change_percentage_threshold,
         time_frame_in_days,
-        dataflow_local=True):
+        dataflow_local=True,
+        download_local=True,
+        local_outfile=None):
     dateString = ','.join(dates)
 
     local_project_root = '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/'
 
     # Dataflow command
-    dataflow_cmd = 'mvn compile -f %sAnalyticPipeline/Dataflow/analyze_sql/pom.xml exec:java -Dexec.mainClass=PriceChangeDetectionFlow -Dexec.args=' % project_root
+    dataflow_cmd = 'mvn compile -f %sAnalyticPipeline/Dataflow/analyze_sql/pom.xml exec:java -Dexec.mainClass=PriceChangeDetectionFlow -Dexec.args=' % local_project_root
 
     # Project
     project = '--project=%s' % 'model-1256'
@@ -334,13 +337,17 @@ def FindStockWithLargePriceChangeWithGivenDates(
                 'gs://market_data_analysis/result/result.txt*')
 
     # Output file location
-    output_file = '--outputFile=%s' % (
+    output_file = '--outputFile=%s%s' % (
             local_project_root,
             'AnalyticPipeline/Dataflow/analyze_sql/src/test/price_output.txt')
+    cloud_outfile = None
     if not dataflow_local:
-        output_file = '--outputFile=%s.%s.txt' % (
-                'gs://market_data_analysis/price_change_result/result',
-                time.time())
+        timestamp = time.time()
+        local_outfile = local_outfile or 'result.%s' % timestamp
+        cloud_outfile = 'result.%s' % timestamp
+        output_file = '--outputFile=%s%s.txt' % (
+                'gs://market_data_analysis/price_change_result/',
+                cloud_outfile)
 
     # Runner
     runner = '--runner=%s' % 'DirectPipelineRunner'
@@ -360,8 +367,20 @@ def FindStockWithLargePriceChangeWithGivenDates(
     dataflow_cmd = '%s"%s %s %s %s %s %s %s %s"' % (
             dataflow_cmd, project, staging_location, input_file, output_file,
             runner, price_change, date_string, time_frame)
-    print dataflow_cmd
+    logger.Logger.info(dataflow_cmd)
     os.system(dataflow_cmd)
+
+    # Download the result from cloud storage to local
+    if (not dataflow_local) and download_local:
+        logger.Logger.info("Download analytic result to %s" % local_outfile)
+        storage_client = CloudStorageHelper(
+                project_id=Config.cloud_projectid,
+                client_secret=Config.cloudstorage_secret_json)
+        storage_client.get_dataflow_file(
+                bucket="market_data_analysis",
+                dataflow_filename="price_change_result/%s" % cloud_outfile,
+                out_filename=local_outfile)
+
 
 if __name__ == '__main__':
     """analytic_obj = UsEquityMetricsAnalytics(
@@ -396,4 +415,6 @@ if __name__ == '__main__':
     FindStockWithLargePriceChangeWithGivenDates(
         dates, price_change_percentage_threshold,
         time_frame_in_days,
-        dataflow_local=local)
+        dataflow_local=local,
+        download_local=True,
+        local_outfile=None)
