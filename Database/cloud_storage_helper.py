@@ -30,6 +30,12 @@ class CloudStorageObject(object):
         self.is_directory = is_directory
         self.size = size
 
+    def full_path(self):
+        full_path = '%s/%s' % (self.directory, self.name)
+        if full_path[0] == '/':
+            full_path = full_path[1:]
+        return full_path
+
 
 class CloudStorageDataflowObject(object):
     def __init__(self, name, size, cloud_storage_objects):
@@ -72,13 +78,12 @@ class CloudStorageHelper(object):
 
         return None
 
-    def list_objects(self, bucket, directory):
-        # List all objects under a directory in a bucket
+    def list_objects(self, bucket, prefix):
+        # List all objects under a prefix in a bucket
         try:
             objects_json = self.storage_service.objects().list(
                     bucket=bucket,
-                    prefix=directory).execute()
-
+                    prefix=prefix).execute()
             objects = []
             for object_json in objects_json['items']:
                 name = object_json['name']
@@ -102,14 +107,15 @@ class CloudStorageHelper(object):
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 
-        return None
+        return []
 
-    def list_dataflow_result(self, bucket, directory):
-        objects = self.list_objects(bucket, directory)
+    def list_dataflow_result(self, bucket, prefix):
+        objects = self.list_objects(bucket, prefix)
         dataflow_obj_map = {}
 
         for obj in objects:
-            if obj.directory != directory:
+            full_path = obj.full_path()
+            if prefix not in full_path:
                 continue
 
             # result.1464158881.07.txt-00000-of-00006
@@ -148,12 +154,17 @@ class CloudStorageHelper(object):
                         int(status.progress() * 100),
                         out_filename))
 
+    def get_dataflow_file(self, bucket, dataflow_filename, out_filename):
+        dataflow_objs = self.list_dataflow_result(bucket, dataflow_filename)
+        if len(dataflow_objs) != 1:
+            logger.Logger.error("Find %d dataflow obj" % len(dataflow_objs)) 
+            return
+        return self.get_dataflow_object(bucket, dataflow_objs[0], out_filename)
+
     def get_dataflow_object(self, bucket, dataflow_obj, out_filename):
         with open(out_filename, "a") as out_file:
             for obj in dataflow_obj.cloud_storage_objects:
-                filename = '%s/%s' % (obj.directory, obj.name)
-                if filename[0] == '/':
-                    filename = filename[1:]
+                filename = obj.full_path()
                 req = self.storage_service.objects().get_media(
                         bucket=bucket, object=filename)
                 downloader = http.MediaIoBaseDownload(out_file, req)

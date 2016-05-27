@@ -115,6 +115,17 @@ class TestCloudStorageHelper(unittest.TestCase):
                     out_filename=out_filename)
             with open(out_filename, "r") as out_file:
                 self.assertEqual(out_file.read(), "a\nb\nc\nd\ne\nf\n")
+
+            try:
+                os.remove(out_filename)
+            except Exception:
+                pass
+            self.storage_client.get_dataflow_file(
+                    bucket="market_data_analysis_test_2",
+                    dataflow_filename="result.1464158881.07.txt",
+                    out_filename=out_filename)
+            with open(out_filename, "r") as out_file:
+                self.assertEqual(out_file.read(), "a\nb\nc\nd\ne\nf\n")
         finally:
             self.tearDown()
 

@@ -30,7 +30,7 @@ class Logger(object):
     WARN_FILE = open('warn.txt', 'a')
 
     @staticmethod
-    def log(level, msg):
+    def log(level, msg, wrapper_layer=2):
         print_msg = ''
         if isinstance(msg, Exception):
             print_msg = str(msg)
@@ -38,7 +38,7 @@ class Logger(object):
             print_msg = msg
 
         traces = traceback.extract_stack()
-        log_msg = "%s, %s, %s, '%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), print_msg, traces[-2])
+        log_msg = "%s, %s, %s, '%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), print_msg, traces[-wrapper_layer])
 
         if level == LogLevel.ERROR:
             Logger.ERROR_FILE.write(log_msg)
@@ -49,20 +49,20 @@ class Logger(object):
 
     @staticmethod
     def trace(msg):
-        return Logger.log(LogLevel.TRACE, msg)
+        return Logger.log(LogLevel.TRACE, msg, wrapper_layer=3)
 
     @staticmethod
     def debug(msg):
-        return Logger.log(LogLevel.DEBUG, msg)
+        return Logger.log(LogLevel.DEBUG, msg, wrapper_layer=3)
 
     @staticmethod
     def info(msg):
-        return Logger.log(LogLevel.INFO, msg)
+        return Logger.log(LogLevel.INFO, msg, wrapper_layer=3)
 
     @staticmethod
     def warn(msg):
-        return Logger.log(LogLevel.WARN, msg)
+        return Logger.log(LogLevel.WARN, msg, wrapper_layer=3)
 
     @staticmethod
     def error(msg):
-        return Logger.log(LogLevel.ERROR, msg)
+        return Logger.log(LogLevel.ERROR, msg, wrapper_layer=3)
