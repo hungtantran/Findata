@@ -312,7 +312,7 @@ def FindStockWithLargePriceChangeWithGivenDates(
         local_outfile=None):
     dateString = ','.join(dates)
 
-    local_project_root = '/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/'
+    local_project_root = ''
 
     # Dataflow command
     dataflow_cmd = 'mvn compile -f %sAnalyticPipeline/Dataflow/analyze_sql/pom.xml exec:java -Dexec.mainClass=PriceChangeDetectionFlow -Dexec.args=' % local_project_root

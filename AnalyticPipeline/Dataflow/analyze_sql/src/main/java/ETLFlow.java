@@ -11,12 +11,13 @@ import com.google.cloud.dataflow.sdk.values.PCollection;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 
 public class ETLFlow {
-  static class ExtractWordsFn extends DoFn<String, KV<String, String>> {
+  static class ExtractWordsFn extends DoFn<String, KV<String,String>> {
     private String extractTableName(String line) {
       String tablename = "";
 
@@ -48,6 +49,7 @@ public class ETLFlow {
 
       String ticker = tablename.substring(0, tablename.length() - 8);
       StringBuilder outputStr = new StringBuilder();
+      HashMap<String, StringBuilder> nameToMetrics;
 
       int numValue = 0;
       String[] values = line.split("\\(");
