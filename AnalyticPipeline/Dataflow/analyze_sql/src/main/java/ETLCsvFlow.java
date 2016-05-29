@@ -49,7 +49,7 @@ public class ETLCsvFlow {
       HashMap<String, StringBuilder> nameToMetrics;
 
       int numValue = 0;
-      Pattern pattern = Pattern.compile("([0-9]+),(.+),(.+),(.+),(.+),(.+),(.+)\\),");
+      Pattern pattern = Pattern.compile("([0-9]+),'(.+)',(.+),'(.+)','(.+)','(.+)',(.+)\\),");
       String[] values = line.split("\\(");
       for (String value : values) {
         Matcher matcher = pattern.matcher(value);

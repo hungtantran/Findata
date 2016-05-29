@@ -5,24 +5,36 @@ import datetime
 import logger
 import re
 import time
+import uuid
+from httplib2 import Http
 
 from googleapiclient import discovery
 from googleapiclient.errors import HttpError
 from oauth2client.client import AccessTokenRefreshError
 from oauth2client.service_account import ServiceAccountCredentials
+from constants_config import Config
 
 
 class BigQueryClient(object):
+    # Read more at https://developers.google.com/resources/api-libraries/documentation/bigquery/v2/python/latest/
     SCOPES = ['https://www.googleapis.com/auth/bigquery']
+    STORAGE_SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
     CLIENT_SECRETS = 'Key/model-5798ace788b3.json'
 
     def __init__(self, project_id, dataset_id):
         self.credentials = ServiceAccountCredentials.from_json_keyfile_name(
             BigQueryClient.CLIENT_SECRETS, scopes=BigQueryClient.SCOPES)
+        self.storage_credentials = ServiceAccountCredentials.from_json_keyfile_name(
+            BigQueryClient.CLIENT_SECRETS, scopes=BigQueryClient.STORAGE_SCOPES)
+
+        http_auth = self.credentials.authorize(Http())
+        storage_http_auth = self.storage_credentials.authorize(Http())
 
         # Create a BigQuery client using the credentials.
         self.bigquery_service = discovery.build(
-            'bigquery', 'v2', credentials=self.credentials)
+                'bigquery', 'v2', http=http_auth)
+        self.storage_service = discovery.build(
+                'storage', 'v1', http=storage_http_auth)
 
         self.project_id = project_id
         self.dataset_id = dataset_id
@@ -71,6 +83,101 @@ class BigQueryClient(object):
                                                   body=table).execute()
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+
+    def load_cloud_storage_into_bigquery(
+            self, storage_path, table_name, wait_until_complete=True):
+        buckets_json = self.storage_service.buckets().list(
+                    project=self.project_id).execute()
+
+        job_data = {
+            'user_email': 'hungtantran@gmail.com',
+            'jobReference': {
+                'projectId': self.project_id,
+                'job_id': str(uuid.uuid4())
+            },
+            'configuration': {
+                'load': {
+                    'sourceUris': [storage_path],
+                    'ignoreUnknownValues': True,
+                    'destinationTable': {
+                        'projectId': self.project_id,
+                        'datasetId': self.dataset_id,
+                        'tableId': table_name
+                    },
+                    'schema': {
+                        'fields': [
+                            {
+                                'type' : 'STRING',
+                                'name' : 'ticker',
+                            },
+                            {
+                                'type' : 'INTEGER',
+                                'name' : 'id',
+                            },
+                            {
+                                'type' : 'STRING',
+                                'name' : 'metric_name',
+                            },
+                            {
+                                'type' : 'FLOAT',
+                                'name' : 'value',
+                            },
+                            {
+                                'type' : 'STRING',
+                                'name' : 'unit',
+                            },
+                            {
+                                'type' : 'STRING',
+                                'name' : 'start_date',
+                            },
+                            {
+                                'type' : 'STRING',
+                                'name' : 'end_date',
+                            },
+                            {
+                                'type' : 'STRING',
+                                'name' : 'metadata',
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+
+        result = self.bigquery_service.jobs().insert(
+                projectId=self.project_id,
+                body=job_data).execute(num_retries=2)
+        logger.Logger.info('%s' % result)
+
+        if wait_until_complete:
+            self.poll_job(result)
+
+        return result
+
+    def poll_job(self, job, polling_frequency_in_sec=5):
+        """Waits for a job to complete."""
+
+        logger.Logger.info('Waiting for job to finish...')
+
+        request = self.bigquery_service.jobs().get(
+                projectId=job['jobReference']['projectId'],
+                jobId=job['jobReference']['jobId'])
+
+        num_wait_sec = 0
+        while True:
+            result = request.execute(num_retries=2)
+
+            if result['status']['state'] == 'DONE':
+                if 'errorResult' in result['status']:
+                    raise RuntimeError(result['status']['errorResult'])
+                logger.Logger.info('Job complete.')
+                return
+            else:
+                logger.Logger.info(
+                        'Has wait %d secs, still wait more. Jobs: %s' % (
+                                num_wait_sec, result))
+            time.sleep(polling_frequency_in_sec)
+            num_wait_sec += polling_frequency_in_sec
 
     def delete_table(self, tablename):
         try:
@@ -278,3 +385,10 @@ class BigQueryClient(object):
                 logger.LogLevel.WARN,
                 'Cannot recognize query %s' % query_string)
         return None
+
+
+if __name__ == '__main__':
+    bigquery_client = BigQueryClient("model-1256", "model")
+    job = bigquery_client.load_cloud_storage_into_bigquery(
+            storage_path="gs://market_data_analysis/csv/result.csv-*",
+            table_name="metrics")

@@ -1,1 +1,1 @@
-mvn compile exec:java -Dexec.mainClass=ETLFlow -Dexec.args="--project=model-1256 --stagingLocation=gs://market_data_analysis_staging/ --runner=BlockingDataflowPipelineRunner --inputFile=gs://market_data_analysis/total --output=gs://market_data_analysis/csv/result.csv"
+mvn compile exec:java -Dexec.mainClass=ETLCsvFlow -Dexec.args="--project=model-1256 --stagingLocation=gs://market_data_analysis_staging/ --runner=BlockingDataflowPipelineRunner --inputFile=gs://market_data_analysis/total --output=gs://market_data_analysis/csv/result.csv"
