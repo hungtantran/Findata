@@ -7,6 +7,7 @@ import logger
 import re
 import time
 import uuid
+import os
 from httplib2 import Http
 
 from googleapiclient import discovery
@@ -385,9 +386,43 @@ class BigQueryClient(object):
                 'Cannot recognize query %s' % query_string)
         return None
 
+    def query_to_cloud_storage(self, query_string, output_bucket, output_filename, dry_run=True):
+        # Dataflow command
+        local_project_root = ''
+        dataflow_cmd = 'mvn compile -f %sAnalyticPipeline/Dataflow/analyze_sql/pom.xml exec:java -Dexec.mainClass=BigQueryToCloudStorage -Dexec.args=' % local_project_root
+
+        # Project
+        project = '--project=%s' % 'model-1256'
+
+        # Query String
+        query = '--query=%s' % query_string
+
+        # Staging location
+        staging_location = '--stagingLocation=%s' % ('gs://market_data_analysis_staging/')
+
+        # Runner
+        runner = '--runner=%s' % 'BlockingDataflowPipelineRunner'
+
+        # Output file location
+        output_file = '--output=gs://%s/%s' % (output_bucket, output_filename)
+
+        dataflow_cmd = '%s"%s %s %s %s %s"' % (
+            dataflow_cmd, project, staging_location, query, output_file, runner)
+        logger.Logger.info(dataflow_cmd)
+
+        if not dry_run:
+            os.system(dataflow_cmd)
+
 
 if __name__ == '__main__':
     bigquery_client = BigQueryClient("model-1256", "model")
-    job = bigquery_client.load_cloud_storage_into_bigquery(
+    """job = bigquery_client.load_cloud_storage_into_bigquery(
             storage_path="gs://market_data_analysis/csv/2016/5/29/result.csv-*",
-            table_name="metrics")
+            table_name="metrics")"""
+    query_string = "SELECT ticker, value, start_date FROM model.metrics WHERE metric_name = 'adj_close'"
+    query_string = query_string.replace("'", "&quot")
+    bigquery_client.query_to_cloud_storage(
+        "'%s'" % query_string,
+        'market_data_analysis',
+        'bigquery/2016/05/29/adj_close.txt',
+        dry_run=False)

@@ -119,7 +119,7 @@ public class ETLCsvFlow {
     }
   }
 
-  public static interface SqlWordCountOptions extends PipelineOptions {
+  public static interface ETLCsvOptions extends PipelineOptions {
     @Description("Path of the file to read from")
     @Default.String("/media/hungtantran/HDD1/Users/hungtantran/PycharmProjects/Models/AnalyticPipeline/Dataflow/analyze_sql/src/test/test_sql_dump.txt")
     String getInputFile();
@@ -132,8 +132,8 @@ public class ETLCsvFlow {
   }
 
   public static void main(String[] args) {
-    SqlWordCountOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
-      .as(SqlWordCountOptions.class);
+    ETLCsvOptions options= PipelineOptionsFactory.fromArgs(args).withValidation()
+      .as(ETLCsvOptions.class);
     Pipeline p = Pipeline.create(options);
 
     p.apply(TextIO.Read.named("ReadLines").from(options.getInputFile()))
