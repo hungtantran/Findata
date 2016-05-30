@@ -1,6 +1,6 @@
 __author__ = 'hungtantran'
 
-
+import init_app
 import datetime
 import re
 import urllib

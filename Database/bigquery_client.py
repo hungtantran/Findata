@@ -1,5 +1,6 @@
 __author__ = 'hungtantran'
 
+import init_app
 import pprint
 import datetime
 import logger
@@ -156,9 +157,7 @@ class BigQueryClient(object):
 
     def poll_job(self, job, polling_frequency_in_sec=5):
         """Waits for a job to complete."""
-
         logger.Logger.info('Waiting for job to finish...')
-
         request = self.bigquery_service.jobs().get(
                 projectId=job['jobReference']['projectId'],
                 jobId=job['jobReference']['jobId'])
@@ -390,5 +389,5 @@ class BigQueryClient(object):
 if __name__ == '__main__':
     bigquery_client = BigQueryClient("model-1256", "model")
     job = bigquery_client.load_cloud_storage_into_bigquery(
-            storage_path="gs://market_data_analysis/csv/result.csv-*",
+            storage_path="gs://market_data_analysis/csv/2016/5/29/result.csv-*",
             table_name="metrics")

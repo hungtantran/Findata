@@ -42,13 +42,15 @@ class CloudSqlHelper(object):
                     project=self.project_id).execute()
             return instances
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            logger.Logger.error('Exception = %s' % e)
 
         return None
 
     def export_table_to_cloud_storage(self, sql_database, sql_table,
                                       storage_bucket, storage_filename):
         try:
+            logger.Logger.info('Export table %s from database %s to %s/%s' % (
+                    sql_table, sql_database, storage_bucket, storage_filename))
             request_body = {
                 'exportContext': {
                     'kind': 'sql#exportContext',
@@ -66,6 +68,70 @@ class CloudSqlHelper(object):
                     project=self.project_id,
                     instance=self.instance_id,
                     body=request_body).execute()
+            logger.Logger.info('Export result %s' % result)
             return result
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            logger.Logger.error('Exception = %s' % e)
+
+    def export_sql_to_cloud_storage(self, sql_database, storage_bucket,
+                                    storage_filename, wait_until_complete=True):
+        try:
+            logger.Logger.info('Export sql database %s to %s/%s' % (
+                    sql_database, storage_bucket, storage_filename))
+            request_body = {
+                'exportContext': {
+                    'kind': 'sql#exportContext',
+                    'fileType': 'SQL',
+                    'uri': 'gs://%s/%s' % (storage_bucket, storage_filename),
+                    'databases': [
+                        '%s' % sql_database
+                    ]
+                }
+            }
+            result = self.cloudsqlapi_service.instances().export(
+                    project=self.project_id,
+                    instance=self.instance_id,
+                    body=request_body).execute()
+            logger.Logger.info('Export result %s' % result)
+
+            if wait_until_complete:
+                self.poll_job(result)
+
+            return result
+        except Exception as e:
+            logger.Logger.error('Exception = %s' % e)
+
+    def poll_job(self, job, polling_frequency_in_sec=60):
+        """Waits for a job to complete."""
+        logger.Logger.info('Waiting for job to finish...')
+        request = self.cloudsqlapi_service.operations().get(
+                project=job['targetProject'],
+                operation=job['name'])
+
+        num_wait_sec = 0
+        while True:
+            result = request.execute(num_retries=2)
+            if result['status'] == 'DONE':
+                logger.Logger.info('Job complete.')
+                return
+            else:
+                logger.Logger.info(
+                        'Wait %d secs for project %s, wait more. Jobs: %s' % (
+                                num_wait_sec, job['targetProject'], result))
+            time.sleep(polling_frequency_in_sec)
+            num_wait_sec += polling_frequency_in_sec
+
+
+if __name__ == '__main__':
+    cloud_sql_client = CloudSqlHelper(
+            project_id=Config.cloud_projectid,
+            instance_id=Config.cloudsql_instanceid,
+            client_secret=Config.cloudsql_secret_json)
+
+    now = datetime.datetime.now()
+    storage_filename = '%s/%s/%s/total' % (
+            now.year, now.month, now.day)
+    cloud_sql_client.export_sql_to_cloud_storage(
+            sql_database=Config.mysql_database,
+            storage_bucket='market_data_analysis',
+            storage_filename=storage_filename)

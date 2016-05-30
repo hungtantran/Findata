@@ -1,6 +1,6 @@
 __author__ = 'hungtantran'
 
-
+import init_app
 import Queue
 import re
 import threading
@@ -14,6 +14,14 @@ from dao_factory_repo import DAOFactoryRepository
 from string_helper import StringHelper
 from constants_config import Config
 from cloud_storage_helper import CloudStorageHelper
+
+
+init_app.DEFINE_bool('run_local', True)
+init_app.DEFINE_bool('download_local', True)
+init_app.DEFINE_string('metric_name', 'msft')
+init_app.DEFINE_string('local_outfile', None)
+init_app.DEFINE_integer('time_frame_in_days', 1)
+init_app.DEFINE_float('price_change_percentage_threshold', 0)
 
 
 class DatabaseAnalytic(object):
@@ -280,6 +288,7 @@ class UsEquityMetricsAnalytics(DatabaseAnalytic):
         results = self.GetAnalyticResults()
         return results
 
+
 def FindDatesWithLargePriceChangeForStock(table_name,
                                           change_threshold_percentage):
     def DetectSuddenMovement(data, ticker_info):
@@ -303,6 +312,7 @@ def FindDatesWithLargePriceChangeForStock(table_name,
         AnalyticFunc(DetectSuddenMovement)
     analytic_obj.RunAnalytic()
     return analytic_obj.GetAnalyticResults()[table_name]
+
 
 def FindStockWithLargePriceChangeWithGivenDates(
         dates, price_change_percentage_threshold,
@@ -383,6 +393,7 @@ def FindStockWithLargePriceChangeWithGivenDates(
 
 
 if __name__ == '__main__':
+    init_app.InitApp()
     """analytic_obj = UsEquityMetricsAnalytics(
             db_type='mysql',
             username=Config.mysql_username,
@@ -397,24 +408,11 @@ if __name__ == '__main__':
             line = table_name + ': ' + ','.join(results[table_name]) + '\n'
             f.write(line)"""
 
-    local = False
-    metric = 'msft'
-    time_frame_in_days = 1
-    price_change_percentage_threshold = 0
-
-    if len(sys.argv) >= 2:
-        local = True if sys.argv[1] == 'True' else False
-
-    if len(sys.argv) >= 3:
-        metric = sys.argv[2]
-
-    if len(sys.argv) >= 4:
-        time_frame_in_days = int(sys.argv[3])
-
-    dates = FindDatesWithLargePriceChangeForStock('%s_metrics' % metric, 1)
+    dates = FindDatesWithLargePriceChangeForStock('%s_metrics' % init_app.FLAGS.metric_name, 1)
     FindStockWithLargePriceChangeWithGivenDates(
-        dates, price_change_percentage_threshold,
-        time_frame_in_days,
-        dataflow_local=local,
-        download_local=True,
-        local_outfile=None)
+        dates,
+        init_app.FLAGS.price_change_percentage_threshold,
+        init_app.FLAGS.time_frame_in_days,
+        init_app.FLAGS.run_local,
+        init_app.FLAGS.download_local,
+        init_app.FLAGS.local_outfile)
