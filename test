@@ -1,7 +1,0 @@
-2016-05-19 23:46:28.456285, INFO, Run analytic for 1 tables, '('AnalyticPipeline/database_analytic.py', 159, 'RunAnalytic', 'len(self.table_names))')'
-
-2016-05-19 23:46:28.458306, INFO, Wait for thread Thread-1, '('AnalyticPipeline/database_analytic.py', 174, 'RunAnalytic', "'Wait for thread %s' % wait_thread.name)")'
-
-2016-05-19 23:46:28.699792, INFO, Run analytic for table msft_metrics, '('AnalyticPipeline/database_analytic.py', 122, '_RunAnalyticPerTable', "'Run analytic for table %s' % table_name)")'
-
-SELECT value, start_date FROM msft_metrics WHERE metric_name = 'adj_close' ORDER BY start_date 

@@ -1,5 +1,4 @@
 import sys
-import logger
 
 
 class FLAGS(object):
@@ -28,6 +27,7 @@ def DEFINE_integer(name, value):
 
 
 def InitPythonPath():
+    sys.path.append('.')
     sys.path.append('AnalyticPipeline')
     sys.path.append('Common')
     sys.path.append('Database')
@@ -63,7 +63,7 @@ def InitApp():
             val = float(value)
 
         setattr(FLAGS, name, val)
-        logger.Logger.info('Set flag %s to %s' % (name, value))
+        print('Set flag %s to %s' % (name, value))
 
 
 InitPythonPath()
