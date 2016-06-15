@@ -1,6 +1,7 @@
 __author__ = 'hungtantran'
 
 
+import init_app
 import filecmp
 import os
 import unittest
@@ -20,12 +21,12 @@ def rename_table():
         try:
             # TODO need to make this general
             cursor = connection.cursor()
-            cursor.execute('SHOW TABLES LIKE "%\_metrics"')
+            cursor.execute('SHOW TABLES LIKE "%economics\_info\_%"')
             data = cursor.fetchall()
             for row in data:
                 try:
                     original_name = row[0]
-                    name = 'company_fundamentals_' + original_name
+                    name = original_name + '_metrics'
                     name = name.lower()
                     print 'Update %s to %s' % (original_name, name)
                     cursor2 = connection.cursor()
@@ -40,5 +41,4 @@ def rename_table():
 
 if __name__ == '__main__':
     #rename_table()
-
-
+    pass
