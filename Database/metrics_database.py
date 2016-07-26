@@ -57,7 +57,7 @@ class MetricsDatabase(object):
         try:
             self.table.create(self.engine, checkfirst=True)
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, e)
+            logger.Logger.error('Exception = %s' % e)
 
     def insert_metric(self, new_metric, ignore_duplicate=False):
     	return self.insert_metrics([new_metric])
@@ -97,7 +97,7 @@ class MetricsDatabase(object):
                     cursor.execute(query_string)
                     connection.commit()
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, e)
+            logger.Logger.error('Exception = %s' % e)
 
     def remove_metric(self):
         logger.Logger.log(logger.LogLevel.INFO, 'Drop metric %s' % self.metric)
@@ -106,7 +106,7 @@ class MetricsDatabase(object):
             self.session.close_all()
             self.table.drop(self.engine, checkfirst=False)
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, e)
+            logger.Logger.error('Exception = %s' % e)
 
     def get_metrics(self, metric_name=None, max_num_results=None, reverse_order=False):
         try:
@@ -138,7 +138,7 @@ class MetricsDatabase(object):
                         metadata=row[6]) for row in data]
                 return metric_list
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, e)
+            logger.Logger.error('Exception = %s' % e)
 
     def get_all_metrics_tables(self):
         try:
@@ -154,32 +154,32 @@ class MetricsDatabase(object):
                 metrics_table_list = [row[0] for row in data]
                 return metrics_table_list
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, e)
+            logger.Logger.error('Exception = %s' % e)
 
-    def get_earliest_time(self):
-        earliest_rows = self.get_metrics(max_num_results=1, reverse_order=True)
+    def get_earliest_time(self, metric_name=None):
+        earliest_rows = self.get_metrics(metric_name=metric_name, max_num_results=1, reverse_order=True)
         earliest_time = None
         try:
             earliest_time = earliest_rows[0].start_date
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            logger.Logger.error('Exception = %s' % e)
             earliest_time = None
         return earliest_time
 
-    def get_latest_time(self):
-        latest_rows = self.get_metrics(max_num_results=1)
+    def get_latest_time(self, metric_name=None):
+        latest_rows = self.get_metrics(metric_name=metric_name, max_num_results=1)
         latest_time = None
         try:
             latest_time = latest_rows[0].start_date
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+            logger.Logger.error('Exception = %s' % e)
             latest_time = None
         return latest_time
 
-    def get_earliest_and_latest_time(self):
+    def get_earliest_and_latest_time(self, metric_name=None):
         # Find the latest and earliest time
-        latest_time = self.get_latest_time()
-        earliest_time = self.get_earliest_time()
+        latest_time = self.get_latest_time(metric_name=metric_name)
+        earliest_time = self.get_earliest_time(metric_name=metric_name)
 
         return latest_time, earliest_time
 
@@ -197,5 +197,5 @@ class MetricsDatabase(object):
             if len(insert_rows) > 0:
                 self.insert_metrics(insert_rows)
 
-        logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (self.metric, num_value_update))
+        logger.Logger.info('Update table %s with %d new values' % (self.metric, num_value_update))
         return num_value_update

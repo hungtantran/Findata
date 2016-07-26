@@ -2,7 +2,26 @@ __author__ = 'hungtantran'
 
 
 class TickerInfo(object):
-    def __init__(self, id, ticker, ticker_type, name, location, cik, ipo_year, sector, industry, exchange, sic, naics, class_share, fund_type, fund_family, asset_class, active, metadata):
+    def __init__(
+            self,
+            id = None,
+            ticker = None,
+            ticker_type = None,
+            name = None,
+            location = None,
+            cik = None,
+            ipo_year = None,
+            sector = None,
+            industry = None,
+            exchange = None,
+            sic = None,
+            naics = None,
+            class_share = None,
+            fund_type = None,
+            fund_family = None,
+            asset_class = None,
+            active = None,
+            metadata = None):
         self.id = id
         self.ticker = ticker
         self.ticker_type = ticker_type

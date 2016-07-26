@@ -1,6 +1,5 @@
 __author__ = 'hungtantran'
 
-
 import init_app
 import datetime
 import re
@@ -8,199 +7,89 @@ import urllib
 import time
 import threading
 from bs4 import BeautifulSoup
+import string
+import Queue
 
 import logger
 import metrics
+import ticker_info
+import ticker_info_database
 import metrics_database
 from string_helper import StringHelper
 from Common.constants_config import Config
+from update_yahoo_finance import UpdateYahooFinance
 
 
-class UpdateExchangeIndex(threading.Thread):
-    SUMMARY_LINKS = {
-        'nasdaq': 'http://finance.yahoo.com/q/hp?s=%5Eixic+historical+prices',
-        'sp500': 'https://finance.yahoo.com/q/hp?s=%5EGSPC+Historical+Prices',
-        'dowjones': 'https://finance.yahoo.com/q/hp?s=%5EDJI+Historical+Prices'}
-    SUMMARY_DIMENSIONS = ['open', 'high', 'low', 'close', 'volume', 'adj_close']
-    NUM_RETRIES_DOWNLOAD = 2
+class UpdateExchangeIndex(UpdateYahooFinance):
+    MAX_PROCESSING_THREADS = 1
 
-    def __init__(self, db_type, username, password, server, database):
-        threading.Thread.__init__(self)
-        # 12-hour update frequency
-        self.update_frequency_seconds = 43200
-        self.tablename = 'exchange_index_metrics'
-        self.metrics_db = metrics_database.MetricsDatabase(
-                db_type,
-                username,
-                password,
-                server,
-                database,
-                self.tablename)
+    SUMMARY_LINKS_TEMPLATE = {
+        'dowjones': 'http://chart.finance.yahoo.com/table.csv?s=^DJI&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=d&ignore=.csv',
+        'sp500': 'http://chart.finance.yahoo.com/table.csv?s=^GSPC&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=d&ignore=.csv',
+        'nasdaq': 'http://chart.finance.yahoo.com/table.csv?s=^IXIC&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=d&ignore=.csv',
+    }
 
-        self.data = None
+    def __init__(self, db_type, username, password, server, database,
+                 max_num_threads=None, update_frequency_seconds=None,
+                 update_history=False):
+        super(UpdateExchangeIndex, self).__init__(
+                db_type=db_type,
+                username=username,
+                password=password,
+                server=server,
+                database=database,
+                max_num_threads=max_num_threads,
+                update_frequency_seconds=update_frequency_seconds,
+                update_history=update_history)
 
-    def run(self):
-        while True:
-            self.data = []
-            self.update_nasdaq()
-            self.update_downjones()
-            self.update_sp500()
-            self.update_database()
-            logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before updating again' % self.update_frequency_seconds)
-            time.sleep(self.update_frequency_seconds)
+        self.ticker_info_db = ticker_info_database.TickerInfoDatabase(
+                self.db_type,
+                self.username,
+                self.password,
+                self.server,
+                self.database)
 
-    def clear_data(self):
-        self.data = None
+    def populate_work_queue(self):
+        sp500_ticker_info = ticker_info.TickerInfo(ticker='sp500', name='sp500')
+        dowjones_ticker_info = ticker_info.TickerInfo(ticker='dowjones', name='dowjones')
+        nasdaq_ticker_info = ticker_info.TickerInfo(ticker='nasdaq', name='nasdaq')
+        
+        self.q.put(sp500_ticker_info)
+        self.q.put(dowjones_ticker_info)
+        self.q.put(nasdaq_ticker_info)
 
-    def update_nasdaq(self):
-        try:
-            logger.Logger.log(logger.LogLevel.INFO, 'Update nasdaq now')
-            response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['nasdaq'])
-            html_string = response.read()
-            return self.update_from_html_content('nasdaq', html_string)
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+    def get_metric_table_name(self, metric):
+        return 'exchange_index_metrics'
 
-    def update_downjones(self):
-        try:
-            logger.Logger.log(logger.LogLevel.INFO, 'Update downjones now')
-            response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['dowjones'])
-            html_string = response.read()
-            return self.update_from_html_content('dowjones', html_string)
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+    def get_csv_link(self, metric, beginning_date, end_date):
+        return UpdateExchangeIndex.SUMMARY_LINKS_TEMPLATE[metric.ticker] % (
+                beginning_date.month - 1,
+                beginning_date.day,
+                beginning_date.year,
+                end_date.month - 1,
+                end_date.day,
+                end_date.year)
 
-    def update_sp500(self):
-        try:
-            logger.Logger.log(logger.LogLevel.INFO, 'Update sp500 now')
-            response = urllib.urlopen(UpdateExchangeIndex.SUMMARY_LINKS['sp500'])
-            html_string = response.read()
-            return self.update_from_html_content('sp500', html_string)
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
+    def get_unit(self):
+        return 'point'
 
-    def _yahoo_finance_get_content_table(self, html_elem):
-        outer_content_table_elem = html_elem.findAll('table', attrs={'class': 'yfnc_datamodoutline1'})
-        if len(outer_content_table_elem) != 1:
-            return None
+    def get_metric_name(self, metric, dimension):
+        return '%s_%s' % (metric.ticker, dimension)
 
-        inner_content_table_elem = outer_content_table_elem[0].findAll('table')
-        if len(inner_content_table_elem) != 1:
-            return None
-
-        return inner_content_table_elem[0]
-
-    def _yahoo_finance_extract_titles(self, header_elem):
-        titles_elem = header_elem.findAll('th')
-        if len(titles_elem) == 0:
-            return None
-
-        if titles_elem[0].get_text() != 'Date':
-            return None
-
-        titles = []
-        for i in range(1, len(titles_elem)):
-            titles.append(StringHelper.clean_name(titles_elem[i].get_text()))
-
-        logger.Logger.log(logger.LogLevel.INFO, 'Found titles %s' % titles)
-        return titles
-
-    def update_from_html_content(self, index, html_string):
-        num_fail = 0
-        while True:
-            try:
-                html_elem = BeautifulSoup(html_string, 'html.parser')
-
-                # Get the table html elem
-                content_table_elem = self._yahoo_finance_get_content_table(html_elem)
-                if content_table_elem is None:
-                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no content table')
-                    return
-
-                rows_elem = content_table_elem.findAll('tr')
-                if len(rows_elem) == 0:
-                    logger.Logger.log(logger.LogLevel.INFO, 'Exit found no row values left')
-                    return
-
-                # Extract the title
-                header_elem = rows_elem[0]
-                titles = self._yahoo_finance_extract_titles(header_elem)
-                if (titles is None) or (len(titles) != len(UpdateExchangeIndex.SUMMARY_DIMENSIONS)):
-                    logger.Logger.log(logger.LogLevel.INFO, 'Does not find the expected titles')
-                    return
-
-                # Iterate through each row in the table, extract date and value
-                for i in range(1, len(rows_elem)):
-                    row_elem = rows_elem[i]
-                    tds_elem = row_elem.findAll('td')
-
-                    # The +1 is to account for the Date column, not in titles array
-                    if len(tds_elem) != len(titles) + 1:
-                        logger.Logger.log(logger.LogLevel.WARN, 'Row with num elem %d not match with num titles %d' %
-                                          (len(tds_elem), len(titles)))
-                        continue
-
-                    date = StringHelper.convert_string_to_datetime(tds_elem[0].get_text())
-                    if date is None:
-                        logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to date' % tds_elem[0].get_text())
-                        continue
-
-                    for j in range(1, len(tds_elem)):
-                        cell_text = tds_elem[j].get_text().strip()
-                        cell_value = StringHelper.parse_value_string(cell_text)
-                        if cell_value is None:
-                            logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to value' % cell_text)
-                            continue
-
-                        value = metrics.Metrics(
-                                metric_name=index + '_' + UpdateExchangeIndex.SUMMARY_DIMENSIONS[j - 1],
-                                start_date=date,
-                                end_date=date,
-                                unit='point',
-                                value=cell_value)
-                        self.data.append(value)
-                break
-            except Exception as e:
-                logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-                num_fail += 1
-                if num_fail >= UpdateExchangeIndex.NUM_RETRIES_DOWNLOAD:
-                    break
-                else:
-                    continue
-
-    def update_database(self):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update database')
-        latest_rows = self.metrics_db.get_metrics(max_num_results=1)
-        try:
-            latest_time = latest_rows[0].start_date
-        except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
-            latest_time = None
-
-        self._update_database_with_given_data(self.data, latest_time)
-
-    def _update_database_with_given_data(self, data, latest_time):
-        logger.Logger.log(logger.LogLevel.INFO, 'Update database with given data')
-        all_data = data
-
-        num_value_update = 0
-        for row in data:
-            # Only insert value later than the current latest value
-            # TODO make it more flexible than that
-            if (latest_time is None or row.start_date > latest_time):
-                self.metrics_db.insert_metric(row)
-                num_value_update += 1
-
-        logger.Logger.log(logger.LogLevel.INFO, 'Update table %s with %d new values' % (self.tablename, num_value_update))
+    def get_earliest_and_latest_time(self, metric, metrics_db):
+        return metrics_db.get_earliest_and_latest_time('%s_adj_close' % metric.ticker)
 
 
 def main():
     try:
-        update_obj = UpdateExchangeIndex('mysql',
-                                         Config.mysql_username,
-                                         Config.mysql_password,
-                                         Config.mysql_server,
-                                         Config.mysql_database)
+        update_obj = UpdateExchangeIndex(
+                'mysql',
+                Config.mysql_username,
+                Config.mysql_password,
+                Config.mysql_server,
+                Config.mysql_database,
+                update_history=False,
+                max_num_threads=UpdateExchangeIndex.MAX_PROCESSING_THREADS)
         update_obj.daemon = True
         update_obj.start()
 

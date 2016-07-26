@@ -18,15 +18,19 @@ from Common.constants_config import Config
 
 
 class UpdateYahooFinance(threading.Thread):
-    SUMMARY_LINKS_TEMPLATE = 'http://finance.yahoo.com/q/hp?s=%s&z=66&y=%d'
+    SUMMARY_LINKS_TEMPLATE = 'http://chart.finance.yahoo.com/table.csv?s=%s&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=d&ignore=.csv'
     SUMMARY_DIMENSIONS = ['open', 'high', 'low', 'close', 'volume', 'adj_close']
+    CSV_HEADERS = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Adj Close']
     NUM_RETRIES_DOWNLOAD = 2
-    WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 1
+    WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 3
     MAX_PROCESSING_THREADS = 5
     UPDATE_FREQUENCY_SECONDS = 43200
+    MAX_PAGE_SIZE = 90
 
 
-    def __init__(self, db_type, username, password, server, database, max_num_threads=None, update_frequency_seconds=None, update_history=False):
+    def __init__(self, db_type, username, password, server, database,
+                 max_num_threads=None, update_frequency_seconds=None,
+                 update_history=False):
         threading.Thread.__init__(self)
 
         self.db_type = db_type
@@ -63,11 +67,11 @@ class UpdateYahooFinance(threading.Thread):
 
             for i in range(len(threads)):
                 wait_thread = threads[i]
-                logger.Logger.log(logger.LogLevel.INFO, 'Wait for thread %s' % wait_thread.name)
+                logger.Logger.info('Wait for thread %s' % wait_thread.name)
                 wait_thread.join()
-                logger.Logger.log(logger.LogLevel.INFO, 'Thread %s done' % wait_thread.name)
+                logger.Logger.info('Thread %s done' % wait_thread.name)
 
-            logger.Logger.log(logger.LogLevel.INFO,
+            logger.Logger.info(
                     'Sleep for %d secs before updating again' % self.update_frequency_seconds)
             # TODO make it sleep through weekend
             time.sleep(self.update_frequency_seconds)
@@ -78,6 +82,25 @@ class UpdateYahooFinance(threading.Thread):
     def get_metric_table_name(self, metric):
         return '%s_metrics' % metric.ticker
 
+    def get_csv_link(self, metric, beginning_date, end_date):
+        return UpdateYahooFinance.SUMMARY_LINKS_TEMPLATE % (
+                metric.ticker,
+                beginning_date.month - 1,
+                beginning_date.day,
+                beginning_date.year,
+                end_date.month - 1,
+                end_date.day,
+                end_date.year)
+
+    def get_unit(self):
+        return 'usd'
+
+    def get_metric_name(self, metric, dimension):
+        return dimension
+
+    def get_earliest_and_latest_time(self, metric, metrics_db):
+        return metrics_db.get_earliest_and_latest_time()
+
     def get_list_of_crawl_pages(self, latest_time, earliest_time):
         crawl_pages = []
         today = datetime.datetime.today()
@@ -85,13 +108,12 @@ class UpdateYahooFinance(threading.Thread):
         latest_diff = None
         if latest_time is not None:
             latest_diff = today - latest_time
-            # 66 trading days per page = (approx) 90 normal days
-            crawl_pages.extend(range(int(latest_diff.days/90) + 1))
+            crawl_pages.extend(range(int(latest_diff.days/UpdateYahooFinance.MAX_PAGE_SIZE) + 1))
 
         earliest_diff = None
         if earliest_time is not None:
             earliest_diff = today - earliest_time
-            crawl_pages.extend(range(int(earliest_diff.days/90), 1000))
+            crawl_pages.extend(range(int(earliest_diff.days/UpdateYahooFinance.MAX_PAGE_SIZE), 1000))
 
         if len(crawl_pages) == 0:
             crawl_pages = range(1000)
@@ -103,7 +125,7 @@ class UpdateYahooFinance(threading.Thread):
         marked_days = []
 
         if latest_diff is not None and earliest_diff is not None:
-            [int(latest_diff.days/90), int(earliest_diff.days/90)]
+            [int(latest_diff.days/UpdateYahooFinance.MAX_PAGE_SIZE), int(earliest_diff.days/UpdateYahooFinance.MAX_PAGE_SIZE)]
         return crawl_pages, marked_days
 
     def update_metrics(self):
@@ -113,8 +135,9 @@ class UpdateYahooFinance(threading.Thread):
                 count += 1
                 metric = self.q.get()
 
-                logger.Logger.log(logger.LogLevel.INFO, '(%s) Processing metric %s (%s) and push to database' % (
-                                  threading.current_thread().name, metric.name, metric.ticker))
+                logger.Logger.info(
+                        '(%s) Processing metric %s (%s) and push to database' % (
+                        threading.current_thread().name, metric.name, metric.ticker))
 
                 self.sanitize_metric(metric)
                 # TODO make this more extensible
@@ -131,38 +154,49 @@ class UpdateYahooFinance(threading.Thread):
                         tablename)
                 metrics_db.create_metric()
 
-                latest_time, earliest_time = metrics_db.get_earliest_and_latest_time()
-                logger.Logger.log(logger.LogLevel.INFO, 'Found for metric %s (%s) latest time: %s, earliest time: %s' % (metric.name, metric.ticker, latest_time, earliest_time))
+                latest_time, earliest_time = self.get_earliest_and_latest_time(
+                        metric, metrics_db)
+                logger.Logger.info(
+                        'Found for metric %s (%s) latest time: %s, earliest time: %s' % (
+                        metric.name, metric.ticker, latest_time, earliest_time))
 
-                # Normal case: only update first page. Special case: update all pages later than latest and earlier than earliest
+                # Normal case: only update first page. Special case: update all
+                # pages later than latest and earlier than earliest
                 crawl_pages = [0]
                 marked_days = []
                 if self.update_history:
                     crawl_pages, marked_days = self.get_list_of_crawl_pages(latest_time, earliest_time)
-                # If the lastest time is Friday of this week and today is Saturday or Sunday, skip the entry since we already have the latest value
+                # If the lastest time is Friday of this week and today is
+                # Saturday or Sunday, skip the entry since we already have the
+                # latest value
                 elif latest_time is not None:
                     today = datetime.datetime.today()
                     delta_day = today - latest_time
                     if (latest_time.weekday() == 4 and today.weekday() >= 4 and delta_day.days < 7):
-                        logger.Logger.log(logger.LogLevel.INFO, 'Already have the latest data for %s at date %s, skip' % (metric.ticker, latest_time))
+                        logger.Logger.info(
+                                'Already have the latest data for %s at date %s, skip' % (
+                                metric.ticker, latest_time))
                         continue
 
                 for page_num in crawl_pages:
                     data = self.update_metric_value(metric, page_num)
                     if len(data) == 0:
-                        logger.Logger.log(logger.LogLevel.INFO, 'Found no more data for metric %s (%s) at page %d' % (metric.name, metric.ticker, page_num))
+                        logger.Logger.info(
+                                'Found no more data for metric %s (%s) at page %d' % (
+                                metric.name, metric.ticker, page_num))
                         break
-
-                    logger.Logger.log(logger.LogLevel.INFO, 'Update database for %s with given data' % metric.name)
+                    logger.Logger.info('Update database for %s with given data' % metric.name)
                     num_update= metrics_db.update_database_with_given_data(
                             data=data,
                             latest_time=latest_time,
                             earliest_time=earliest_time)
                     if num_update == 0 and page_num not in marked_days:
-                        logger.Logger.log(logger.LogLevel.INFO, 'Update to the latest data for metric %s (%s) at page %d' % (metric.name, metric.ticker, page_num))
+                        logger.Logger.info(
+                                'Update to the latest data for metric %s (%s) at page %d' % (
+                                metric.name, metric.ticker, page_num))
                         break
 
-                logger.Logger.log(logger.LogLevel.INFO, 'Sleep for %d secs before updating again' %
+                logger.Logger.info('Sleep for %d secs before updating again' %
                         UpdateYahooFinance.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
                 time.sleep(UpdateYahooFinance.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
             finally:
@@ -170,125 +204,92 @@ class UpdateYahooFinance(threading.Thread):
 
     def update_metric_value(self, metric, page_num):
         try:
-            logger.Logger.log(logger.LogLevel.INFO, 'Update metric %s (%s) now for page %d' % (metric.name, metric.ticker, page_num))
-            response = urllib.urlopen(UpdateYahooFinance.SUMMARY_LINKS_TEMPLATE % (metric.ticker, 66 * page_num))
-            html_string = response.read()
-            data = self.update_from_html_content(html_string)
+            today = datetime.datetime.today()
+            end_date = today - datetime.timedelta(days=page_num*UpdateYahooFinance.MAX_PAGE_SIZE)
+            beginning_date = end_date - datetime.timedelta(days=UpdateYahooFinance.MAX_PAGE_SIZE)
+            csv_link = self.get_csv_link(metric, beginning_date, end_date)
+            logger.Logger.log(logger.LogLevel.INFO,
+                              'Update metric %s (%s) now for page %d from %s to %s' % (
+                              metric.name, metric.ticker, page_num,
+                              beginning_date, end_date)) 
+
+            response = urllib.urlopen(csv_link)
+            csv_string = response.read()
+            data = self.update_from_csv_content(metric, csv_string)
             return data
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, 'Exception = %s' % e)
 
-    def _yahoo_finance_get_content_table(self, html_elem):
-        outer_content_table_elem = html_elem.findAll('table', attrs={'class': 'yfnc_datamodoutline1'})
-        if len(outer_content_table_elem) != 1:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Found %d outer content table' % len(outer_content_table_elem))
-            return None
-
-        inner_content_table_elem = outer_content_table_elem[0].findAll('table')
-        if len(inner_content_table_elem) != 1:
-            logger.Logger.log(logger.LogLevel.ERROR, 'Found %d inner content table' % len(inner_content_table_elem))
-            return None
-
-        return inner_content_table_elem[0]
-
-    def _yahoo_finance_extract_titles(self, header_elem):
-        titles_elem = header_elem.findAll('th')
-        if len(titles_elem) == 0:
-            return None
-
-        if titles_elem[0].get_text() != 'Date':
-            return None
-
-        titles = []
-        for i in range(1, len(titles_elem)):
-            titles.append(StringHelper.clean_name(titles_elem[i].get_text()))
-
-        logger.Logger.log(logger.LogLevel.INFO, 'Found titles %s' % titles)
-        return titles
-
-    def update_from_html_content(self, html_string):
+    def update_from_csv_content(self, metric, csv_string):
         num_fail = 0
         data = []
         try:
-            html_elem = BeautifulSoup(html_string, 'html.parser')
+            lines = csv_string.split('\n')
+            if len(lines) == 0:
+                logger.Logger.warn('Exit found no content')
+                return data
 
-            # Get the table html elem
-            content_table_elem = self._yahoo_finance_get_content_table(html_elem)
-            if content_table_elem is None:
-                logger.Logger.log(logger.LogLevel.WARN, 'Exit found no content table')
-                return
+            headers = lines[0].split(',')
+            if len(headers) != len(UpdateYahooFinance.CSV_HEADERS):
+                logger.Logger.warn('Found unexpected headers %s' % headers)
+                return data
 
-            rows_elem = content_table_elem.findAll('tr')
-            if len(rows_elem) == 0:
-                logger.Logger.log(logger.LogLevel.INFO, 'Exit found no row values left')
-                return
+            for i, header in enumerate(headers):
+                if header != UpdateYahooFinance.CSV_HEADERS[i]:
+                    logger.Logger.warn('Found unexpected headers %s' % headers)
+                    return data
 
-            # Extract the title
-            header_elem = rows_elem[0]
-            titles = self._yahoo_finance_extract_titles(header_elem)
-            if (titles is None) or (len(titles) != len(UpdateYahooFinance.SUMMARY_DIMENSIONS)):
-                logger.Logger.log(logger.LogLevel.INFO, 'Does not find the expected titles')
-                return
-
-            # Iterate through each row in the table, extract date and value
-            for i in range(1, len(rows_elem)):
-                row_elem = rows_elem[i]
-                tds_elem = row_elem.findAll('td')
-
-                # The +1 is to account for the Date column, not in titles array
-                # For special rows of dividends and stock split, there are 2 td elems
-                if (len(tds_elem) != len(titles) + 1 and len(tds_elem) != 2):
-                    logger.Logger.log(logger.LogLevel.WARN, 'Row with num elem %d not match with num titles %d' %
-                                      (len(tds_elem), len(titles)))
+            for i in range(1, len(lines)):
+                cells = lines[i].split(',')
+                if len(cells) != len(UpdateYahooFinance.CSV_HEADERS):
+                    logger.Logger.warn('Found unexpected line %s' % lines[i])
                     continue
 
-                date = StringHelper.convert_string_to_datetime(tds_elem[0].get_text())
-                if date is None:
-                    logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to date' % tds_elem[0].get_text())
-                    continue
+                date = StringHelper.convert_string_to_datetime(cells[0])
+                for j in range(1, len(cells)):
+                    cell_value = StringHelper.parse_value_string(cells[j])
+                    value = metrics.Metrics(
+                            metric_name=self.get_metric_name(
+                                    metric,
+                                    UpdateYahooFinance.SUMMARY_DIMENSIONS[j - 1]),
+                            start_date=date,
+                            end_date=date,
+                            unit=self.get_unit(),
+                            value=cell_value)
+                    data.append(value)
+        except Exception as e:
+            logger.Logger.error(e)
+        finally:
+            return data
 
-                # For normal stock price rows:
-                if (len(tds_elem) == len(titles) + 1):
-                    for j in range(1, len(tds_elem)):
-                        cell_text = tds_elem[j].get_text().strip()
-                        cell_value = StringHelper.parse_value_string(cell_text)
-                        if cell_value is None:
-                            logger.Logger.log(logger.LogLevel.WARN, 'Cannot convert %s to value' % cell_text)
-                            continue
-
-                        value = metrics.Metrics(
-                                metric_name=UpdateYahooFinance.SUMMARY_DIMENSIONS[j - 1],
-                                start_date=date,
-                                end_date=date,
-                                unit='usd',
-                                value=cell_value)
-                        data.append(value)
-                elif len(tds_elem) == 2:
-                    # For special dividends and stock splits rows
-                    cell_text = tds_elem[1].get_text().strip()
-                    if 'Dividend' in cell_text:
-                        # Cell text is like this '0.48 Dividend'
-                        dividend_value_string = cell_text.replace(' Dividend', '').strip()
-                        dividend_value = StringHelper.parse_value_string(dividend_value_string)
-                        value = metrics.Metrics(
-                                metric_name='dividend',
-                                start_date=date,
-                                end_date=date,
-                                unit='usd',
-                                value=dividend_value)
-                        data.append(value)
-                    elif cell_text.endswith('Stock Split'):
-                        # Cell text is like this '1: 5 Stock Split'
-                        cell_value_string = cell_text.replace(' Stock Split', '').strip().split(':')
-                        cell_value = StringHelper.parse_value_string(cell_value_string[0]) / StringHelper.parse_value_string(cell_value_string[1])
-                        value = metrics.Metrics(
-                                metric_name='stock split',
-                                start_date=date,
-                                end_date=date,
-                                unit='ratio',
-                                value=cell_value)
-                        data.append(value)
+    def update_dividend(self):
+        """elif len(tds_elem) == 2:
+            # For special dividends and stock splits rows
+            cell_text = tds_elem[1].get_text().strip()
+            if 'Dividend' in cell_text:
+                # Cell text is like this '0.48 Dividend'
+                dividend_value_string = cell_text.replace(' Dividend', '').strip()
+                dividend_value = StringHelper.parse_value_string(dividend_value_string)
+                value = metrics.Metrics(
+                        metric_name='dividend',
+                        start_date=date,
+                        end_date=date,
+                        unit='usd',
+                        value=dividend_value)
+                data.append(value)
+            elif cell_text.endswith('Stock Split'):
+                # Cell text is like this '1: 5 Stock Split'
+                cell_value_string = cell_text.replace(' Stock Split', '').strip().split(':')
+                cell_value = StringHelper.parse_value_string(cell_value_string[0]) / StringHelper.parse_value_string(cell_value_string[1])
+                value = metrics.Metrics(
+                        metric_name='stock split',
+                        start_date=date,
+                        end_date=date,
+                        unit='ratio',
+                        value=cell_value)
+                data.append(value)
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, e)
         finally:
-            return data
+            return data"""
+        pass

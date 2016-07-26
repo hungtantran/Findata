@@ -20,7 +20,11 @@ from update_yahoo_finance import UpdateYahooFinance
 
 
 class UpdateExchangeStockprice(UpdateYahooFinance):
-    def __init__(self, db_type, username, password, server, database, max_num_threads=None, update_frequency_seconds=None, update_history=False):
+    MAX_PROCESSING_THREADS = 5
+
+    def __init__(self, db_type, username, password, server, database,
+                 max_num_threads=None, update_frequency_seconds=None,
+                 update_history=False):
         super(UpdateExchangeStockprice, self).__init__(
                 db_type=db_type,
                 username=username,
@@ -53,7 +57,8 @@ def main():
                 Config.mysql_password,
                 Config.mysql_server,
                 Config.mysql_database,
-                update_history=False)
+                update_history=False,
+                max_num_threads=UpdateExchangeStockprice.MAX_PROCESSING_THREADS)
         update_obj.daemon = True
         update_obj.start()
 
