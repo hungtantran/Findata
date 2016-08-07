@@ -1,3 +1,4 @@
+import init_app
 from flask import Flask, render_template, request
 import json
 import copy
@@ -21,10 +22,12 @@ def GetMetricsFromTicker(ticker):
 
 
 app = Flask(__name__, static_url_path='', static_folder='static')
-app.add_url_rule('/', 'index', lambda: render_template('index.html'))
-
 defaultTableModel = json.load(open('webserver/models/tablemodel.json', 'r'))
 defaultGraphModel = json.load(open('webserver/models/graphmodel.json', 'r'))
+
+app.add_url_rule('/', 'index', lambda: render_template('index.html'))
+app.add_url_rule('/about', 'about', lambda: render_template('about.html'))
+app.add_url_rule('/contact', 'contact', lambda: render_template('contact.html'))
 
 @app.route('/search')
 def doSearch():
@@ -36,9 +39,9 @@ def doSearch():
     graphModel["data"] = [(x.start_date.isoformat(sep=' '), x.value) for x in GetMetricsFromTicker(title)]
     tableModel["title"] = title
     for num, item in enumerate(title.split()):
-        tableModel["data"].append(("Key%s"%num, item))
+        tableModel["data"].append(("Key%s" % num, item))
 
-    print "FInishing search..."
+    print "Finishing search..."
     return '{"graphModel": %s, "tableModel": %s}' % (json.dumps(graphModel), json.dumps(tableModel))
 
 if __name__ == "__main__":

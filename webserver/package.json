@@ -4,8 +4,8 @@
   "description": "webserver for FinModels project",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c rollup.config.js",
-    "start": "rollup -c rollup.config.js",
+    "build": "rollup -c rollup-index.config.js && rollup -c rollup-about.config.js && rollup -c rollup-contact.config.js",
+    "start": "rollup -c rollup-index.config.js && rollup -c rollup-about.config.js && rollup -c rollup-contact.config.js",
     "prepublish": "npm run build"
   },
   "author": "nwickham",
@@ -13,7 +13,8 @@
     "jquery": "^2.2.3",
     "q": "^1.4.1",
     "react": "^15.0.1",
-    "react-dom": "^15.0.1"
+    "react-dom": "^15.0.1",
+    "react-bootstrap": ""
   },
   "devDependencies": {
     "babel-preset-es2015-rollup": "^1.1.1",
@@ -24,6 +25,7 @@
     "rollup-plugin-json": "^2.0.0",
     "rollup-plugin-node-resolve": "^1.5.0",
     "rollup-plugin-replace": "^1.1.0",
-    "rollup-plugin-uglify": "^0.3.1"
+    "rollup-plugin-uglify": "^0.3.1",
+    "react-bootstrap": "^0.30.2"
   }
 }
