@@ -6,7 +6,8 @@ import Header from './components/header'
 
 ReactDOM.render(
   <Footer />,
-  document.getElementById('footer'));
+  document.getElementById('footer')
+);
 
 ReactDOM.render(
   <Header />,
