@@ -9,12 +9,13 @@
   <!-- Bootstrap -->
   <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="http://getbootstrap.com/examples/sticky-footer-navbar/sticky-footer-navbar.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-  <div id="header"></div>
-  <div id="content">Loading...</div>
-  <div id="footer"></div>
+  <div id="header" class='col-xs-12 col-sm-12 col-md-12 col-lg-12' style="overflow:auto"></div>
+  <div id="content" class='col-xs-12 col-sm-12 col-md-12 col-lg-12' style="overflow:auto">Loading...</div>
+  <div id="footer" class='footer col-xs-12 col-sm-12 col-md-12 col-lg-12' style="overflow:auto"></div>
   <script async src="{{ url_for('static', filename='index.js') }}"></script>
 </body>
 </html>

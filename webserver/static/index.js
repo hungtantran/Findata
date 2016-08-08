@@ -33411,8 +33411,54 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      { className: "footer" },
-	      "Footer"
+	      { className: "navbar navbar-inverse" },
+	      React.createElement(
+	        "div",
+	        { className: "navbar-header" },
+	        React.createElement(
+	          "button",
+	          { type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#navbar", "aria-expanded": "false", "aria-controls": "navbar" },
+	          React.createElement(
+	            "span",
+	            { className: "sr-only" },
+	            "Toggle navigation"
+	          ),
+	          React.createElement("span", { className: "icon-bar" }),
+	          React.createElement("span", { className: "icon-bar" }),
+	          React.createElement("span", { className: "icon-bar" })
+	        ),
+	        React.createElement(
+	          "a",
+	          { className: "navbar-brand", href: "/" },
+	          "Findata"
+	        )
+	      ),
+	      React.createElement(
+	        "div",
+	        { id: "navbar", className: "collapse navbar-collapse navbar-right" },
+	        React.createElement(
+	          "ul",
+	          { className: "nav navbar-nav" },
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "/about" },
+	              "About"
+	            )
+	          ),
+	          React.createElement(
+	            "li",
+	            null,
+	            React.createElement(
+	              "a",
+	              { href: "/contact" },
+	              "Contact"
+	            )
+	          )
+	        )
+	      )
 	    );
 	  }
 	});
@@ -33423,67 +33469,50 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      { className: "header" },
+	      { className: "navbar navbar-inverse" },
 	      React.createElement(
-	        "nav",
-	        { className: "navbar navbar-inverse navbar-fixed-top" },
+	        "div",
+	        { className: "navbar-header" },
 	        React.createElement(
-	          "div",
-	          { className: "container" },
+	          "button",
+	          { type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#navbar", "aria-expanded": "false", "aria-controls": "navbar" },
 	          React.createElement(
-	            "div",
-	            { className: "navbar-header" },
-	            React.createElement(
-	              "button",
-	              { type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#navbar", "aria-expanded": "false", "aria-controls": "navbar" },
-	              React.createElement(
-	                "span",
-	                { className: "sr-only" },
-	                "Toggle navigation"
-	              ),
-	              React.createElement("span", { className: "icon-bar" }),
-	              React.createElement("span", { className: "icon-bar" }),
-	              React.createElement("span", { className: "icon-bar" })
-	            ),
+	            "span",
+	            { className: "sr-only" },
+	            "Toggle navigation"
+	          ),
+	          React.createElement("span", { className: "icon-bar" }),
+	          React.createElement("span", { className: "icon-bar" }),
+	          React.createElement("span", { className: "icon-bar" })
+	        ),
+	        React.createElement(
+	          "a",
+	          { className: "navbar-brand", href: "/" },
+	          "Findata"
+	        )
+	      ),
+	      React.createElement(
+	        "div",
+	        { id: "navbar", className: "collapse navbar-collapse navbar-right" },
+	        React.createElement(
+	          "ul",
+	          { className: "nav navbar-nav" },
+	          React.createElement(
+	            "li",
+	            null,
 	            React.createElement(
 	              "a",
-	              { className: "navbar-brand", href: "/" },
-	              "Findata"
+	              { href: "/about" },
+	              "About"
 	            )
 	          ),
 	          React.createElement(
-	            "div",
-	            { id: "navbar", className: "collapse navbar-collapse" },
+	            "li",
+	            null,
 	            React.createElement(
-	              "ul",
-	              { className: "nav navbar-nav" },
-	              React.createElement(
-	                "li",
-	                { className: "active" },
-	                React.createElement(
-	                  "a",
-	                  { href: "/" },
-	                  "Home"
-	                )
-	              ),
-	              React.createElement(
-	                "li",
-	                null,
-	                React.createElement(
-	                  "a",
-	                  { href: "/about" },
-	                  "About"
-	                )
-	              ),
-	              React.createElement(
-	                "li",
-	                null,
-	                React.createElement(
-	                  "a",
-	                  { href: "/contact" },
-	                  "Contact"
-	                )
-	              )
+	              "a",
+	              { href: "/contact" },
+	              "Contact"
 	            )
 	          )
 	        )
