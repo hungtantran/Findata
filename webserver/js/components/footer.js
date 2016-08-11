@@ -3,23 +3,25 @@ import React from 'react'
 var Footer = React.createClass({
   render: function() {
     return (
-      <div className="navbar navbar-inverse">
-        <div className="navbar-header">
-          <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span className="sr-only">Toggle navigation</span>
-            <span className="icon-bar"></span>
-            <span className="icon-bar"></span>
-            <span className="icon-bar"></span>
-          </button>
-          <a className="navbar-brand" href="/">Findata</a>
-        </div>
-        <div id="navbar" className="collapse navbar-collapse navbar-right">
-          <ul className="nav navbar-nav">
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
+      <footer className="container">
+        <div className="row">
+          <p className="col-sm-4">&copy; 2016 Findata</p>
+          <ul className="col-sm-8">
+            <li className="col-sm-1">
+              <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/twitter.svg"/>
+            </li>
+            <li className="col-sm-1">
+              <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/facebook.svg"/>
+            </li>
+            <li className="col-sm-1">
+              <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/instagram.svg"/>
+            </li>
+            <li className="col-sm-1">
+              <img src="https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/medium.svg"/>
+            </li>
           </ul>
         </div>
-      </div>
+      </footer>
     );
   }
 });

@@ -21169,52 +21169,38 @@
 
 	  render: function () {
 	    return React.createElement(
-	      "div",
-	      { className: "navbar navbar-inverse" },
+	      "footer",
+	      { className: "container" },
 	      React.createElement(
 	        "div",
-	        { className: "navbar-header" },
+	        { className: "row" },
 	        React.createElement(
-	          "button",
-	          { type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#navbar", "aria-expanded": "false", "aria-controls": "navbar" },
-	          React.createElement(
-	            "span",
-	            { className: "sr-only" },
-	            "Toggle navigation"
-	          ),
-	          React.createElement("span", { className: "icon-bar" }),
-	          React.createElement("span", { className: "icon-bar" }),
-	          React.createElement("span", { className: "icon-bar" })
+	          "p",
+	          { className: "col-sm-4" },
+	          "© 2016 Findata"
 	        ),
 	        React.createElement(
-	          "a",
-	          { className: "navbar-brand", href: "/" },
-	          "Findata"
-	        )
-	      ),
-	      React.createElement(
-	        "div",
-	        { id: "navbar", className: "collapse navbar-collapse navbar-right" },
-	        React.createElement(
 	          "ul",
-	          { className: "nav navbar-nav" },
+	          { className: "col-sm-8" },
 	          React.createElement(
 	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "/about" },
-	              "About"
-	            )
+	            { className: "col-sm-1" },
+	            React.createElement("img", { src: "https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/twitter.svg" })
 	          ),
 	          React.createElement(
 	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "/contact" },
-	              "Contact"
-	            )
+	            { className: "col-sm-1" },
+	            React.createElement("img", { src: "https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/facebook.svg" })
+	          ),
+	          React.createElement(
+	            "li",
+	            { className: "col-sm-1" },
+	            React.createElement("img", { src: "https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/instagram.svg" })
+	          ),
+	          React.createElement(
+	            "li",
+	            { className: "col-sm-1" },
+	            React.createElement("img", { src: "https://s3.amazonaws.com/codecademy-content/projects/make-a-website/lesson-4/medium.svg" })
 	          )
 	        )
 	      )
@@ -21228,51 +21214,44 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      { className: "navbar navbar-inverse" },
+	      { className: "row" },
 	      React.createElement(
-	        "div",
-	        { className: "navbar-header" },
-	        React.createElement(
-	          "button",
-	          { type: "button", className: "navbar-toggle collapsed", "data-toggle": "collapse", "data-target": "#navbar", "aria-expanded": "false", "aria-controls": "navbar" },
-	          React.createElement(
-	            "span",
-	            { className: "sr-only" },
-	            "Toggle navigation"
-	          ),
-	          React.createElement("span", { className: "icon-bar" }),
-	          React.createElement("span", { className: "icon-bar" }),
-	          React.createElement("span", { className: "icon-bar" })
-	        ),
+	        "h1",
+	        { className: "col-sm-4" },
 	        React.createElement(
 	          "a",
-	          { className: "navbar-brand", href: "/" },
+	          { href: "/" },
 	          "Findata"
 	        )
 	      ),
 	      React.createElement(
-	        "div",
-	        { id: "navbar", className: "collapse navbar-collapse navbar-right" },
+	        "nav",
+	        { className: "col-sm-8" },
 	        React.createElement(
-	          "ul",
-	          { className: "nav navbar-nav" },
+	          "p",
+	          null,
 	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "/about" },
-	              "About"
-	            )
-	          ),
+	            "a",
+	            { href: "/about" },
+	            "About Us"
+	          )
+	        ),
+	        React.createElement(
+	          "p",
+	          null,
 	          React.createElement(
-	            "li",
-	            null,
-	            React.createElement(
-	              "a",
-	              { href: "/contact" },
-	              "Contact"
-	            )
+	            "a",
+	            { href: "/contact" },
+	            "Contact Us"
+	          )
+	        ),
+	        React.createElement(
+	          "p",
+	          null,
+	          React.createElement(
+	            "a",
+	            { href: "/signup" },
+	            "Sign Up"
 	          )
 	        )
 	      )

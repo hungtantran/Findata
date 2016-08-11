@@ -383,7 +383,7 @@ class UpdateBureauLaborStatistics(threading.Thread):
             while not self.q.empty():
                 count += 1
                 economics_info = self.q.get()
-                if count < 800:
+                if count < 900:
                     continue
 
                 if self.daily_api_call > UpdateBureauLaborStatistics.QUOTA:
