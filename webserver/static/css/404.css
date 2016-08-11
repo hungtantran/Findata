@@ -1,0 +1,12 @@
+#content {
+    background-image: url('http://tradingexchange.com/wp-content/uploads/2012/03/Fotolia_22762195_Subscription_L.jpg');
+    background-size: cover;
+
+    display: flex;
+}
+
+.notfound {
+    color: white;
+    font-size: 5em;
+    margin: auto;
+}
