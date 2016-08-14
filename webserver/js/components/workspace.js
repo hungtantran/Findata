@@ -1,83 +1,57 @@
-import React from 'react'
-import SearchBar from './searchbar'
-import Graph from './graph'
-import Table from './table'
-import jQuery from 'jquery'
-import TableModel from '../../models/tablemodel.json'
-import GraphModel from '../../models/graphmodel.json'
-import GoogleChartLoader from '../googleChartLoader'
+import React from 'react';
+import SearchBar from './searchbar';
+import D3Graph from './graph/graph';
 
 class Workspace extends React.Component {
 
     constructor(props) {
-        super(props)
-        this.state = {
-            graphModel: this.props.initialGraphModel,
-            tableModel: this.props.initialTableModel,
-            googleChartsLoaded: false
-        }
+        super(props);
 
-        this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
-        this.loadModelsFromJSON = this.loadModelsFromJSON.bind(this)
+        this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+        this.generateData = this.generateData.bind(this);
+
+        this.dataSets = [];
+
+        this.state = {
+            graphModel: this.generateData()
+        };
     }
 
     componentDidMount() {
-        GoogleChartLoader.load().then(() => {
-            this.setState({googleChartsLoaded: true})
-        })
     }
 
     componentDidUpdate() {
-        console.log("workspace updating...")
     }
 
     render() {
-        console.log("Rendering workspace...")
-        var graphs = []
-
-        if(this.state.googleChartsLoaded === true && this.state.graphModel.data.length > 0) {
-            console.log("Adding graph")
-            graphs.push(<Graph {...this.state.graphModel} key={this.state.graphModel.title} />)
-        }
-
-        return(
+        var margins = { top: 50, right: 50, bottom: 50, left: 50 };
+        return (
             <div className="workspace">
                 <SearchBar onSearchSubmit={this.handleSearchSubmit} />
-                {graphs}
+                <D3Graph key="graph" dataSets={this.state.graphModel} width={window.innerWidth} height={window.innerHeight} margins={margins}/>
             </div>
-        )
+        );
     }
 
-    loadModelsFromJSON(data) {
-        data.graphModel.data = data.graphModel.data.map(function(item){
-            return [new Date(item[0].replace(/-/g, "/")), item[1]]
-        })
+    generateData() {
+        var dataSet = [];
+        var now = Date.now();
+        var dayOffset = 1000 * 60 * 60 * 24;
 
-        console.log("Setting models on state...")
+        for (var i = 0; i < 200; i++) {
+            dataSet.push({ t: new Date(now + i * dayOffset), v: Math.random() * i });
+        }
+
+        this.dataSets.push(dataSet);
+
+        return this.dataSets;
+    }
+
+    handleSearchSubmit(/*submission*/) {
         this.setState({
-            graphModel: data.graphModel,
-            tableModel: data.tableModel
-        })
-    }
-
-    handleSearchSubmit(submission) {
-        jQuery.getJSON(
-            this.props.seearchUrlRoot,
-            {search: submission.search},
-            this.loadModelsFromJSON
-        )
+            graphModel: this.generateData()
+        });
     }
 }
 
-Workspace.propTypes = {
-    seearchUrlRoot: React.PropTypes.string,
-    initialGraphModel: React.PropTypes.object,
-    initialTableModel: React.PropTypes.object
-}
-Workspace.defaultProps = {
-    seearchUrlRoot: $SCRIPT_ROOT + '/search',
-    initialGraphModel: Object.assign({}, GraphModel),
-    initialTableModel: Object.assign({}, TableModel)
-}
-
-export default Workspace
+export default Workspace;

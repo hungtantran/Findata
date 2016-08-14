@@ -2,9 +2,6 @@ __author__ = 'hungtantran'
 
 import datetime
 import re
-import sqlalchemy
-import sqlalchemy.orm
-import sqlalchemy.sql
 from time import sleep
 
 import logger
@@ -25,10 +22,6 @@ class MetricsDatabase(object):
         self.metric = metric
 
         if use_orm and metric is not None:
-            self.engine = sqlalchemy.create_engine('%s://%s:%s@%s/%s?charset=utf8&use_unicode=0' %
-                                                   (db_type, username, password, server, database),
-                                                   pool_recycle=3600)
-            self.session = sqlalchemy.orm.sessionmaker(bind=self.engine, expire_on_commit=False)
             self.table = self.get_metrics_table_object(
                     metric=metric,
                     class_map=metrics.Metrics)
@@ -36,21 +29,6 @@ class MetricsDatabase(object):
     @staticmethod
     def create_metric_name(metric):
         return metric.replace(' ', '_')
-
-    def get_metrics_table_object(self, metric, class_map):
-        metric_name = MetricsDatabase.create_metric_name(metric)
-        metadata = sqlalchemy.MetaData(bind=self.engine)
-        metrics_table = sqlalchemy.Table(
-                metric_name, metadata,
-                sqlalchemy.Column('id', sqlalchemy.INTEGER, primary_key=True, autoincrement=True),
-                sqlalchemy.Column('metric_name', sqlalchemy.String(255), nullable=False),
-                sqlalchemy.Column('value', sqlalchemy.Float),
-                sqlalchemy.Column('unit', sqlalchemy.String(32)),
-                sqlalchemy.Column('start_date', sqlalchemy.DateTime),
-                sqlalchemy.Column('end_date', sqlalchemy.DateTime),
-                sqlalchemy.Column('metadata', sqlalchemy.TEXT),
-                sqlalchemy.UniqueConstraint('metric_name', 'start_date', 'end_date'))
-        return metrics_table
 
     def create_metric(self, insert_to_data_store=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Create metric %s' % self.metric)
