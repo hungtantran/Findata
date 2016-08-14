@@ -1,8 +1,8 @@
-import ReactDOM from 'react-dom'
-import React from 'react' 
-import Workspace from './components/workspace'
-import Footer from './components/footer'
-import Header from './components/header'
+import ReactDOM from 'react-dom';
+import React from 'react'; 
+import Workspace from './components/workspace';
+import Footer from './components/footer';
+import Header from './components/header';
 
 ReactDOM.render(
   <Footer />,
