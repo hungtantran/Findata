@@ -4,7 +4,7 @@ import {line} from 'd3-shape';
 function Line(props) {
     var scaledData = line()
         .x((d) => {
-            return props.xscale(d.t);
+            return props.xscale(new Date(d.t));
         })
         .y((d) => {
             return props.yscale(d.v);
@@ -18,7 +18,7 @@ Line.propTypes = {
     yscale: React.PropTypes.func,
     colorscale: React.PropTypes.func,
     dataSet: React.PropTypes.array,
-    colorid: React.PropTypes.number
+    colorid: React.PropTypes.string
 };
 
 export default Line;

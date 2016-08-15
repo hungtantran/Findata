@@ -6,21 +6,23 @@ import YAxis from './yaxis';
 import {scaleLinear, scaleTime, scaleOrdinal, schemeCategory10} from 'd3-scale';
 import {max, min} from 'd3-array';
 import Legend from '../legend/legend.js';
+import Entries from 'object.entries';
+
 
 function getDataXDomain(dataSets) {
     return [
-        min(dataSets, function (dataSet) {
-            return dataSet[0].t;
+        min(Entries(dataSets), function (pair) {
+            return new Date(pair[1].data[0].t);
         }),
-        max(dataSets, function (dataSet) {
-            return dataSet[dataSet.length - 1].t;
+        max(Entries(dataSets), function (pair) {
+            return new Date(pair[1].data[pair[1].data.length - 1].t);
         })
     ];
 }
 
 function getValueDataSetsMax(dataSets) {
-    return max(dataSets, function (dataSet) {
-        return max(dataSet, function (d) {
+    return max(Entries(dataSets), function (pair) {
+        return max(pair[1].data, function (d) {
             return d.v;
         });
     });
@@ -55,17 +57,16 @@ function getXScaleTranslation(height) {
 
 function Plot(props) {
     var scales = buildScales(props.dataSets, props.width * .95, props.height);
-    var lines = props.dataSets.map(function (dataSet, index) {
-        return <Line xscale={scales.xscale} yscale={scales.yscale} colorscale={scales.colorscale} dataSet={dataSet} key={index} colorid={index} />;
-    });
-    var bars = props.dataSets.map(function (dataSet, index) {
-        return <Bar xscale={scales.xscale} yscale={scales.yscale} colorscale={scales.colorscale} dataSet={dataSet} key={index} colorid={index} />;
+    var items = Entries(props.dataSets).map(function (pair) {
+        if(pair[1].type === 'line')
+            return <Line xscale={scales.xscale} yscale={scales.yscale} colorscale={scales.colorscale} dataSet={pair[1].data} key={pair[0]} colorid={pair[0]} />;
+        else if(pair[1].type === 'bar')
+            return <Bar xscale={scales.xscale} yscale={scales.yscale} colorscale={scales.colorscale} dataSet={pair[1].data} key={pair[0]} colorid={pair[0]} />;
     });
 
     return (
         <g className="plot" transform={getPlotTranslation(props.margins.left, props.margins.top) } >
-            {lines}
-            //{bars}
+            {items}
             <XAxis key="axis" scale={scales.xscale} translate={getXScaleTranslation(props.height) } />
             <YAxis key="yaxis" scale={scales.yscale} />
             <Legend xpos= {props.width * .95} ypos={0} colorscale={scales.colorscale} items={props.dataSets} />
@@ -77,7 +78,7 @@ Plot.propTypes = {
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     margins: React.PropTypes.object,
-    dataSets: React.PropTypes.array
+    dataSets: React.PropTypes.object
 };
 
 export default Plot;

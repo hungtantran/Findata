@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchBar from './searchbar';
 import D3Graph from './graph/graph';
+import Entries from 'object.entries';
 
 class Workspace extends React.Component {
 
@@ -9,12 +10,9 @@ class Workspace extends React.Component {
 
         this.loadModelsFromJSON = this.loadModelsFromJSON.bind(this);
         this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
-        this.generateData = this.generateData.bind(this);
-
-        this.dataSets = [];
 
         this.state = {
-            graphModel: this.generateData()
+            graphModel: {}
         };
     }
 
@@ -26,40 +24,25 @@ class Workspace extends React.Component {
 
     render() {
         var margins = { top: 50, right: 50, bottom: 50, left: 50 };
+        var graphs = this.state.graphModel.graphs && Entries(this.state.graphModel.graphs).map(function(pair) {
+            return <D3Graph key={pair[0]} dataSets={pair[1].dataSets} width={window.innerWidth} height={window.innerHeight} margins={margins}/>;
+        });
+
         return (
             <div className="workspace">
                 <SearchBar onSearchSubmit={this.handleSearchSubmit} />
-                <D3Graph key="graph" dataSets={this.state.graphModel} width={window.innerWidth} height={window.innerHeight} margins={margins}/>
+                {graphs}
             </div>
         );
     }
 
-    generateData() {
-        var dataSet = [];
-        var now = Date.now();
-        var dayOffset = 1000 * 60 * 60 * 24;
-
-        for (var i = 0; i < 200; i++) {
-            dataSet.push({ t: new Date(now + i * dayOffset), v: Math.random() * i });
-        }
-
-        this.dataSets.push(dataSet);
-
-        return this.dataSets;
-    }
-
     loadModelsFromJSON(json) {
-        var data = [];
-        data.push(json.graphModel.adj_close.map(function(item) {
+        /*data.push(json.graphModel.adj_close.map(function(item) {
             return {t: new Date(item[0].replace(/-/g, '/')), v: item[1]};
-        }));
-
-        data.push(json.graphModel.vol.map(function(item) {
-            return {t: new Date(item[0].replace(/-/g, '/')), v: item[1]};
-        }));
+        }));*/
 
         this.setState({
-            graphModel: data
+            graphModel: json.graphModel
         });
     }
 

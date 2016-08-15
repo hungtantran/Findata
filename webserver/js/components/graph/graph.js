@@ -21,7 +21,7 @@ Graph.propTypes = {
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     margins: React.PropTypes.object,
-    dataSets: React.PropTypes.array
+    dataSets: React.PropTypes.object
 };
 
 export default Graph;
