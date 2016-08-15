@@ -7,6 +7,7 @@ class Workspace extends React.Component {
     constructor(props) {
         super(props);
 
+        this.loadModelsFromJSON = this.loadModelsFromJSON.bind(this);
         this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
         this.generateData = this.generateData.bind(this);
 
@@ -47,10 +48,30 @@ class Workspace extends React.Component {
         return this.dataSets;
     }
 
-    handleSearchSubmit(/*submission*/) {
+    loadModelsFromJSON(json) {
+        var data = [];
+        data.push(json.graphModel.adj_close.map(function(item) {
+            return {t: new Date(item[0].replace(/-/g, '/')), v: item[1]};
+        }));
+
+        data.push(json.graphModel.vol.map(function(item) {
+            return {t: new Date(item[0].replace(/-/g, '/')), v: item[1]};
+        }));
+
         this.setState({
-            graphModel: this.generateData()
+            graphModel: data
         });
+    }
+
+    handleSearchSubmit(submission) {
+        fetch($SCRIPT_ROOT + '/search' + '?search=' + submission.search, {mode: 'no-cors'})
+            .then(function(response) {
+                return response.json();
+            }).catch(function(ex) {
+                console.log('parsing failed', ex);
+            }).then((json) => {
+                this.loadModelsFromJSON(json);
+            });
     }
 }
 

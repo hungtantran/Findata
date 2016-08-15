@@ -1,9 +1,11 @@
 import React from 'react';
 import Line from './line';
+import Bar from './bar';
 import XAxis from './xaxis';
 import YAxis from './yaxis';
 import {scaleLinear, scaleTime, scaleOrdinal, schemeCategory10} from 'd3-scale';
 import {max, min} from 'd3-array';
+import Legend from '../legend/legend.js';
 
 function getDataXDomain(dataSets) {
     return [
@@ -52,16 +54,21 @@ function getXScaleTranslation(height) {
 }
 
 function Plot(props) {
-    var scales = buildScales(props.dataSets, props.width, props.height);
+    var scales = buildScales(props.dataSets, props.width * .95, props.height);
     var lines = props.dataSets.map(function (dataSet, index) {
         return <Line xscale={scales.xscale} yscale={scales.yscale} colorscale={scales.colorscale} dataSet={dataSet} key={index} colorid={index} />;
+    });
+    var bars = props.dataSets.map(function (dataSet, index) {
+        return <Bar xscale={scales.xscale} yscale={scales.yscale} colorscale={scales.colorscale} dataSet={dataSet} key={index} colorid={index} />;
     });
 
     return (
         <g className="plot" transform={getPlotTranslation(props.margins.left, props.margins.top) } >
             {lines}
+            //{bars}
             <XAxis key="axis" scale={scales.xscale} translate={getXScaleTranslation(props.height) } />
             <YAxis key="yaxis" scale={scales.yscale} />
+            <Legend xpos= {props.width * .95} ypos={0} colorscale={scales.colorscale} items={props.dataSets} />
         </g>
     );
 }

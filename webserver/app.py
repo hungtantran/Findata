@@ -14,7 +14,9 @@ def GetMetricsFromTicker(ticker):
          Config.mysql_database,
          '%s_metrics'%ticker)
     try:
-        data = metrics_db.get_metrics("adj_close")
+        data = {}
+        data["adj_close"] = metrics_db.get_metrics("adj_close", reverse_order=True)
+        data["vol"] = metrics_db.get_metrics("volume", reverse_order=True)
         return data
     except Exception as e:
         print e
@@ -36,7 +38,9 @@ def doSearch():
     tableModel = copy.deepcopy(defaultTableModel)
     title = request.args.get('search', 'default title')
     graphModel["title"] = title
-    graphModel["data"] = [(x.start_date.isoformat(sep=' '), x.value) for x in GetMetricsFromTicker(title)]
+    metrics = GetMetricsFromTicker(title);
+    graphModel["adj_close"] = [(x.start_date.isoformat(sep=' '), x.value) for x in metrics["adj_close"]]
+    graphModel["vol"] = [(x.start_date.isoformat(sep=' '), x.value) for x in metrics["vol"]]
     tableModel["title"] = title
     for num, item in enumerate(title.split()):
         tableModel["data"].append(("Key%s" % num, item))

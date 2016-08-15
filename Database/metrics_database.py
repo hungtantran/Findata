@@ -21,11 +21,6 @@ class MetricsDatabase(object):
         self.database = database
         self.metric = metric
 
-        if use_orm and metric is not None:
-            self.table = self.get_metrics_table_object(
-                    metric=metric,
-                    class_map=metrics.Metrics)
-
     @staticmethod
     def create_metric_name(metric):
         return metric.replace(' ', '_')
