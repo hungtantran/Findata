@@ -1,0 +1,44 @@
+economics_info | CREATE TABLE `economics_info` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`name` varchar(255) DEFAULT NULL,
+`location` varchar(255) DEFAULT NULL,
+`category` varchar(255) DEFAULT NULL,
+`type` varchar(255) DEFAULT NULL,
+`source` varchar(255) DEFAULT NULL,
+`metadata` text,
+PRIMARY KEY (`id`),
+UNIQUE KEY `name` (`name`,`location`,`category`,`type`)
+ENGINE=InnoDB AUTO_INCREMENT=1207 DEFAULT CHARSET=utf8
+
+data_source | CREATE TABLE `data_source` (
+`name` varchar(128) DEFAULT NULL,
+`abbrv` varchar(32) DEFAULT NULL,
+`type` varchar(32) NOT NULL DEFAULT '',
+`subtype` varchar(32) NOT NULL DEFAULT '',
+`city` varchar(32) DEFAULT NULL,
+`country` varchar(32) DEFAULT NULL,
+`region` varchar(32) DEFAULT NULL,
+`tablename` varchar(255) NOT NULL DEFAULT '',
+`source` varchar(32) DEFAULT NULL,
+`frequency` varchar(32) DEFAULT NULL,
+`tabletype` varchar(32) DEFAULT NULL,
+`link` varchar(255) DEFAULT NULL,
+`description` text,
+PRIMARY KEY (`type`,`subtype`,`tablename`),
+CONSTRAINT `data_source_ibfk_1` FOREIGN KEY (`type`, `subtype`) REFERENCES `data_source_type` (`type`, `subtype`),
+CONSTRAINT `data_source_ibfk_2` FOREIGN KEY (`type`, `subtype`) REFERENCES `data_source_type` (`type`, `subtype`)
+
+data_source_type | CREATE TABLE `data_source_type` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`type` varchar(32) NOT NULL DEFAULT '',
+`subtype` varchar(32) NOT NULL DEFAULT '',
+PRIMARY KEY (`type`,`subtype`),
+KEY `id` (`id`)
+
+fixedincome_ustreasurybill_metrics
+
+exchange_index_metrics
+
+%_metrics
+
+economics_info_%_metrics
