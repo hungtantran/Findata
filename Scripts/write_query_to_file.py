@@ -1,5 +1,6 @@
 __author__ = 'hungtantran'
 
+import init_app
 
 import datetime
 import re
@@ -53,14 +54,17 @@ def execute_query(query):
 
 if __name__ == '__main__':
     #write_query_to_file("show tables like '%\_metrics%'", 'tables.txt')
-    #write_query_to_file("select * from msft_metrics", 'metrics.txt')
-    #write_query_to_file("select * from exchange_stockprice_msft_adj_close", 'adj_close.txt')
-    #write_query_to_file("select * from exchange_stockprice_msft_volume", 'volume.txt')
-    #write_query_to_file("select * from company_fundamentals_msft_metrics", 'fundamentals.txt')
-    #write_query_to_file("show tables like 'a%\_metrics'", 'tables.txt')
-    #write_query_to_file("show tables where tables_in_models like 'exchange_stockprice%' and tables_in_models > ' exchange_stockprice_' and tables_in_models < 'exchange_stockprice_inn'", 'exchange_stockprice.txt')
-    #write_query_to_file("select lower(ticker) from ticker_info where ticker REGEXP '^[A-Za-z0-9]+$'", 'metric_tables.txt')
-    #write_query_to_file("select count(*) as num, name from ticker_info group by name order by num desc", 'ticker_name_and_count.txt')
     #write_query_to_file(r"show tables like '%fund%'", 'fund.txt')
     #write_query_to_file(r"show tables like '%metrics%'", 'metric.txt')
+    #write_query_to_file(r"show tables like 'a%\_metrics'", 'tables.txt')
+    #write_query_to_file(r"show tables where tables_in_models like 'exchange_stockprice%' and tables_in_models > ' exchange_stockprice_' and tables_in_models < 'exchange_stockprice_inn'", 'exchange_stockprice.txt')
+
+    #write_query_to_file(r"select * from msft_metrics", 'metrics.txt')
+    #write_query_to_file(r"select * from exchange_stockprice_msft_adj_close", 'adj_close.txt')
+    #write_query_to_file(r"select * from exchange_stockprice_msft_volume", 'volume.txt')
+    #write_query_to_file(r"select * from company_fundamentals_msft_metrics", 'fundamentals.txt')
+    #write_query_to_file(r"select lower(ticker) from ticker_info where ticker REGEXP '^[A-Za-z0-9]+$'", 'metric_tables.txt')
+    #write_query_to_file(r"select count(*) as num, name from ticker_info group by name order by num desc", 'ticker_name_and_count.txt')
     #write_query_to_file(r"select ticker from ticker_info where ticker_type = 'stock' or ticker_type = 'etf'", 'ticker.txt')
+
+    write_query_to_file(r"show tables", 'tables.txt')

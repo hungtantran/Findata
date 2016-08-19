@@ -9,12 +9,11 @@ class Workspace extends React.Component {
 
         this.loadModelsFromJSON = this.loadModelsFromJSON.bind(this);
         this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
-        this.generateData = this.generateData.bind(this);
 
         this.dataSets = [];
 
         this.state = {
-            graphModel: this.generateData()
+            graphModel: []
         };
     }
 
@@ -32,20 +31,6 @@ class Workspace extends React.Component {
                 <D3Graph key="graph" dataSets={this.state.graphModel} width={window.innerWidth} height={window.innerHeight} margins={margins}/>
             </div>
         );
-    }
-
-    generateData() {
-        var dataSet = [];
-        var now = Date.now();
-        var dayOffset = 1000 * 60 * 60 * 24;
-
-        for (var i = 0; i < 200; i++) {
-            dataSet.push({ t: new Date(now + i * dayOffset), v: Math.random() * i });
-        }
-
-        this.dataSets.push(dataSet);
-
-        return this.dataSets;
     }
 
     loadModelsFromJSON(json) {

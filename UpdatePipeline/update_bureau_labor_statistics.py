@@ -378,13 +378,9 @@ class UpdateBureauLaborStatistics(threading.Thread):
         return 'economics_info_%d_metrics' % economics_info.id
 
     def update_measures(self):
-        count = 0
         try:
             while not self.q.empty():
-                count += 1
                 economics_info = self.q.get()
-                if count < 900:
-                    continue
 
                 if self.daily_api_call > UpdateBureauLaborStatistics.QUOTA:
                     logger.Logger.info('Exceed daily quota of %d' % (
