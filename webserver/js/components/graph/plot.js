@@ -29,7 +29,7 @@ function getValueDataSetsMax(dataSets) {
 }
 
 function getDataYDomain(dataSets) {
-    return [0, getValueDataSetsMax(dataSets)];
+    return [0, getValueDataSetsMax(dataSets) * 1.05];
 }
 
 function buildScales(dataSets, width, height) {

@@ -88,7 +88,11 @@ app.add_url_rule('/contact', 'contact', lambda: render_template('contact.html'))
 def doSearch():
     print "Running search..."
     title = request.args.get('search', 'default title')
-    graphModel = GetMetricsFromTicker(title);
+    graphModel = Model()
+    if title == "clear":
+        global_model = Model()
+    else:
+        graphModel = GetMetricsFromTicker(title);
 
     print "Finishing search..."
     return '{"graphModel": %s}' % (json.dumps(graphModel, default=lambda o: o.__dict__))
