@@ -187,7 +187,7 @@ class UpdateBureauLaborStatistics(threading.Thread):
                     db_link = db_link_elems[0]['href']
                     database_list.append((table_header, db_name, db_link))
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, e)
+            logger.Logger.error(e)
 
         return database_list
 
@@ -202,7 +202,7 @@ class UpdateBureauLaborStatistics(threading.Thread):
                 measure_series_id = measure_match.group(2).strip()
                 measure_list.append((measure_name, measure_series_id))
         except Exception as e:
-            logger.Logger.log(logger.LogLevel.ERROR, e)
+            logger.Logger.error(e)
 
         return measure_list
 
@@ -223,16 +223,24 @@ class UpdateBureauLaborStatistics(threading.Thread):
         metrics_db.create_metric()
         latest_time, earliest_time = metrics_db.get_earliest_and_latest_time()
 
-        headers = {'Content-type': 'application/json'}
         today = datetime.datetime.today()
         current_year = (today.year - 1) if not update_history else 1940
+        logger.Logger.info("Get time series info for %s from year %d to year %d. Earliest year %d, latest year %d" % (
+                economics_info.name,
+                current_year,
+                today.year,
+                earliest_time.year,
+                latest_time.year))
         while current_year <= today.year:
             end_year = min(current_year + 20, today.year)
             # Skip year in the middle of earliest and latest time
             if (latest_time is not None and earliest_time is not None and
-                current_year >= earliest_time.year and
-                current_year <= latest_time.year):
-                current_year += 20
+                current_year > earliest_time.year and
+                current_year < latest_time.year):
+                logger.Logger.info("Skip updating %s for year %d" % (
+                        economics_info.name,
+                        current_year))
+                current_year = min(today.year, current_year + 20)
                 continue
 
             logger.Logger.info('Update %s (%s) (%s) from year %d to year %d' % (
@@ -260,6 +268,7 @@ class UpdateBureauLaborStatistics(threading.Thread):
                             UpdateBureauLaborStatistics.QUOTA))
                     return
 
+                headers = {'Content-type': 'application/json'}
                 req = urllib2.Request(data_url, data, headers)
                 rsp = urllib2.urlopen(req)
                 response = rsp.read()
@@ -409,7 +418,7 @@ def main():
                 Config.mysql_password,
                 Config.mysql_server,
                 Config.mysql_database,
-                update_history=True,
+                update_history=False,
                 api_version=2)
         update_obj.daemon = True
         update_obj.start()

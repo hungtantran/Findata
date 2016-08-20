@@ -28,7 +28,24 @@ class MetricsDatabase(object):
     def create_metric(self, insert_to_data_store=False):
         logger.Logger.log(logger.LogLevel.INFO, 'Create metric %s' % self.metric)
         try:
-            self.table.create(self.engine, checkfirst=True)
+            with self.dao_factory.create(self.username,
+                                         self.password,
+                                         self.server,
+                                         self.database) as connection:
+                cursor = connection.cursor()
+                query_string = """CREATE TABLE `%s` (
+                    `id` int(11) NOT NULL AUTO_INCREMENT,
+                    `metric_name` varchar(255) NOT NULL,
+                    `value` float DEFAULT NULL,
+                    `unit` varchar(32) DEFAULT NULL,
+                    `start_date` datetime DEFAULT NULL,
+                    `end_date` datetime DEFAULT NULL,
+                    `metadata` text,
+                    PRIMARY KEY (`id`),
+                    UNIQUE KEY `metric_name` (`metric_name`,`start_date`,`end_date`))"""
+                query_string = query_string % MetricsDatabase.create_metric_name(self.metric)
+                cursor.execute(query_string)
+                connection.commit()
         except Exception as e:
             logger.Logger.error('Exception = %s' % e)
 
@@ -74,10 +91,15 @@ class MetricsDatabase(object):
 
     def remove_metric(self):
         logger.Logger.log(logger.LogLevel.INFO, 'Drop metric %s' % self.metric)
-        # TODO figure out why this make update_exchange_stockprice_test deadlock
         try:
-            self.session.close_all()
-            self.table.drop(self.engine, checkfirst=False)
+            with self.dao_factory.create(self.username,
+                                         self.password,
+                                         self.server,
+                                         self.database) as connection:
+                cursor = connection.cursor()
+                query_string = "drop table if exists %s" % MetricsDatabase.create_metric_name(self.metric)
+                cursor.execute(query_string)
+                connection.commit()
         except Exception as e:
             logger.Logger.error('Exception = %s' % e)
 
