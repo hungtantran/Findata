@@ -1,18 +1,26 @@
 import React from 'react';
 import Plot from './plot';
+import Entries from 'object.entries';
 
-function getPlotProps(dataSets, width, height, margins, key) {
+function getPlotProps(dataSets, width, height, xOffset, yOffset, key, margins) {
     var innerWidth = width - margins.right - margins.left;
-    var innerHeight = height - margins.top - margins.bottom;
 
     return {
-        dataSets: dataSets, width: innerWidth, height: innerHeight, margins: margins, key: key};
+        dataSets: dataSets, width: innerWidth, height: height, xOffset: xOffset, yOffset: yOffset, key: key};
 }
 
 function Graph(props) {
+    var innerHeight = props.height - props.margins.top - props.margins.bottom;
+    var plotCount = Object.keys(props.plots).length;
+    var plotHeight = innerHeight / plotCount;
+    var plots = Entries(props.plots).map(function(pair, index) {
+        var yOffset = props.margins.top + plotHeight*index;
+        return <Plot {...getPlotProps(pair[1].dataSets, props.width, plotHeight, props.margins.left, yOffset, pair[0], props.margins) } />;
+    });
+
     return ( 
         <svg className="graph" width={props.width}  height={props.height} > 
-            <Plot {...getPlotProps(props.dataSets, props.width, props.height, props.margins, 'plot') } />
+            {plots}
         </svg>
     );
 }
@@ -21,7 +29,7 @@ Graph.propTypes = {
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     margins: React.PropTypes.object,
-    dataSets: React.PropTypes.object
+    plots: React.PropTypes.object
 };
 
 export default Graph;

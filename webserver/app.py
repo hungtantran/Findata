@@ -23,12 +23,18 @@ class Model():
 
 class Graph():
     def __init__(self, title):
+        self.plots = {}
+
+    def addPlot(self, key, plot):
+        self.plots[key] = plot
+
+class Plot():
+    def __init__(self, title):
         self.title = title
         self.dataSets = {}
 
     def addDataSet(self, key, dataSet):
         self.dataSets[key] = dataSet
-        pass
 
 class DataSet():
     def __init__(self, title, type, data):
@@ -44,6 +50,8 @@ class DataSet():
             data.append(DataPair(datum[0], datum[1]))
         return data
 
+global_model = Model()
+
 def GetMetricsFromTicker(ticker):
     metrics_db = MetricsDatabase(
         'mysql',
@@ -53,17 +61,16 @@ def GetMetricsFromTicker(ticker):
          Config.mysql_database,
          '%s_metrics'%ticker)
     try:
-        model = Model()
-        adj_close_graph = Graph(ticker)
-        volume_graph = Graph(ticker)
-        print "Getting adj close"
-        adj_close_graph.addDataSet(ticker, DataSet( "%s Adjusted Close" % ticker, VizType.Line, metrics_db.get_metrics("adj_close", reverse_order=True)))
-        print "Getting volume"
-        volume_graph.addDataSet(ticker, DataSet( "%s Volume" % ticker, VizType.Bar, metrics_db.get_metrics("volume", reverse_order=True)))
-        print "Adding graphs to model"
-        model.addGraph("adj_close_%s" % ticker, adj_close_graph)
-        model.addGraph("volume_%s" % ticker, volume_graph)
-        return model
+        graph = Graph(ticker)
+        volume_plot = Plot(ticker)
+        adj_close_plot = Plot(ticker)
+
+        adj_close_plot.addDataSet(ticker, DataSet( "%s Adjusted Close" % ticker, VizType.Line, metrics_db.get_metrics("adj_close", reverse_order=True)))
+        volume_plot.addDataSet(ticker, DataSet( "%s Volume" % ticker, VizType.Bar, metrics_db.get_metrics("volume", reverse_order=True)))
+        graph.addPlot("adj_close_%s" % ticker, adj_close_plot)
+        graph.addPlot("volume_%s" % ticker, volume_plot)
+        global_model.addGraph(ticker, graph)
+        return global_model
     except Exception as e:
         print e
         return Model()

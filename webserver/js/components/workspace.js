@@ -25,7 +25,7 @@ class Workspace extends React.Component {
     render() {
         var margins = { top: 50, right: 50, bottom: 50, left: 50 };
         var graphs = this.state.graphModel.graphs && Entries(this.state.graphModel.graphs).map(function(pair) {
-            return <D3Graph key={pair[0]} dataSets={pair[1].dataSets} width={window.innerWidth} height={window.innerHeight} margins={margins}/>;
+            return <D3Graph key={pair[0]} plots={pair[1].plots} width={window.innerWidth} height={window.innerHeight} margins={margins}/>;
         });
 
         return (

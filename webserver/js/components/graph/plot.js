@@ -65,7 +65,7 @@ function Plot(props) {
     });
 
     return (
-        <g className="plot" transform={getPlotTranslation(props.margins.left, props.margins.top) } >
+        <g className="plot" transform={getPlotTranslation(props.xOffset, props.yOffset) } >
             {items}
             <XAxis key="axis" scale={scales.xscale} translate={getXScaleTranslation(props.height) } />
             <YAxis key="yaxis" scale={scales.yscale} />
@@ -77,8 +77,9 @@ function Plot(props) {
 Plot.propTypes = {
     width: React.PropTypes.number,
     height: React.PropTypes.number,
-    margins: React.PropTypes.object,
-    dataSets: React.PropTypes.object
+    xOffset: React.PropTypes.number,
+    dataSets: React.PropTypes.object,
+    yOffset: React.PropTypes.number
 };
 
 export default Plot;
