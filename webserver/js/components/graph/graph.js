@@ -19,7 +19,7 @@ function Graph(props) {
     });
 
     return ( 
-        <svg className="graph" width={props.width}  height={props.height} > 
+        <svg className="graph" width={props.width} height={props.height} style={props.style}> 
             {plots}
         </svg>
     );
@@ -29,7 +29,8 @@ Graph.propTypes = {
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     margins: React.PropTypes.object,
-    plots: React.PropTypes.object
+    plots: React.PropTypes.object,
+    style: React.PropTypes.object,
 };
 
 export default Graph;

@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchBar from './searchbar';
-import D3Graph from './graph/graph';
+import Graph from './graph/graph';
 import Entries from 'object.entries';
 
 class Workspace extends React.Component {
@@ -10,6 +10,15 @@ class Workspace extends React.Component {
 
         this.loadModelsFromJSON = this.loadModelsFromJSON.bind(this);
         this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+
+        this.numColumns = 12;
+        this.width = window.innerWidth;
+        this.cellSize = this.width / this.numColumns;
+
+        this.defaultGraphWidthInCell = 6;
+        this.defaultGraphHeightInCell = 6;
+
+        this.graphs = {};
 
         this.state = {
             graphModel: {}
@@ -24,14 +33,24 @@ class Workspace extends React.Component {
 
     render() {
         var margins = { top: 50, right: 50, bottom: 50, left: 50 };
-        var graphs = this.state.graphModel.graphs && Entries(this.state.graphModel.graphs).map(function(pair) {
-            return <D3Graph key={pair[0]} plots={pair[1].plots} width={window.innerWidth} height={window.innerHeight} margins={margins}/>;
+        this.graphs = this.state.graphModel.graphs && Entries(this.state.graphModel.graphs).map((pair, index) => {
+            var xOffset = (index % 2) * this.defaultGraphWidthInCell * this.cellSize;
+            var yOffset = Math.floor(index / 2) * this.defaultGraphHeightInCell * this.cellSize;
+            var width = this.defaultGraphWidthInCell * this.cellSize;
+            var height = this.defaultGraphHeightInCell * this.cellSize;
+
+            var divStyle = {
+                position: 'absolute',
+                left: `${xOffset}px`,
+                top: `${yOffset}px`,
+            };
+            return <Graph key={pair[0]} plots={pair[1].plots} width={width} height={height} margins={margins} style={divStyle}/>;
         });
 
         return (
             <div className="workspace">
                 <SearchBar onSearchSubmit={this.handleSearchSubmit} />
-                {graphs}
+                <div style={{position:'relative'}}>{this.graphs}</div>
             </div>
         );
     }
