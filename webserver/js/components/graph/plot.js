@@ -79,7 +79,8 @@ class Plot extends React.Component {
                 else if(pair[1].type === 'bar')
                     return <Bar xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={pair[1].data} key={pair[0]} colorid={pair[0]} />;
             }),
-            hoverLine:[]
+            hoverLines:[],
+            hoverValues:[]
         };
     }
 
@@ -98,19 +99,32 @@ class Plot extends React.Component {
             });
 
             yVal.forEach((val, index) => {
-                console.log('Building line with y = ' + val);
                 lines.push(<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: this.xscale.domain()[0], v: val}, {t: this.xscale.domain()[1], v: val}]} key={`hoverLiney${index}`} colorid={'0'} style={style} />);
             });
 
-            this.setState({hoverLine:lines});
-        } else if(this.state.hoverLine.length > 0) {
-            this.setState({hoverLine: []});
+            var values = [<text x={elX} y={this.yscale.range()[1]} fontFamily="sans-serif" fontSize="15px" fill="red" key={'hovervaluex'}>{xVal.toDateString()}</text>];
+            yVal.forEach((val, index) => {
+                values.push(<text x={this.xscale.range()[1]} y={this.yscale(val)} fontFamily="sans-serif" fontSize="15px" fill="red" key={`hovervaluey${index}`}>{val}</text>);
+            });
+
+            this.setState({
+                hoverLines: lines,
+                hoverValues: values
+            });
+        } else if(this.state.hoverLines.length > 0) {
+            this.setState({
+                hoverLines: [],
+                hoverValues: []
+            });
         }
-    }
+    }   
 
     onMouseLeave() {
-        if(this.state.hoverLine.length > 0) {
-            this.setState({hoverLine: []});
+        if(this.state.hoverLines.length > 0) {
+            this.setState({
+                hoverLines: [],
+                hoverValues: []
+            });
         }
     }
 
@@ -123,7 +137,8 @@ class Plot extends React.Component {
         return (
             <g className="plot" transform={getPlotTranslation(this.props.xOffset, this.props.yOffset)} ref="element" >
                 {this.state.items}
-                {this.state.hoverLine}
+                {this.state.hoverLines}
+                {this.state.hoverValues}                
                 <XAxis key="axis" scale={this.xscale} translate={getXScaleTranslation(this.props.height)} />
                 <YAxis key="yaxis" scale={this.yscale} translate={getYScaleTranslation(this.props.width * .95)} />
                 <Legend xpos={this.props.width * .95} ypos={0} colorscale={this.colorscale} items={this.props.dataSets} />
