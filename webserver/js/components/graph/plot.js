@@ -4,7 +4,7 @@ import Bar from './bar';
 import XAxis from './xaxis';
 import YAxis from './yaxis';
 import {scaleLinear, scaleTime, scaleOrdinal, schemeCategory10} from 'd3-scale';
-import {max, min} from 'd3-array';
+import {max, min, bisector} from 'd3-array';
 import Legend from '../legend/legend.js';
 import Entries from 'object.entries';
 
@@ -83,6 +83,15 @@ class Plot extends React.Component {
         var elX = event.pageX - this.refs.element.parentNode.getBoundingClientRect().left - this.props.xOffset - window.pageXOffset;
         var xVal = this.xscale.invert(elX);
         if(valueIsInDomain(xVal, this.xscale.domain())) {
+            var dateBisector = bisector(function(d) {
+                return new Date(d.t);
+            }).right;
+            var yVal = Entries(this.props.dataSets).map((pair) => {
+                var index = dateBisector(pair[1].data, xVal);
+                return pair[1].data[index];
+            });
+            console.log(xVal, yVal);
+
             this.setState({hoverLine:
                 [<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: xVal, v: 0}, {t: xVal, v: this.yscale.domain()[1]}]} key={'hoverLine'} colorid={'0'} />]
             });
