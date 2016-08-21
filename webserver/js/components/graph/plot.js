@@ -87,7 +87,8 @@ class Plot extends React.Component {
         var elX = event.pageX - this.refs.element.parentNode.getBoundingClientRect().left - this.props.xOffset - window.pageXOffset;
         var xVal = this.xscale.invert(elX);
         if(valueIsInDomain(xVal, this.xscale.domain())) {
-            var lines = [<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: xVal, v: 0}, {t: xVal, v: this.yscale.domain()[1]}]} key={'hoverLinex'} colorid={'0'} />];
+            var style = {strokeWidth: '1', strokeLinecap: 'round', strokeDasharray: '5,5'};
+            var lines = [<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: xVal, v: 0}, {t: xVal, v: this.yscale.domain()[1]}]} key={'hoverLinex'} colorid={'0'} style={style} />];
             var dateBisector = bisector(function(d) {
                 return new Date(d.t);
             }).right;
@@ -98,7 +99,7 @@ class Plot extends React.Component {
 
             yVal.forEach((val, index) => {
                 console.log('Building line with y = ' + val);
-                lines.push(<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: this.xscale.domain()[0], v: val}, {t: this.xscale.domain()[1], v: val}]} key={`hoverLiney${index}`} colorid={'0'} />);
+                lines.push(<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: this.xscale.domain()[0], v: val}, {t: this.xscale.domain()[1], v: val}]} key={`hoverLiney${index}`} colorid={'0'} style={style} />);
             });
 
             this.setState({hoverLine:lines});

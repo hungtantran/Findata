@@ -10,15 +10,25 @@ function Line(props) {
             return props.yscale(d.v);
         })(props.dataSet);
 
-    return <path className="line" d={scaledData} fill="none" strokeWidth="1.5" stroke={props.colorscale(props.colorid) } />;
+    props.style.className = 'line';
+    props.style.d = scaledData;
+    props.style.stroke = props.colorscale(props.colorid);
+    props.style.fill = 'none';
+
+    return <path {...props.style} />;
 }
+
+Line.defaultProps = {
+    style: {strokeWidth: '1.5'}
+};
 
 Line.propTypes = {
     xscale: React.PropTypes.func,
     yscale: React.PropTypes.func,
     colorscale: React.PropTypes.func,
     dataSet: React.PropTypes.array,
-    colorid: React.PropTypes.string
+    colorid: React.PropTypes.string,
+    style: React.PropTypes.object
 };
 
 export default Line;
