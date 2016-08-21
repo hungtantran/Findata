@@ -126,7 +126,7 @@ class Plot extends React.Component {
                 {this.state.hoverLine}
                 <XAxis key="axis" scale={this.xscale} translate={getXScaleTranslation(this.props.height)} />
                 <YAxis key="yaxis" scale={this.yscale} translate={getYScaleTranslation(this.props.width * .95)} />
-                <Legend xpos= {this.props.width * .95} ypos={0} colorscale={this.colorscale} items={this.props.dataSets} />
+                <Legend xpos={this.props.width * .95} ypos={0} colorscale={this.colorscale} items={this.props.dataSets} />
             </g>
         );
     }
