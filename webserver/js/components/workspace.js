@@ -15,8 +15,8 @@ class Workspace extends React.Component {
         this.width = window.innerWidth;
         this.cellSize = this.width / this.numColumns;
 
-        this.defaultGraphWidthInCell = 4;
-        this.defaultGraphHeightInCell = 2;
+        this.defaultGraphWidthInCell = 6;
+        this.defaultGraphHeightInCell = 6;
 
         this.graphs = {};
 

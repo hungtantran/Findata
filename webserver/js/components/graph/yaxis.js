@@ -1,6 +1,6 @@
 import React from 'react';
 import {select} from 'd3-selection';
-import {axisLeft} from 'd3-axis';
+import {axisRight} from 'd3-axis';
 
 class YAxis extends React.Component {
     constructor(props) {
@@ -18,19 +18,20 @@ class YAxis extends React.Component {
     }
 
     generateAxis() {
-        var axisGenerator = axisLeft(this.props.scale);
+        var axisGenerator = axisRight(this.props.scale);
         select(this.refs.axis).call(axisGenerator);
     }
 
     render() {
         return (
-            <g className="y axis" ref="axis" />
+            <g className="y axis" ref="axis" transform={this.props.translate} />
         );
     }
 }
 
 YAxis.propTypes = {
-    scale: React.PropTypes.func
+    scale: React.PropTypes.func,
+    translate: React.PropTypes.string
 };
 
 export default YAxis;

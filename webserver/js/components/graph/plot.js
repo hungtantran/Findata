@@ -44,6 +44,10 @@ function getXScaleTranslation(height) {
     return `translate(0, ${height})`;
 }
 
+function getYScaleTranslation(width) {
+    return `translate(${width}, 0)`;
+}
+
 class Plot extends React.Component {
     constructor(props) {
         super(props);
@@ -83,18 +87,23 @@ class Plot extends React.Component {
         var elX = event.pageX - this.refs.element.parentNode.getBoundingClientRect().left - this.props.xOffset - window.pageXOffset;
         var xVal = this.xscale.invert(elX);
         if(valueIsInDomain(xVal, this.xscale.domain())) {
+            var lines = [<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: xVal, v: 0}, {t: xVal, v: this.yscale.domain()[1]}]} key={'hoverLinex'} colorid={'0'} />];
             var dateBisector = bisector(function(d) {
                 return new Date(d.t);
             }).right;
             var yVal = Entries(this.props.dataSets).map((pair) => {
                 var index = dateBisector(pair[1].data, xVal);
-                return pair[1].data[index];
+                return pair[1].data[index].v;
             });
-            console.log(xVal, yVal);
 
-            this.setState({hoverLine:
-                [<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: xVal, v: 0}, {t: xVal, v: this.yscale.domain()[1]}]} key={'hoverLine'} colorid={'0'} />]
+            yVal.forEach((val, index) => {
+                console.log('Building line with y = ' + val);
+                lines.push(<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: this.xscale.domain()[0], v: val}, {t: this.xscale.domain()[1], v: val}]} key={`hoverLiney${index}`} colorid={'0'} />);
             });
+
+            this.setState({hoverLine:lines});
+        } else if(this.state.hoverLine.length > 0) {
+            this.setState({hoverLine: []});
         }
     }
 
@@ -115,7 +124,7 @@ class Plot extends React.Component {
                 {this.state.items}
                 {this.state.hoverLine}
                 <XAxis key="axis" scale={this.xscale} translate={getXScaleTranslation(this.props.height)} />
-                <YAxis key="yaxis" scale={this.yscale} />
+                <YAxis key="yaxis" scale={this.yscale} translate={getYScaleTranslation(this.props.width * .95)} />
                 <Legend xpos= {this.props.width * .95} ypos={0} colorscale={this.colorscale} items={this.props.dataSets} />
             </g>
         );
