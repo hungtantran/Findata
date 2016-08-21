@@ -102,7 +102,7 @@ class Plot extends React.Component {
                 lines.push(<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: this.xscale.domain()[0], v: val}, {t: this.xscale.domain()[1], v: val}]} key={`hoverLiney${index}`} colorid={'0'} style={style} />);
             });
 
-            var values = [<text x={elX} y={this.yscale.range()[1]} fontFamily="sans-serif" fontSize="15px" fill="red" key={'hovervaluex'}>{xVal.toDateString()}</text>];
+            var values = [<text x={elX} y={this.yscale.range()[0]} fontFamily="sans-serif" fontSize="15px" fill="red" key={'hovervaluex'}>{xVal.toDateString()}</text>];
             yVal.forEach((val, index) => {
                 values.push(<text x={this.xscale.range()[1]} y={this.yscale(val)} fontFamily="sans-serif" fontSize="15px" fill="red" key={`hovervaluey${index}`}>{val}</text>);
             });
