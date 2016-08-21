@@ -4,8 +4,8 @@
   "description": "webserver for FinModels project",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -c rollup-index.config.js && rollup -c rollup-about.config.js && rollup -c rollup-contact.config.js && rollup -c rollup-404.config.js",
-    "start": "rollup -c rollup-index.config.js && rollup -c rollup-about.config.js && rollup -c rollup-contact.config.js && rollup -c rollup-404.config.js",
+    "build": "rollup -c rollup-index.config.js -w && rollup -c rollup-about.config.js && rollup -c rollup-contact.config.js && rollup -c rollup-404.config.js",
+    "start": "rollup -c rollup-index.config.js -w && rollup -c rollup-about.config.js && rollup -c rollup-contact.config.js && rollup -c rollup-404.config.js",
     "prepublish": "npm run build"
   },
   "author": "nwickham",

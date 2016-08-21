@@ -21,6 +21,9 @@ class Model():
     def addGraph(self, key, graph):
         self.graphs[key] = graph
 
+    def clear(self):
+        self.graphs = {}
+
 class Graph():
     def __init__(self, title):
         self.plots = {}
@@ -90,7 +93,7 @@ def doSearch():
     title = request.args.get('search', 'default title')
     graphModel = Model()
     if title == "clear":
-        global_model = Model()
+        global_model.clear()
     else:
         graphModel = GetMetricsFromTicker(title);
 

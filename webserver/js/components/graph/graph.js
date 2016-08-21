@@ -6,7 +6,21 @@ function getPlotProps(dataSets, width, height, xOffset, yOffset, key, margins) {
     var innerWidth = width - margins.right - margins.left;
 
     return {
-        dataSets: dataSets, width: innerWidth, height: height, xOffset: xOffset, yOffset: yOffset, key: key};
+        dataSets: dataSets, width: innerWidth, height: height, xOffset: xOffset, yOffset: yOffset, key: key, mouseEventsRegister : addMouseListener};
+}
+
+var listeners = [];
+
+function addMouseListener(listener) {
+    console.log('Event listener added!');
+    listeners.push(listener);
+}
+
+function onMouseMove(event) {
+    listeners.forEach(function(listener) {
+        console.log('Noifying event listener!');
+        listener(event);
+    });
 }
 
 function Graph(props) {
@@ -19,7 +33,7 @@ function Graph(props) {
     });
 
     return ( 
-        <svg className="graph" width={props.width} height={props.height} style={props.style}> 
+        <svg className="graph" width={props.width} height={props.height} style={props.style} onMouseMove={onMouseMove} > 
             {plots}
         </svg>
     );

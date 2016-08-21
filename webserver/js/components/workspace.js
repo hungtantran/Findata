@@ -15,8 +15,8 @@ class Workspace extends React.Component {
         this.width = window.innerWidth;
         this.cellSize = this.width / this.numColumns;
 
-        this.defaultGraphWidthInCell = 6;
-        this.defaultGraphHeightInCell = 6;
+        this.defaultGraphWidthInCell = 4;
+        this.defaultGraphHeightInCell = 2;
 
         this.graphs = {};
 
@@ -34,8 +34,9 @@ class Workspace extends React.Component {
     render() {
         var margins = { top: 50, right: 50, bottom: 50, left: 50 };
         this.graphs = this.state.graphModel.graphs && Entries(this.state.graphModel.graphs).map((pair, index) => {
-            var xOffset = (index % 2) * this.defaultGraphWidthInCell * this.cellSize;
-            var yOffset = Math.floor(index / 2) * this.defaultGraphHeightInCell * this.cellSize;
+            var maxGraphPerRow = this.numColumns / this.defaultGraphWidthInCell;
+            var xOffset = (index % maxGraphPerRow) * this.defaultGraphWidthInCell * this.cellSize;
+            var yOffset = Math.floor(index / maxGraphPerRow) * this.defaultGraphHeightInCell * this.cellSize;
             var width = this.defaultGraphWidthInCell * this.cellSize;
             var height = this.defaultGraphHeightInCell * this.cellSize;
 
