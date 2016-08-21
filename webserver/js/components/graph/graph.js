@@ -6,37 +6,32 @@ function getPlotProps(dataSets, width, height, xOffset, yOffset, key, margins) {
     var innerWidth = width - margins.right - margins.left;
 
     return {
-        dataSets: dataSets, width: innerWidth, height: height, xOffset: xOffset, yOffset: yOffset, key: key, mouseEventsRegister : addMouseListener};
+        dataSets: dataSets, width: innerWidth, height: height, xOffset: xOffset, yOffset: yOffset, key: key};
 }
 
-var listeners = [];
+class Graph extends React.Component {
+    constructor(props) {
+        super(props);
+        this.buildPlots = this.buildPlots.bind(this);
 
-function addMouseListener(listener) {
-    console.log('Event listener added!');
-    listeners.push(listener);
-}
+        this.buildPlots();
+    }
 
-function onMouseMove(event) {
-    listeners.forEach(function(listener) {
-        console.log('Noifying event listener!');
-        listener(event);
-    });
-}
+    buildPlots() {
+        var innerHeight = this.props.height - this.props.margins.top - this.props.margins.bottom;
+        var plotCount = Object.keys(this.props.plots).length;
+        var plotHeight = innerHeight / plotCount;
+        this.state = {plots: Entries(this.props.plots).map((pair, index) => {
+            var yOffset = this.props.margins.top + plotHeight * index;
+            return <Plot {...getPlotProps(pair[1].dataSets, this.props.width, plotHeight, this.props.margins.left, yOffset, pair[0], this.props.margins) } />;
+        })};
+    }
 
-function Graph(props) {
-    var innerHeight = props.height - props.margins.top - props.margins.bottom;
-    var plotCount = Object.keys(props.plots).length;
-    var plotHeight = innerHeight / plotCount;
-    var plots = Entries(props.plots).map(function(pair, index) {
-        var yOffset = props.margins.top + plotHeight*index;
-        return <Plot {...getPlotProps(pair[1].dataSets, props.width, plotHeight, props.margins.left, yOffset, pair[0], props.margins) } />;
-    });
-
-    return ( 
-        <svg className="graph" width={props.width} height={props.height} style={props.style} onMouseMove={onMouseMove} > 
-            {plots}
-        </svg>
-    );
+    render() {
+        return <svg className="graph" width={this.props.width} height={this.props.height} style={this.props.style} > 
+            {this.state.plots}
+        </svg>;
+    }
 }
 
 Graph.propTypes = { 

@@ -49,11 +49,11 @@ class Plot extends React.Component {
         super(props);
         this.buildScale = this.buildScales.bind(this);
         this.buildItems = this.buildItems.bind(this);
-        this.onMouseMoveEvent = this.onMouseMoveEvent.bind(this);
+        this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseLeave = this.onMouseLeave.bind(this);
 
         this.buildScales();
         this.buildItems();
-        this.props.mouseEventsRegister(this.onMouseMoveEvent);
     }
 
     buildScales() {
@@ -79,15 +79,25 @@ class Plot extends React.Component {
         };
     }
 
-    onMouseMoveEvent(event) {
-        console.log(this.refs.element.parentNode.getBoundingClientRect().left);
-        var elX = event.pageX - this.refs.element.parentNode.getBoundingClientRect().left - this.props.xOffset;
+    onMouseMove(event) {
+        var elX = event.pageX - this.refs.element.parentNode.getBoundingClientRect().left - this.props.xOffset - window.pageXOffset;
         var xVal = this.xscale.invert(elX);
         if(valueIsInDomain(xVal, this.xscale.domain())) {
             this.setState({hoverLine:
-                [<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: xVal, v: 0}, {t: xVal, v: this.yscale.domain()[1]}]} key={'hoverLine'} colorid={0} />]
+                [<Line xscale={this.xscale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: xVal, v: 0}, {t: xVal, v: this.yscale.domain()[1]}]} key={'hoverLine'} colorid={'0'} />]
             });
         }
+    }
+
+    onMouseLeave() {
+        if(this.state.hoverLine.length > 0) {
+            this.setState({hoverLine: []});
+        }
+    }
+
+    componentDidMount() {
+        this.refs.element.parentNode.addEventListener('mousemove', this.onMouseMove);
+        this.refs.element.parentNode.addEventListener('mouseleave', this.onMouseLeave);
     }
 
     render() {
@@ -108,8 +118,7 @@ Plot.propTypes = {
     height: React.PropTypes.number,
     xOffset: React.PropTypes.number,
     dataSets: React.PropTypes.object,
-    yOffset: React.PropTypes.number,
-    mouseEventsRegister: React.PropTypes.func
+    yOffset: React.PropTypes.number
 };
 
 export default Plot;
