@@ -100,9 +100,37 @@ def doSearch():
     print "Finishing search..."
     return '{"graphModel": %s}' % (json.dumps(graphModel, default=lambda o: o.__dict__))
 
+# TODO FIX THIS UGLY GLOBAL
+metrics_list = []
+
+@app.route('/match')
+def doMatch():
+    print "Matching..."
+    match = request.args.get('match', '')
+
+    matching_results = []
+    for metric in metrics_list:
+        if metric.startswith(match):
+            matching_results.append(metric)
+            if len(matching_results) >= 10:
+                break
+
+    print "Finish matching... %s" % matching_results
+    return json.dumps(matching_results)
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
 if __name__ == "__main__":
+    # TODO FIX THIS UGLY
+    metrics_db = MetricsDatabase(
+        'mysql',
+        Config.mysql_username,
+        Config.mysql_password,
+        Config.mysql_server,
+        Config.mysql_database,
+        None)
+    metrics_list = metrics_db.get_all_metrics_tables()
+
     app.run(debug=True);
