@@ -132,5 +132,6 @@ if __name__ == "__main__":
         Config.mysql_database,
         None)
     metrics_list = metrics_db.get_all_metrics_tables()
+    metrics_list = [metric[:-8] for metric in metrics_list]
 
     app.run(debug=True);
