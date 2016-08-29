@@ -11,12 +11,14 @@ class Workspace extends React.Component {
         this.loadModelsFromJSON = this.loadModelsFromJSON.bind(this);
         this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
 
-        this.numColumns = 12;
-        this.width = window.innerWidth;
+        this.numColumns = 48;
+        this.width = screen.width * 0.90;
         this.cellSize = this.width / this.numColumns;
 
-        this.defaultGraphWidthInCell = 6;
-        this.defaultGraphHeightInCell = 6;
+        this.defaultGraphWidthInCell = 15;
+        this.defaultGraphHeightInCell = 10;
+        this.defaultGraphContainerWidthInCell = 16;
+        this.defaultGraphContainerHeightInCell = 11;
 
         this.graphs = {};
 
@@ -34,9 +36,9 @@ class Workspace extends React.Component {
     render() {
         var margins = { top: 50, right: 50, bottom: 50, left: 50 };
         this.graphs = this.state.graphModel.graphs && Entries(this.state.graphModel.graphs).map((pair, index) => {
-            var maxGraphPerRow = this.numColumns / this.defaultGraphWidthInCell;
-            var xOffset = (index % maxGraphPerRow) * this.defaultGraphWidthInCell * this.cellSize;
-            var yOffset = Math.floor(index / maxGraphPerRow) * this.defaultGraphHeightInCell * this.cellSize;
+            var maxGraphPerRow = Math.floor(this.numColumns / this.defaultGraphContainerWidthInCell);
+            var xOffset = (index % maxGraphPerRow) * this.defaultGraphContainerWidthInCell * this.cellSize;
+            var yOffset = Math.floor(index / maxGraphPerRow) * this.defaultGraphContainerHeightInCell * this.cellSize;
             var width = this.defaultGraphWidthInCell * this.cellSize;
             var height = this.defaultGraphHeightInCell * this.cellSize;
 

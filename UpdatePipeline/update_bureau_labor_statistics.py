@@ -221,16 +221,29 @@ class UpdateBureauLaborStatistics(threading.Thread):
                 self.database,
                 tablename)
         metrics_db.create_metric()
-        latest_time, earliest_time = metrics_db.get_earliest_and_latest_time()
 
+        latest_time, earliest_time = metrics_db.get_earliest_and_latest_time()
+        # If the table is empty, default to use update history option
+        if latest_time is None:
+            update_history = True 
         today = datetime.datetime.today()
+
+        # The bureau release monthly data one month late
+        latest_available_data = today - datetime.timedelta(days=30)
+        if ((not update_history) and (latest_time is not None) and
+            (latest_available_data.year == latest_time.year) and
+            (latest_available_data.month == latest_time.month)):
+            logger.Logger.info("The latest info is at %s, update to date, so skip updating" % latest_time)
+            return
+
         current_year = (today.year - 1) if not update_history else 1940
-        logger.Logger.info("Get time series info for %s from year %d to year %d. Earliest year %d, latest year %d" % (
+        logger.Logger.info("Get time series info for %s from year %d to year %d. Earliest time %s, latest time %s" % (
                 economics_info.name,
                 current_year,
                 today.year,
-                earliest_time.year,
-                latest_time.year))
+                earliest_time,
+                latest_time))
+        
         while current_year <= today.year:
             end_year = min(current_year + 20, today.year)
             # Skip year in the middle of earliest and latest time
@@ -295,9 +308,11 @@ class UpdateBureauLaborStatistics(threading.Thread):
         start_date = None
         end_date = None
 
+        # Annual System
         if periodName == 'Annual':
             start_date = datetime.datetime(year, 1, 1)
             end_date = datetime.datetime(year + 1, 1, 1)
+        # Month System
         elif periodName == 'January':
             start_date = datetime.datetime(year, 1, 1)
             end_date = datetime.datetime(year, 2, 1)
@@ -333,6 +348,19 @@ class UpdateBureauLaborStatistics(threading.Thread):
             end_date = datetime.datetime(year, 12, 1)
         elif periodName == 'December':
             start_date = datetime.datetime(year, 12, 1)
+            end_date = datetime.datetime(year + 1, 1, 1)
+        # Quarter system
+        elif periodName == '1st Quarter':
+            start_date = datetime.datetime(year, 1, 1)
+            end_date = datetime.datetime(year, 4, 1)
+        elif periodName == '2nd Quarter':
+            start_date = datetime.datetime(year, 4, 1)
+            end_date = datetime.datetime(year, 7, 1)
+        elif periodName == '3rd Quarter':
+            start_date = datetime.datetime(year, 7, 1)
+            end_date = datetime.datetime(year, 10, 1)
+        elif periodName == '4th Quarter':
+            start_date = datetime.datetime(year, 10, 1)
             end_date = datetime.datetime(year + 1, 1, 1)
 
         return start_date, end_date
@@ -388,8 +416,12 @@ class UpdateBureauLaborStatistics(threading.Thread):
 
     def update_measures(self):
         try:
+            count = 0
             while not self.q.empty():
                 economics_info = self.q.get()
+                count += 1
+                if (count < 200):
+                    continue
 
                 if self.daily_api_call > UpdateBureauLaborStatistics.QUOTA:
                     logger.Logger.info('Exceed daily quota of %d' % (
@@ -402,10 +434,6 @@ class UpdateBureauLaborStatistics(threading.Thread):
                         economics_info.category, economics_info.type))
 
                 self.get_time_series_data_and_update(economics_info, self.update_history)
-
-                logger.Logger.info('Sleep for %d secs before updating again' %
-                        UpdateBureauLaborStatistics.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
-                time.sleep(UpdateBureauLaborStatistics.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
         finally:
             self.q.task_done()
 

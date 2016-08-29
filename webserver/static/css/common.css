@@ -5,7 +5,8 @@
 #header {
     width: 100%;
     margin: 0;
-    padding: 20px;
+    padding: 5px 50px;
+    background-color: black;
 }
 
 #header .row {
@@ -28,17 +29,28 @@
   margin: 0;
 }
 
+#header a {
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
 /*
  * Footer 
  */
 #footer {
     width: 100%;
     margin: 0;
-    padding: 0px 10px;
+    padding: 5px 20px;
     font-size: 12px;
+    background-color: black;
+
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
 
     /* Put footer at the bottom */
-    position: absolute;
+    position: fixed;
     bottom: 0;
 }
 
@@ -57,8 +69,8 @@
 }
 
 #footer li img {
-  width: 32px;
-  height: 32px;
+  width: 15px;
+  height: 15px;
 }
 
 /*
@@ -70,7 +82,7 @@
     margin: 0;
     padding: 10px 20px;
     min-height: 800px;
-    background-color: #e9eaea;
+    background-color: white;
 }
 
 /*

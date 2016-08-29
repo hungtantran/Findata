@@ -48,3 +48,10 @@
 .selected {
   background-color: darkgray;
 }
+
+/*
+ * Graph
+ */
+.graph {
+  border: 2px solid black;
+}

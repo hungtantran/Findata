@@ -38,7 +38,7 @@ class Logger(object):
             print_msg = msg
 
         traces = traceback.extract_stack()
-        log_msg = "%s, %s, %s, '%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), print_msg, traces[-wrapper_layer])
+        log_msg = "%s, %s, %s, *********** '%s'\n" % (datetime.datetime.now(), LogLevel.to_string(level), print_msg, traces[-wrapper_layer])
 
         if level == LogLevel.ERROR:
             Logger.ERROR_FILE.write(log_msg)

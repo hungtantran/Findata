@@ -53,6 +53,7 @@ class MetricsDatabase(object):
     	return self.insert_metrics([new_metric])
 
     def insert_metrics(self, new_metrics, ignore_duplicate=True):
+        query_string = None
         try:
             with self.dao_factory.create(self.username,
                                          self.password,
@@ -65,7 +66,7 @@ class MetricsDatabase(object):
 
                 for metric in new_metrics:
                     value_string = '('
-                    value_string += "'%s'," % metric.metric_name
+                    value_string += "'%s'," % metric.metric_name.replace("'", "''")
                     value_string += "%s," % metric.value
                     value_string += "'%s'," % metric.unit
                     value_string += "'%s'," % StringHelper.convert_datetime_to_string(metric.start_date)
@@ -87,7 +88,7 @@ class MetricsDatabase(object):
                     cursor.execute(query_string)
                     connection.commit()
         except Exception as e:
-            logger.Logger.error('Exception = %s' % e)
+            logger.Logger.error('Exception = %s. Query = %s' % (e, query_string))
 
     def remove_metric(self):
         logger.Logger.log(logger.LogLevel.INFO, 'Drop metric %s' % self.metric)
@@ -152,8 +153,11 @@ class MetricsDatabase(object):
             logger.Logger.error('Exception = %s' % e)
 
     def get_earliest_time(self, metric_name=None):
-        earliest_rows = self.get_metrics(metric_name=metric_name, max_num_results=1, reverse_order=True)
         earliest_time = None
+        earliest_rows = self.get_metrics(metric_name=metric_name, max_num_results=1, reverse_order=True)
+        if len(earliest_rows) == 0:
+            return earliest_time
+
         try:
             earliest_time = earliest_rows[0].start_date
         except Exception as e:
@@ -162,8 +166,11 @@ class MetricsDatabase(object):
         return earliest_time
 
     def get_latest_time(self, metric_name=None):
-        latest_rows = self.get_metrics(metric_name=metric_name, max_num_results=1)
         latest_time = None
+        latest_rows = self.get_metrics(metric_name=metric_name, max_num_results=1)
+        if len(latest_rows) == 0:
+            return latest_time
+
         try:
             latest_time = latest_rows[0].start_date
         except Exception as e:

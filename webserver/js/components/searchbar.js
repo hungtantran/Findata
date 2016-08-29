@@ -118,7 +118,7 @@ SearchBar.propTypes = {
 };
 SearchBar.defaultProps = {
     initialSearch: '',
-    placeholderText: 'Whatchu wanna know...',
+    placeholderText: "Search",
     onSearchSubmit: function (/*submission*/) { }
 };
 
