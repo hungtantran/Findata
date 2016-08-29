@@ -34,7 +34,7 @@ class Workspace extends React.Component {
     }
 
     render() {
-        var margins = { top: 50, right: 50, bottom: 50, left: 50 };
+        var margins = { top: 20, right: 40, bottom: 30, left: 10 };
         this.graphs = this.state.graphModel.graphs && Entries(this.state.graphModel.graphs).map((pair, index) => {
             var maxGraphPerRow = Math.floor(this.numColumns / this.defaultGraphContainerWidthInCell);
             var xOffset = (index % maxGraphPerRow) * this.defaultGraphContainerWidthInCell * this.cellSize;
