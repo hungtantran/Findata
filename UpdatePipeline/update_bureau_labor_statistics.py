@@ -73,7 +73,8 @@ class UpdateBureauLaborStatistics(threading.Thread):
         if self.update_list:
             self.get_latest_measure_list()
 
-        measure_list = self.economics_info_db.get_economics_info_data()
+        measure_list = self.economics_info_db.get_economics_info_data(
+                source='bureau_of_labor_statistics')
 
         for measure in measure_list:
             self.q.put(measure)
@@ -420,7 +421,7 @@ class UpdateBureauLaborStatistics(threading.Thread):
             while not self.q.empty():
                 economics_info = self.q.get()
                 count += 1
-                if (count < 200):
+                if (count < 640):
                     continue
 
                 if self.daily_api_call > UpdateBureauLaborStatistics.QUOTA:

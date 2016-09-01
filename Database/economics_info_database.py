@@ -83,7 +83,7 @@ class EconomicsInfoDatabase(object):
         except Exception as e:
             logger.Logger.log(logger.LogLevel.ERROR, e)
 
-    def get_economics_info_data(self):
+    def get_economics_info_data(self, source=None):
         try:
             with self.dao_factory.create(
                     self.username,
@@ -91,6 +91,8 @@ class EconomicsInfoDatabase(object):
                     self.server,
                     self.database) as connection:
                 query_string = 'SELECT * FROM %s' % self.economics_info_table_name
+                if source is not None:
+                    query_string += " WHERE source = '%s'" % source
 
                 cursor = connection.cursor()
                 cursor.execute(query_string)

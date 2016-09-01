@@ -37,7 +37,7 @@ class MetricsDatabase(object):
                     `id` int(11) NOT NULL AUTO_INCREMENT,
                     `metric_name` varchar(255) NOT NULL,
                     `value` float DEFAULT NULL,
-                    `unit` varchar(32) DEFAULT NULL,
+                    `unit` varchar(255) DEFAULT NULL,
                     `start_date` datetime DEFAULT NULL,
                     `end_date` datetime DEFAULT NULL,
                     `metadata` text,
