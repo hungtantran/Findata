@@ -93,6 +93,7 @@ class EconomicsInfoDatabase(object):
                 query_string = 'SELECT * FROM %s' % self.economics_info_table_name
                 if source is not None:
                     query_string += " WHERE source = '%s'" % source
+                query_string += " order by id"
 
                 cursor = connection.cursor()
                 cursor.execute(query_string)

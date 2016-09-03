@@ -35,7 +35,7 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
     }
     NUM_RETRIES_DOWNLOAD = 2
     WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 20
-    MAX_PROCESSING_THREADS = 1
+    MAX_PROCESSING_THREADS = 5
     UPDATE_FREQUENCY_SECONDS = 86400
 
     def __init__(
@@ -49,6 +49,8 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
         self.password = password
         self.server = server
         self.database = database
+        self.update_history = update_history
+        self.q = Queue.Queue()
 
         self.update_frequency_seconds = (
                 update_frequency_seconds or
@@ -67,10 +69,10 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
 
     def run(self):
         while True:
-            logger.Logger.info('Sleep for %d secs before updating again' % (
-                    self.update_frequency_seconds))
             self.update_measures()
             # TODO make it sleep through weekend
+            logger.Logger.info('Sleep for %d secs before updating again' % (
+                    self.update_frequency_seconds))
             time.sleep(self.update_frequency_seconds)
     
     # TODO move this function to general utilities
@@ -134,10 +136,10 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
         quarters = None
         category_stack = []
 
-        # Data is a map:
-        #   key: (type, full_name, name_code, unit) like (' Current-Cost Net.....', 'Fixed assets - Private', 'k1ttotl1es000', 'Billions of dollars')
-        #   value: [(start_date_1, end_date_1, 1), (start_date_2, end_date_2, 2), .....]
-        data = {}
+        # Data is a array. Each element is an array itself [type, full_name, name_code, unit, data_values]
+        #   [type, full_name, name_code, unit] like [' Current-Cost Net.....', 'Fixed assets - Private', 'k1ttotl1es000', 'Billions of dollars']
+        #   data_values: [(start_date_1, end_date_1, 1), (start_date_2, end_date_2, 2), .....]
+        data = []
         for index, line in enumerate(lines):
             line = self.trim_ending_comma(line)
             parts = self.split_line_into_values(line)
@@ -155,6 +157,7 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
                         last_alpha = i
                         if first_alpha == -1:
                             first_alpha = i
+                # WRONG WRONG WRONG, it may be C. 
                 type = self.trim_ending_comma(first_part[first_alpha:last_alpha+1].strip())
                 unit = None
                 headers = None
@@ -172,6 +175,7 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
                 else:
                     unit = unit[:-1]
                 unit = unit.replace('()', '').strip()
+                type = '%s (%s)' % (type, unit)
             # Line like: Line,,,1925,1926,1927,1928,1929,1930,.....
             elif parts[0].startswith('Line'):
                 headers = parts
@@ -213,14 +217,14 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
                 # Data line has to have id, name and name_code
                 if (not values[0] or not values[1] or not values[2]):
                     continue
-                line_data = []
 
+                data_values = []
                 # WRONG WRONG WRONG quarter too, may be month too 
                 for i in range(3, len(headers)):
                     try:
                         val = StringHelper.parse_value_string(values[i])
                         year = int(headers[i])
-                        if year > 1800 and year < 3000:
+                        if year > 1800 and year < 3000 and val is not None:
                             start_date = None
                             end_date = None
                             if quarters is None:
@@ -238,7 +242,7 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
                             elif quarters[i] == 4:
                                 start_date = datetime.datetime(year, 10, 1)
                                 end_date = datetime.datetime(year+1, 1, 1)
-                            line_data.append((start_date, end_date, val))
+                            data_values.append((start_date, end_date, val))
                     except:
                         pass
                 
@@ -254,18 +258,22 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
                 while len(category_stack) > 0 and category_stack[-1][1] >= num_starting_whitespace:
                     category_stack.pop()
                 full_name = category_stack[-1][0] + ' - ' + name if len(category_stack) > 0 else name
+                full_name = full_name.strip()
                 category_stack.append([full_name, num_starting_whitespace])
-                data[(type, full_name, name_code, unit)] = line_data
-                #logger.Logger.info('Add data (%d %d) with type `%s`, full_name `%s`, name_code `%s`, unit `%s`' % (
-                #        index, len(lines), type, full_name, name_code, unit))
+                data.append([type, full_name, name_code, unit, data_values])
+                logger.Logger.info('Add data (%d %d) with type `%s`, full_name `%s`, name_code `%s`, unit `%s`' % (
+                        index, len(lines), type, full_name, name_code, unit))
         return data
 
     def get_economics_info_table_name(self, economics_info):
         return 'economics_info_%d_metrics' % economics_info.id
 
     def insert_new_economic_info(self, data, csv_link, category):
-        for key in data:
-            type, full_name, name_code, unit = key
+        for line_data in data:
+            type = line_data[0]
+            full_name = line_data[1]
+            name_code = line_data[2]
+            unit = line_data[3] 
             metadata = {}
             metadata['link'] = csv_link
             metadata['name_code'] = name_code
@@ -278,63 +286,94 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
                 source='bureau_of_economic_analysis',
                 metadata=json.dumps(metadata)
             )
-            logger.Logger.info('Insert economic info %s (%s) with metadata %s' % (key, category, metadata))
+            logger.Logger.info('Insert economic info %s %s %s %s (%s) with metadata %s' % (
+                    type, full_name, name_code, unit, category, metadata))
             self.economics_info_db.insert_row(economics_info)
 
-    def update_economic_info_data(self, measure_list, csv_link, category, type, full_name, name_code, unit, values):
-        logger.Logger.info('Update economic info data for %s %s %s %s' % (type, full_name, name_code, unit))
+    def update_measures(self):
+            count = 0
+            while not self.q.empty():
+                economics_info = self.q.get()
+                count += 1
+                if (count < 1000):
+                    continue
 
-        found_matching_info = False
-        for economics_info in measure_list:
-            metadata = json.loads(economics_info.metadata)
-            # Found the right metrics
-            if (economics_info.name == full_name and
-                economics_info.location == 'us' and
-                economics_info.category == category and
-                economics_info.type == type and
-                metadata['link'] == csv_link and
-                metadata['name_code'] == name_code):
-                found_matching_info = True
-                tablename = self.get_economics_info_table_name(economics_info)
-                metrics_db = metrics_database.MetricsDatabase(
-                        self.db_type,
-                        self.username,
-                        self.password,
-                        self.server,
-                        self.database,
-                        tablename)
-                logger.Logger.info('Create metric table %s' % tablename)
-                metrics_db.create_metric()
+                if self.daily_api_call > UpdateBureauLaborStatistics.QUOTA:
+                    logger.Logger.info('Exceed daily quota of %d' % (
+                            UpdateBureauLaborStatistics.QUOTA))
+                    return
 
-                # measures hold the newly-parsed data
-                metric_name = '%s (%s) (%s)' % (economics_info.name,
-                                                economics_info.category,
-                                                economics_info.type)
-                measures = []
-                for val in values:
-                    try:
-                        start_date = val[0]
-                        end_date = val[1]
-                        measure_val = val[2]
-                        new_measure = metrics.Metrics(
-                                metric_name=metric_name,
-                                start_date=start_date,
-                                end_date=end_date,
-                                unit=unit,
-                                value=measure_val)
-                        print '%s %s %s %s %s' % (metric_name, start_date, end_date, unit, measure_val)
-                        measures.append(new_measure)
-                    except Exception as e:
-                        logger.Logger.error(e)
-                
-                logger.Logger.info('Insert into metric %s %d new values' % (tablename, len(measures)))   
-                #metrics_db.update_database_with_given_data(
-                #        data=new_measures,
-                #        latest_time=None,
-                #        earliest_time=None)
-                break
-        if not found_matching_info:
-            logger.Logger.error('Cannot find matching info for %s %s %s %s' % (type, full_name, name_code, unit))
+                logger.Logger.info(
+                        '(%s) Processing economic measure %s (%s) (%s) and push to database' % (
+                        threading.current_thread().name, economics_info.name,
+                        economics_info.category, economics_info.type))
+
+                self.get_time_series_data_and_update(economics_info, self.update_history)
+
+    def update_economic_info_data(self, measure_list, csv_link, category):
+        try:
+            while not self.q.empty():
+                line_data = self.q.get()
+                type = line_data[0]
+                full_name = line_data[1]
+                name_code = line_data[2]
+                unit = line_data[3]
+                values = line_data[4]
+
+                logger.Logger.info('Update economic info data for %s %s %s %s' % (type, full_name, name_code, unit))
+                found_matching_info = False
+                for economics_info in measure_list:
+                    metadata = json.loads(economics_info.metadata)
+                    # Found the right metrics
+                    if (economics_info.name == full_name and
+                        economics_info.location == 'us' and
+                        economics_info.category == category and
+                        economics_info.type == type and
+                        metadata['link'] == csv_link and
+                        metadata['name_code'] == name_code):
+                        found_matching_info = True
+                        tablename = self.get_economics_info_table_name(economics_info)
+
+                        metrics_db = metrics_database.MetricsDatabase(
+                                self.db_type,
+                                self.username,
+                                self.password,
+                                self.server,
+                                self.database,
+                                tablename)
+                        logger.Logger.info('Create metric table %s' % tablename)
+                        metrics_db.create_metric()
+
+                        # measures hold the newly-parsed data
+                        metric_name = '%s (%s) (%s)' % (economics_info.name,
+                                                        economics_info.category,
+                                                        economics_info.type)
+                        measures = []
+                        for val in values:
+                            try:
+                                start_date = val[0]
+                                end_date = val[1]
+                                measure_val = val[2]
+                                new_measure = metrics.Metrics(
+                                        metric_name=metric_name,
+                                        start_date=start_date,
+                                        end_date=end_date,
+                                        unit=unit,
+                                        value=measure_val)
+                                measures.append(new_measure)
+                            except Exception as e:
+                                logger.Logger.error(e)
+
+                        logger.Logger.info('Start inserting %d values' % len(measures))
+                        metrics_db.update_database_with_given_data(
+                                data=measures,
+                                latest_time=None,
+                                earliest_time=None)
+                        break
+                if not found_matching_info:
+                    logger.Logger.error('Cannot find matching info for %s %s %s %s' % (type, full_name, name_code, unit))
+        finally:
+            self.q.task_done()
 
     def update_measures(self):
         for category in UpdateBureauEconomicAnalysis.DATA_PAGE:
@@ -346,27 +385,38 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
             logger.Logger.info('Found %d csv_links' % len(csv_links))
             for csv_link in csv_links:
                 csv_content = self.get_csv_content(csv_link)
-                # Data is a map:
-                #   key: (type, full_name, name_code, unit) like (' Current-Cost Net.....', 'Fixed assets - Private', 'k1ttotl1es000', 'Billions of dollars')
-                #   value: [(1960, 1), (1961, 2), .....]
+                # Data is a array. Each element is an array itself [type, full_name, name_code, unit, values]
+                #   [type, full_name, name_code, unit] like [' Current-Cost Net.....', 'Fixed assets - Private', 'k1ttotl1es000', 'Billions of dollars']
+                #   values: [(start_date_1, end_date_1, 1), (start_date_2, end_date_2, 2), .....]
                 data = self.update_data_from_csv_content(csv_content)
                 logger.Logger.info('Found %d data line' % len(data))
+                for line_data in data:
+                    self.q.put(line_data)
                 
-                # Insert entries into economics_info table first
-                self.insert_new_economic_info(data, csv_link, category)
+                # Insert entries into economics_info table first only if update_history = True
+                if self.update_history:
+                    self.insert_new_economic_info(data, csv_link, category)
 
                 # Then insert data into each economics_info_#_metrics later
                 measure_list = self.economics_info_db.get_economics_info_data(
                         source='bureau_of_economic_analysis')
-                for key in data:
-                    type, full_name, name_code, unit = key
-                    self.update_economic_info_data(measure_list, csv_link, category, type, full_name, name_code, unit, data[key])
-                    break
+
+                # Start threads to update
+                threads = []
+                for i in range(self.max_num_threads):
+                    t = threading.Thread(target=self.update_economic_info_data, args=(measure_list, csv_link, category,))
+                    threads.append(t)
+                    t.start()
+
+                for i in range(len(threads)):
+                    wait_thread = threads[i]
+                    logger.Logger.info('Wait for thread %s' % wait_thread.name)
+                    wait_thread.join()
+                    logger.Logger.info('Thread %s done' % wait_thread.name)
                 
+                # Sleep before download the next json
                 logger.Logger.info('Sleep for %d before downloading json again' % UpdateBureauEconomicAnalysis.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
                 time.sleep(UpdateBureauEconomicAnalysis.WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC)
-                break
-            break
 
 
 def main():
@@ -378,16 +428,16 @@ def main():
                 Config.mysql_server,
                 Config.mysql_database,
                 update_history=False)
-        #update_obj.daemon = True
-        #update_obj.start()
-        #while True:
-        #    time.sleep(10)        
-        with open('C:\Users\hungt\Downloads\Section1All_csv.csv', 'r') as f:
+        update_obj.daemon = True
+        update_obj.start()
+        while True:
+            time.sleep(10)        
+        """with open('C:\Users\hungt\Downloads\Section1All_csv.csv', 'r') as f:
             content = f.read()
             update_obj.update_data_from_csv_content(content)
         with open('C:\Users\hungt\Downloads\Section3All_csv.csv', 'r') as f:
             content = f.read()
-            update_obj.update_data_from_csv_content(content)
+            update_obj.update_data_from_csv_content(content)"""
     except Exception as e:
         logger.Logger.log(logger.LogLevel.ERROR, e)
 

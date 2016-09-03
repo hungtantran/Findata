@@ -363,6 +363,13 @@ class UpdateBureauLaborStatistics(threading.Thread):
         elif periodName == '4th Quarter':
             start_date = datetime.datetime(year, 10, 1)
             end_date = datetime.datetime(year + 1, 1, 1)
+        # Half system
+        elif periodName == '1st Half':
+            start_date = datetime.datetime(year, 1, 1)
+            end_date = datetime.datetime(year, 7, 1)
+        elif periodName == '2nd Half':
+            start_date = datetime.datetime(year, 7, 1)
+            end_date = datetime.datetime(year + 1, 1, 1)
 
         return start_date, end_date
 
@@ -421,7 +428,7 @@ class UpdateBureauLaborStatistics(threading.Thread):
             while not self.q.empty():
                 economics_info = self.q.get()
                 count += 1
-                if (count < 640):
+                if (count < 1000):
                     continue
 
                 if self.daily_api_call > UpdateBureauLaborStatistics.QUOTA:
