@@ -15,6 +15,7 @@
     "d3-scale": "^1.0.1",
     "d3-selection": "^1.0.0",
     "d3-shape": "^1.0.0",
+    "d3-zoom": "^1.0.3",
     "object.entries": "^1.0.3",
     "react": "^15.3.0",
     "react-dom": "^15.3.0"
