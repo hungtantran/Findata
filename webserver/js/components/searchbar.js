@@ -7,7 +7,7 @@ class SearchBar extends React.Component {
         this.state = {
             search: this.props.initialSearch,
             highlightIndex: 0,
-            suggestions: []
+            suggestions: {}
         };
 
         this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -44,47 +44,78 @@ class SearchBar extends React.Component {
                 this.setState({ suggestions: json });
             });
         } else {
-            this.setState({ suggestions: [] });
+            this.setState({ suggestions: {} });
         }
     }
 
     handleSubmit() {
         // If there is selected item, search that, otherwise, use the user's search term
         var searchTerm = this.state.search;
-        var selectedIndex = this.getSelectedIndex(); 
-        if (selectedIndex > 0) {
-            searchTerm = this.state.suggestions[selectedIndex - 1];
+        var searchType = "";
+        var searchId = 0;
+        var result = this.getSelectedKeyIndex();
+        var key = result[0]
+        var index = result[1] 
+        if (index > 0) {
+            searchType = key;
+            console.log(this.state.suggestions);
+            searchId = this.state.suggestions[key][index - 1].Metadata.Id;
         }
 
-        if (searchTerm.length > 0) {
-            this.props.onSearchSubmit({ search: searchTerm });
+        if (searchTerm.length > 0 || (!searchType && !searchId)) {
+            console.log(searchTerm, searchType, searchId);
+            this.props.onSearchSubmit({ term: searchTerm, type: searchType, id: searchId});
             this.setState({
                 search: this.props.initialSearch,
-                suggestions: []
+                suggestions: {}
             });
         }
     }
 
-    getSelectedIndex() {
-        var suggestionsLength = this.state.suggestions.length;
-        // Mod by suggestionsLength + 1 because there is an extra state of non-selected
-        var index = this.state.highlightIndex % (suggestionsLength + 1);
-        if (index < 0) {
-            index += suggestionsLength + 1;
+    getSelectedKeyIndex() {
+        var suggestionsLength = 0;
+        for (var type in this.state.suggestions) {
+            suggestionsLength += this.state.suggestions[type].length;
         }
-        return index;
+        // Mod by suggestionsLength + 1 because there is an extra state of non-selected
+        var overallIndex = this.state.highlightIndex % (suggestionsLength + 1);
+        if (overallIndex < 0) {
+            overallIndex += suggestionsLength + 1;
+        }
+
+        var key;
+        var index;
+        for (var type in this.state.suggestions) {
+            if (overallIndex > this.state.suggestions[type].length) {
+                overallIndex -= this.state.suggestions[type].length;
+            } else {
+                key = type;
+                index = overallIndex;
+                break;
+            }
+        }
+        return [key, index];
     }
 
     render() {
-        var index = this.getSelectedIndex();
-        var autoSuggestion = this.state.suggestions.map((suggestion, curIndex) => {
-            var selected = this.state.highlightIndex != 0 && index == curIndex + 1;
-            if (selected) { 
-                return <li className="react-search__menu-item selected">{suggestion}</li>
-            } else {
-                return <li className="react-search__menu-item">{suggestion}</li>
-            }
-        });
+        var result = this.getSelectedKeyIndex();
+        var key = result[0]
+        var index = result[1]
+
+        var autoSuggestion = [];
+        for (var type in this.state.suggestions) {
+            // Append the header like "Economics Info", "Metrics", etc...
+            autoSuggestion = autoSuggestion.concat(<li className="react-search__menu-header">{type}</li>)
+            // Append the actual entries
+            autoSuggestion = autoSuggestion.concat(this.state.suggestions[type].map((suggestion, curIndex) => {
+                var selected = this.state.highlightIndex != 0 && index == curIndex + 1 && type == key;
+                if (selected) { 
+                    return <li className="react-search__menu-item selected">{suggestion.Name}</li>
+                } else {
+                    return <li className="react-search__menu-item">{suggestion.Name}</li>
+                }
+            }));
+        }
         var dropdown = '';
         if (autoSuggestion.length) {
             dropdown =

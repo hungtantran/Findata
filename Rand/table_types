@@ -28,6 +28,29 @@ PRIMARY KEY (`type`,`subtype`,`tablename`),
 CONSTRAINT `data_source_ibfk_1` FOREIGN KEY (`type`, `subtype`) REFERENCES `data_source_type` (`type`, `subtype`),
 CONSTRAINT `data_source_ibfk_2` FOREIGN KEY (`type`, `subtype`) REFERENCES `data_source_type` (`type`, `subtype`)
 
+ticker_info | CREATE TABLE `ticker_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ticker` varchar(32) DEFAULT NULL,
+  `ticker_type` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `cik` varchar(255) DEFAULT NULL,
+  `ipo_year` int(11) DEFAULT NULL,
+  `sector` varchar(255) DEFAULT NULL,
+  `industry` varchar(255) DEFAULT NULL,
+  `exchange` varchar(255) DEFAULT NULL,
+  `sic` int(11) DEFAULT NULL,
+  `naics` int(11) DEFAULT NULL,
+  `class_share` varchar(255) DEFAULT NULL,
+  `fund_type` varchar(255) DEFAULT NULL,
+  `fund_family` varchar(255) DEFAULT NULL,
+  `asset_class` varchar(255) DEFAULT NULL,
+  `active` int(11) DEFAULT NULL,
+  `MetaData` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ticker` (`ticker`,`location`)
+) ENGINE=InnoDB AUTO_INCREMENT=41993 DEFAULT CHARSET=utf8 |
+
 data_source_type | CREATE TABLE `data_source_type` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
 `type` varchar(32) NOT NULL DEFAULT '',
@@ -40,5 +63,16 @@ fixedincome_ustreasurybill_metrics
 exchange_index_metrics
 
 %_metrics
+| msft_metrics | CREATE TABLE `msft_metrics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `metric_name` varchar(255) NOT NULL,
+  `value` float DEFAULT NULL,
+  `unit` varchar(32) DEFAULT NULL,
+  `start_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `metadata` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `metric_name` (`metric_name`,`start_date`,`end_date`)
+) ENGINE=InnoDB AUTO_INCREMENT=176477 DEFAULT CHARSET=utf8 |
 
 economics_info_%_metrics

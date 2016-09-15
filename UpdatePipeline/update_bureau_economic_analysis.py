@@ -157,8 +157,14 @@ class UpdateBureauEconomicAnalysis(threading.Thread):
                         last_alpha = i
                         if first_alpha == -1:
                             first_alpha = i
-                # WRONG WRONG WRONG, it may be C. 
                 type = self.trim_ending_comma(first_part[first_alpha:last_alpha+1].strip())
+                # Remove the A., B. C. crap 
+                for i in range(len(type)):
+                    if type[i] == ' ':
+                        if type[i-1] == '.':
+                            type = type[i+1:]
+                        break
+
                 unit = None
                 headers = None
                 quarters = None
@@ -432,7 +438,10 @@ def main():
         update_obj.start()
         while True:
             time.sleep(10)        
-        """with open('C:\Users\hungt\Downloads\Section1All_csv.csv', 'r') as f:
+        """with open('C:\Users\hungt\Downloads\Section6All_Hist.csv', 'r') as f:
+            content = f.read()
+            update_obj.update_data_from_csv_content(content)
+        with open('C:\Users\hungt\Downloads\Section1All_csv.csv', 'r') as f:
             content = f.read()
             update_obj.update_data_from_csv_content(content)
         with open('C:\Users\hungt\Downloads\Section3All_csv.csv', 'r') as f:

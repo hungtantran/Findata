@@ -23,7 +23,7 @@ class Graph extends React.Component {
         var plotHeight = innerHeight / plotCount;
         this.state = {plots: Entries(this.props.plots).map((pair, index) => {
             var yOffset = this.props.margins.top + plotHeight * index;
-            return <Plot {...getPlotProps(pair[1].dataSets, this.props.width, plotHeight, this.props.margins.left, yOffset, pair[0], this.props.margins) } />;
+            return <Plot {...getPlotProps(pair[1].DataSets, this.props.width, plotHeight, this.props.margins.left, yOffset, pair[0], this.props.margins) } />;
         })};
     }
 

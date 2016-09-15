@@ -12,7 +12,7 @@ class Legend extends React.Component {
     render() {
         var items = Object.keys(this.props.items).map((key, index)=> {
             var color = {fill: this.props.colorscale(key)};
-            return <text x="2em" y={`${index}em`} style={color} key={`text${key}`}>{this.props.items[key].title}</text>;
+            return <text x="2em" y={`${index}em`} style={color} key={`text${key}`}>{this.props.items[key].Title}</text>;
         });
 
         var colors = Object.keys(this.props.items).map((key, index)=> {

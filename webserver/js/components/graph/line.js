@@ -4,10 +4,10 @@ import {line} from 'd3-shape';
 function Line(props) {
     var scaledData = line()
         .x((d) => {
-            return props.xscale(new Date(d.t));
+            return props.xscale(new Date(d.T));
         })
         .y((d) => {
-            return props.yscale(d.v);
+            return props.yscale(d.V);
         })(props.dataSet);
 
     props.style.className = 'line';

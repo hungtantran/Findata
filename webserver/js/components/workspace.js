@@ -22,8 +22,11 @@ class Workspace extends React.Component {
 
         this.graphs = {};
 
+        var model = {}
+        model["graphs"] = {}
+
         this.state = {
-            graphModel: {}
+            graphModel: model
         };
     }
 
@@ -47,7 +50,7 @@ class Workspace extends React.Component {
                 left: `${xOffset}px`,
                 top: `${yOffset}px`,
             };
-            return <Graph key={pair[0]} plots={pair[1].plots} width={width} height={height} margins={margins} style={divStyle}/>;
+            return <Graph key={pair[0]} plots={pair[1].Plots} width={width} height={height} margins={margins} style={divStyle}/>;
         });
 
         return (
@@ -59,17 +62,20 @@ class Workspace extends React.Component {
     }
 
     loadModelsFromJSON(json) {
-        /*data.push(json.graphModel.adj_close.map(function(item) {
-            return {t: new Date(item[0].replace(/-/g, '/')), v: item[1]};
-        }));*/
+        console.log("Load Model");
+        var model = this.state.graphModel;
+        model["graphs"][json.Title] = json;
+        console.log(json);
+        console.log(model);
+        console.log("Done Load Model");
 
         this.setState({
-            graphModel: json.graphModel
+            graphModel: model
         });
     }
 
     handleSearchSubmit(submission) {
-        fetch($SCRIPT_ROOT + '/search' + '?search=' + submission.search, {mode: 'no-cors'})
+        fetch($SCRIPT_ROOT + '/search' + '?term=' + submission.term + '&type=' + submission.type + '&id=' + submission.id, {mode: 'no-cors'})
             .then(function(response) {
                 return response.json();
             }).catch(function(ex) {

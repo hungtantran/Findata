@@ -6,8 +6,8 @@
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
   </script>
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/common.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/404.css') }}">
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/404.css">
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
@@ -17,6 +17,6 @@
   <div id="header" class='container'></div>
   <div id="content" class='container'>Loading...</div>
   <div id="footer" class='container'></div>
-  <script async src="{{ url_for('static', filename='generated/404.js') }}"></script>
+  <script async src="generated/404.js"></script>
 </body>
 </html>

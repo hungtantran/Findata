@@ -31,7 +31,7 @@ def write_query_to_file(query, file):
             for row in data:
                 data_str = ''
                 for cell in row:
-                    data_str += str(cell) + ','
+                    data_str += '"%s",' % str(cell)
                 data_str_arr.append(data_str)
 
             with open(file, 'w') as f:
@@ -67,4 +67,10 @@ if __name__ == '__main__':
     #write_query_to_file(r"select count(*) as num, name from ticker_info group by name order by num desc", 'ticker_name_and_count.txt')
     #write_query_to_file(r"select ticker from ticker_info where ticker_type = 'stock' or ticker_type = 'etf'", 'ticker.txt')
 
-    write_query_to_file(r"show tables", 'tables.txt')
+    #write_query_to_file(r"select * from economics_info", 'economics_info')
+    #write_query_to_file(r"select * from economics_info where type like 'A. %' or type like 'B. %' or type like 'C. %' or type like 'D. %' or type like 'ESI. %'", 'economics_info')
+
+    #write_query_to_file(r"select * from data_source_type", "data_source_type")
+
+    #write_query_to_file(r"show tables", 'tables.txt')
+    pass

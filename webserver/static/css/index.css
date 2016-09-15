@@ -29,6 +29,14 @@
   margin: 0em;
 }
 
+.react-search__menu-header {
+  list-style-type: none;
+  padding: 0em;
+  margin: 0em;
+  font-weight: bold;
+  background-color: lightgrey;
+}
+
 .react-search__menu-item a:hover,
 .react-search__menu-item a:visited {
   font-weight: bold;

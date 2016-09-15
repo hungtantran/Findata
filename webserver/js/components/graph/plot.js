@@ -18,18 +18,18 @@ function valueIsInDomain(value, domain) {
 function getDataXDomain(dataSets) {
     return [
         min(Entries(dataSets), function (pair) {
-            return new Date(pair[1].data[0].t);
+            return new Date(pair[1].Data[0].T);
         }),
         max(Entries(dataSets), function (pair) {
-            return new Date(pair[1].data[pair[1].data.length - 1].t);
+            return new Date(pair[1].Data[pair[1].Data.length - 1].T);
         })
     ];
 }
 
 function getValueDataSetsMax(dataSets) {
     return max(Entries(dataSets), function (pair) {
-        return max(pair[1].data, function (d) {
-            return d.v;
+        return max(pair[1].Data, function (d) {
+            return d.V;
         });
     });
 }
@@ -91,10 +91,10 @@ class Plot extends React.Component {
 
     buildItems() {
         return Entries(this.props.dataSets).map((pair) => {
-            if(pair[1].type === 'line')
-                return <Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={pair[1].data} key={pair[0]} colorid={pair[0]} />;
-            else if(pair[1].type === 'bar')
-                return <Bar xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={pair[1].data} key={pair[0]} colorid={pair[0]} />;
+            if(pair[1].Type === 'line')
+                return <Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={pair[1].Data} key={pair[0]} colorid={pair[0]} />;
+            else if(pair[1].Type === 'bar')
+                return <Bar xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={pair[1].Data} key={pair[0]} colorid={pair[0]} />;
         });
     }
 
@@ -103,17 +103,17 @@ class Plot extends React.Component {
         var xVal = this.state.transformedXScale.invert(elX);
         if(valueIsInDomain(xVal, this.state.transformedXScale.domain())) {
             var style = {strokeWidth: '1', strokeLinecap: 'round', strokeDasharray: '5,5'};
-            var lines = [<Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: xVal, v: 0}, {t: xVal, v: this.yscale.domain()[1]}]} key={'hoverLinex'} colorid={'0'} style={style} />];
+            var lines = [<Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{T: xVal, V: 0}, {T: xVal, V: this.yscale.domain()[1]}]} key={'hoverLinex'} colorid={'0'} style={style} />];
             var dateBisector = bisector(function(d) {
-                return new Date(d.t);
+                return new Date(d.T);
             }).right;
             var yVal = Entries(this.props.dataSets).map((pair) => {
-                var index = dateBisector(pair[1].data, xVal);
-                return pair[1].data[index].v;
+                var index = dateBisector(pair[1].Data, xVal);
+                return pair[1].Data[index].V;
             });
 
             yVal.forEach((val, index) => {
-                lines.push(<Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{t: this.state.transformedXScale.domain()[0], v: val}, {t: this.state.transformedXScale.domain()[1], v: val}]} key={`hoverLiney${index}`} colorid={'0'} style={style} />);
+                lines.push(<Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{T: this.state.transformedXScale.domain()[0], V: val}, {T: this.state.transformedXScale.domain()[1], V: val}]} key={`hoverLiney${index}`} colorid={'0'} style={style} />);
             });
 
             var values = [<text x={elX} y={this.yscale.range()[0]} fontFamily="sans-serif" fontSize="15px" fill="red" key={'hovervaluex'}>{xVal.toDateString()}</text>];
