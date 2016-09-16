@@ -109,10 +109,31 @@ class SearchBar extends React.Component {
             // Append the actual entries
             autoSuggestion = autoSuggestion.concat(this.state.suggestions[type].map((suggestion, curIndex) => {
                 var selected = this.state.highlightIndex != 0 && index == curIndex + 1 && type == key;
-                if (selected) { 
-                    return <li className="react-search__menu-item selected">{suggestion.Name}</li>
+                var rowName;
+                if (type == "Economics Indicators") {
+                    rowName = (
+                        <ul className="react-search__menu-item row-result-name multiple-line">
+                            <li className="react-search__menu-item row-result-name first-line">{suggestion.Name}</li>
+                            <li className="react-search__menu-item row-result-name second-line">{suggestion.Metadata.Ca} - {suggestion.Metadata.Ty}</li>
+                        </ul>
+                    );
                 } else {
-                    return <li className="react-search__menu-item">{suggestion.Name}</li>
+                    rowName = suggestion.Name;
+                }
+                var rowResult = (
+                    <ul className="react-search__menu-item row-result">
+                        <li className="react-search__menu-item row-result-abbrv">{suggestion.Abbrv}</li>
+                        <li className="react-search__menu-item row-result-name">{rowName}</li>
+                    </ul>
+                );
+                if (selected) { 
+                    return (
+                        <li className="react-search__menu-item selected">{rowResult}</li>
+                    );
+                } else {
+                    return (
+                        <li className="react-search__menu-item">{rowResult}</li>
+                    );
                 }
             }));
         }

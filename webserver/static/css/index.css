@@ -31,10 +31,11 @@
 
 .react-search__menu-header {
   list-style-type: none;
-  padding: 0em;
+  padding: 0.3em;
   margin: 0em;
   font-weight: bold;
-  background-color: lightgrey;
+  background-color: #1e1e2f;
+  color: white;
 }
 
 .react-search__menu-item a:hover,
@@ -47,6 +48,7 @@
   z-index: 2;
   background: #fff;
   border: 1px solid #b7b7b7;
+  padding: 0px;
 }
 
 .react-search__menu--hidden {
@@ -54,7 +56,40 @@
 }
 
 .selected {
-  background-color: darkgray;
+  background-color: #ffffcc;
+}
+
+.react-search__menu-item .row-result {
+  display: flex;
+  list-style-type: none;
+  padding: 2px;
+  
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+}
+
+/* Style of the 1st column in search bar */
+.react-search__menu-item .row-result-abbrv {
+  width: 10%;
+  font-weight: bold;
+}
+
+/* Style of the 2nd column in search bar */
+.react-search__menu-item .row-result-name {
+  width: 80%;
+}
+
+/* Style of the 2nd column in search bar if it has multiple lines */
+.react-search__menu-item .row-result-name .multiple-line {
+  list-style-type: None;
+  padding: 0px;
+}
+
+/* Style of the 2nd line in the 2nd column in search bar */
+.react-search__menu-item .row-result-name .second-line {
+  color: #9494b8;
+  font-size: 0.8em;
 }
 
 /*

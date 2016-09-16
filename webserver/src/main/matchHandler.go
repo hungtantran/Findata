@@ -65,6 +65,8 @@ func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
            strings.Contains(strings.ToUpper(v.name.String), strings.ToUpper(matches[0])) {
             metadata := make(map[string]interface{});
             metadata["Id"] = v.id.Int64;
+            metadata["Ca"] = v.category.String;
+            metadata["Ty"] = v.typeStr.String;
             matchResult := MatchResult{
                     Abbrv: "",
                     Name: v.name.String,
