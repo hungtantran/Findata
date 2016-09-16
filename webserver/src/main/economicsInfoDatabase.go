@@ -2,7 +2,6 @@ package main
 
 import (
     "database/sql"
-    "fmt"
     _ "github.com/go-sql-driver/mysql"
     "log"
 )
@@ -45,7 +44,7 @@ func NewEconomicsInfoDatabase(
         dbServer string,
         dbDatabase string,
         dbTableName string) *EconomicsInfoDatabase {
-    fmt.Println(dbType, dbUserName, dbPassword, dbServer, dbDatabase, dbTableName)
+    log.Println(dbType, dbUserName, dbPassword, dbServer, dbDatabase, dbTableName)
     var economicsInfoDatabase *EconomicsInfoDatabase = new(EconomicsInfoDatabase);
     economicsInfoDatabase.dbType = dbType;
     economicsInfoDatabase.dbUserName = dbUserName;
@@ -59,10 +58,10 @@ func NewEconomicsInfoDatabase(
         economicsInfoDatabase.dbPassword + "@tcp(" + 
         economicsInfoDatabase.dbServer + ":3306)/" +
         economicsInfoDatabase.dbDatabase;
-    fmt.Println("Connect to economics info database use connection string " + connectionString);
+    log.Println("Connect to economics info database use connection string " + connectionString);
     db, err := sql.Open(economicsInfoDatabase.dbType, connectionString)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
     economicsInfoDatabase.db = db;
     return economicsInfoDatabase;
@@ -71,7 +70,7 @@ func NewEconomicsInfoDatabase(
 func (economicsInfoDatabase *EconomicsInfoDatabase) getAllEconomicsInfo() []EconomicsInfo {
     rows, err := economicsInfoDatabase.db.Query("SELECT * FROM " + economicsInfoDatabase.dbTableName);
     if err != nil {
-        log.Fatal(err)
+        log.Println(err)
     }
     defer rows.Close()
     var economicsInfo EconomicsInfo;
@@ -86,13 +85,13 @@ func (economicsInfoDatabase *EconomicsInfoDatabase) getAllEconomicsInfo() []Econ
                 &economicsInfo.source,
                 &economicsInfo.metadata);
         if err != nil {
-            log.Fatal(err)
+            log.Println(err)
         }
         allEconomicsInfo = append(allEconomicsInfo, economicsInfo);
     }
     err = rows.Err()
     if err != nil {
-        log.Fatal(err)
+        log.Println(err)
     }
     log.Println("Found", len(allEconomicsInfo), "economics info");
     return allEconomicsInfo;

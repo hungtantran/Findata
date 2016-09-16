@@ -1,12 +1,11 @@
 package main
 
 import (
-    "encoding/json"
 	"fmt"
 	"io/ioutil"
+    "log"
     "net/http"
-    "net/url"
-    "strings"
+    "os"
 )
 
 
@@ -32,13 +31,13 @@ type Graph struct {
     Plots map[string]Plot
 }
 
-var allTickerInfo []TickerInfo
-var allEconomicsInfo []EconomicsInfo
 var metricDatabase *MetricDatabase;
+var searchHandlerObj SearchHandler;
+var matchHandlerObj MatchHandler;
 
 
 func loadPage(title string) (string, error) {
-    filename :=  "templates\\" + title + ".html"
+    filename :=  "templates" + string(os.PathSeparator) + title + ".html"
     body, err := ioutil.ReadFile(filename)
     if err != nil {
         return "", err
@@ -46,8 +45,6 @@ func loadPage(title string) (string, error) {
     return string(body), err
 }
 
-// TODO move each of the complicated handle like /search, /match
-// to its own file 
 // TODO move database classes to their own package
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,132 +56,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
-    var param url.Values = r.URL.Query();
-    searchTypes, ok1 := param["type"];
-    searchIds, ok2 := param["id"];
-
-    tableName := "";
-    var metricNames []string;
-    if (ok1 && ok2 &&
-        len(searchTypes) > 0 && searchTypes[0] != "" &&
-        len(searchIds) > 0 && searchIds[0] != "0") {
-        fmt.Println(searchTypes[0], searchIds[0]);
-
-        if searchTypes[0] == "Equities" {
-            tableName = strings.ToLower(searchIds[0]) + "_metrics";
-            metricNames = append(metricNames, "adj_close");
-            metricNames = append(metricNames, "volume");
-        } else if searchTypes[0] == "Economics Indicators" {
-            tableName = "economics_info_" + searchIds[0] + "_metrics";
-        }
-    } else {
-        searchTerms, ok3 := param["term"];
-        if (ok3 && len(searchTerms) > 0 && searchTerms[0] != "") {
-            fmt.Println(searchTerms[0]);
-            if searchTypes[0] == "Equities" {
-                tableName = searchTerms[0] + "_metrics";
-                metricNames = append(metricNames, "adj_close");
-                metricNames = append(metricNames, "volume");
-            }
-        }
-    }
-
-    fmt.Println(tableName, metricNames);
-    if tableName != "" {
-        var graph Graph;
-        graph.Title = tableName
-        graph.Plots = make(map[string]Plot);
-
-        if len(metricNames) > 0 {
-            for _, metricName := range metricNames {
-                metrics := metricDatabase.getMetricWithName(tableName, metricName);
-                dataSet := DataSet {
-                    Title: tableName,
-                    Type: "line",
-                    Data: metrics,
-                }
-                plot := Plot {
-                    Title: tableName,
-                    DataSets: map[string]DataSet {
-                        metricName: dataSet,
-                    },
-                }
-                graph.Plots[tableName + " " + metricName] = plot;
-            }
-        } else {
-            // TODO here
-        }
-
-        graphJson, _ := json.Marshal(graph);
-        graphJsonString := string(graphJson);
-        fmt.Fprintf(w, graphJsonString);
-    }
+    graphJsonString := searchHandlerObj.Search(r);
+    fmt.Fprintf(w, graphJsonString);
 }
 
 func matchHandler(w http.ResponseWriter, r *http.Request) {
-    var param url.Values = r.URL.Query();
-    matches, ok := param["match"]
-    if !ok {
-        fmt.Fprintf(w, "");
-        return
-    }
-
-    allMatches := make(map[string][]MatchResult);
-    // Find all metrics matches
-    var count int = 0;
-    var matchMetrics []MatchResult;
-    for _, v := range allTickerInfo {
-        if strings.HasPrefix(strings.ToUpper(v.name.String), strings.ToUpper(matches[0])) ||
-           strings.Contains(strings.ToUpper(v.ticker.String), strings.ToUpper(matches[0])) {
-            metadata := make(map[string]interface{});
-            metadata["Id"] = v.ticker.String;
-            matchResult := MatchResult{
-                    Abbrv: v.ticker.String,
-                    Name: v.name.String,
-                    Metadata: metadata,}
-            matchMetrics = append(matchMetrics, matchResult);
-            count++;
-            if (count >= maxNumMatchesReturned) {
-                break;
-            }
-        }
-    }
-
-    if len(matchMetrics) > 0 {
-        allMatches["Equities"] = matchMetrics;
-    }
-
-    // Find all economics info matches
-    count = 0;
-    var matchEonomicsInfo []MatchResult;
-    for _, v := range allEconomicsInfo {
-        // TODO don't convert upper everytime, precompute
-        if strings.HasPrefix(strings.ToUpper(v.name.String), strings.ToUpper(matches[0])) ||
-           strings.Contains(strings.ToUpper(v.name.String), strings.ToUpper(matches[0])) {
-            metadata := make(map[string]interface{});
-            metadata["Id"] = v.id.Int64;
-            matchResult := MatchResult{
-                    Abbrv: "",
-                    Name: v.name.String,
-                    Metadata: metadata,}
-            matchEonomicsInfo = append(matchEonomicsInfo, matchResult);
-            count++;
-            if (count >= maxNumMatchesReturned) {
-                break;
-            }
-        }
-    }
-
-    if len(matchEonomicsInfo) > 0 {
-        allMatches["Economics Indicators"] = matchEonomicsInfo;
-    }
-
-    matchJsonString := "{}";
-    matchJson, err := json.Marshal(allMatches);
-    if err != nil {
-        fmt.Println("error:", err)
-    }
-    matchJsonString = string(matchJson);
+    matchJsonString := matchHandlerObj.Match(r);
     fmt.Fprintf(w, matchJsonString);
 }
 
@@ -205,11 +82,14 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func initializeConfiguration() {
+    // Initialize logger to output filename
+    log.SetFlags(log.Lshortfile);
+    
     // Initialize configuration constants
     var config *ProdConfig;
     config.initializeConfig();
 
-    // Initialize the database connection objects
+    // Initialize match handler
     var tickerInfoDatabase *TickerInfoDatabase = NewTickerInfoDatabase(
             dbType,
             mysqlUsername,
@@ -217,7 +97,7 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "");
-    allTickerInfo = tickerInfoDatabase.getAllTickerInfo();
+    allTickerInfo := tickerInfoDatabase.getAllTickerInfo();
 
     var economicsInfoDatabase *EconomicsInfoDatabase = NewEconomicsInfoDatabase(
             dbType,
@@ -226,25 +106,29 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "economics_info");
-    allEconomicsInfo = economicsInfoDatabase.getAllEconomicsInfo();
+    allEconomicsInfo := economicsInfoDatabase.getAllEconomicsInfo();
 
+    matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo);
+    
+    // Initialize search handler
     metricDatabase = NewMetricDatabase(dbType,
         mysqlUsername,
         mysqlPassword,
         mysqlServer,
         mysqlDatabase,
         "");
+    searchHandlerObj = NewStandardSearchHandler(metricDatabase);
 }
 
 func main() {
-    go initializeConfiguration()
+    go initializeConfiguration();
 
-    http.HandleFunc("/about", aboutHandler)
-    http.HandleFunc("/contact", contactHandler)
-    http.HandleFunc("/search", searchHandler)
-    http.HandleFunc("/match", matchHandler)
-    http.HandleFunc("/", indexHandler)
-    http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css/"))))
-    http.Handle("/generated/", http.StripPrefix("/generated/", http.FileServer(http.Dir("static/generated/"))))
-    http.ListenAndServe(":8080", nil)
+    http.HandleFunc("/about", aboutHandler);
+    http.HandleFunc("/contact", contactHandler);
+    http.HandleFunc("/search", searchHandler);
+    http.HandleFunc("/match", matchHandler);
+    http.HandleFunc("/", indexHandler);
+    http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css/"))));
+    http.Handle("/generated/", http.StripPrefix("/generated/", http.FileServer(http.Dir("static/generated/"))));
+    http.ListenAndServe(":8080", nil);
 }

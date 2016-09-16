@@ -2,7 +2,6 @@ package main
 
 import (
     "database/sql"
-    "fmt"
     _ "github.com/go-sql-driver/mysql"
     "strconv"
     "log"
@@ -51,7 +50,7 @@ func NewMetricDatabase(
         dbServer string,
         dbDatabase string,
         dbTableName string) *MetricDatabase {
-    fmt.Println(dbType, dbUserName, dbPassword, dbServer, dbDatabase, dbTableName)
+    log.Println(dbType, dbUserName, dbPassword, dbServer, dbDatabase, dbTableName)
     var metricDatabase *MetricDatabase = new(MetricDatabase);
     metricDatabase.dbType = dbType;
     metricDatabase.dbUserName = dbUserName;
@@ -65,10 +64,10 @@ func NewMetricDatabase(
         metricDatabase.dbPassword + "@tcp(" + 
         metricDatabase.dbServer + ":3306)/" +
         metricDatabase.dbDatabase + "?parseTime=true";
-    fmt.Println("Connect to metric database use connection string " + connectionString);
+    log.Println("Connect to metric database use connection string " + connectionString);
     db, err := sql.Open(metricDatabase.dbType, connectionString)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
     metricDatabase.db = db;
     return metricDatabase;
@@ -76,14 +75,13 @@ func NewMetricDatabase(
 
 func (metricDatabase *MetricDatabase) getMetricWithName(tableName string, metricName string) []ResultMetric {
     // TODO sql injection
-    fmt.Println("Table " + tableName + " metric " + metricName);
     query := "SELECT * FROM " + tableName + " WHERE metric_name = '" + metricName + "' ORDER BY start_date";
     if metricName == "" {
         query = "SELECT * FROM " + tableName + " ORDER BY start_date";
     }
     rows, err := metricDatabase.db.Query(query);
     if err != nil {
-        log.Fatal(err)
+        log.Println(err)
     }
     defer rows.Close()
     var metric ResultMetric;
@@ -102,15 +100,14 @@ func (metricDatabase *MetricDatabase) getMetricWithName(tableName string, metric
                 &endDate,
                 &metaData);
         if err != nil {
-            log.Fatal(err);
+            log.Println(err);
         }
         allMetric = append(allMetric, metric);
     }
     err = rows.Err()
     if err != nil {
-        log.Fatal(err);
+        log.Println(err);
     }
-    log.Println("Found", len(allMetric), "metrics");
     return allMetric;
 }
 

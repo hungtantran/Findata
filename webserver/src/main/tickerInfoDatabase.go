@@ -2,7 +2,6 @@ package main
 
 import (
     "database/sql"
-    "fmt"
     _ "github.com/go-sql-driver/mysql"
     "log"
 )
@@ -66,7 +65,7 @@ func NewTickerInfoDatabase(
         dbServer string,
         dbDatabase string,
         dbTableName string) *TickerInfoDatabase {
-    fmt.Println(dbType, dbUserName, dbPassword, dbServer, dbDatabase, dbTableName)
+    log.Println(dbType, dbUserName, dbPassword, dbServer, dbDatabase, dbTableName)
     var tickerInfoDatabase *TickerInfoDatabase = new(TickerInfoDatabase);
     tickerInfoDatabase.dbType = dbType;
     tickerInfoDatabase.dbUserName = dbUserName;
@@ -80,10 +79,10 @@ func NewTickerInfoDatabase(
         tickerInfoDatabase.dbPassword + "@tcp(" + 
         tickerInfoDatabase.dbServer + ":3306)/" +
         tickerInfoDatabase.dbDatabase;
-    fmt.Println("Connect to metric database use connection string " + connectionString);
+    log.Println("Connect to metric database use connection string " + connectionString);
     db, err := sql.Open(tickerInfoDatabase.dbType, connectionString)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
     tickerInfoDatabase.db = db;
     return tickerInfoDatabase;
@@ -92,7 +91,7 @@ func NewTickerInfoDatabase(
 func (tickerInfoDatabase *TickerInfoDatabase) getAllTickerInfo() []TickerInfo {
     rows, err := tickerInfoDatabase.db.Query("SELECT * FROM ticker_info");
     if err != nil {
-        log.Fatal(err)
+        log.Println(err)
     }
     defer rows.Close()
     var tickerInfo TickerInfo;
@@ -118,13 +117,13 @@ func (tickerInfoDatabase *TickerInfoDatabase) getAllTickerInfo() []TickerInfo {
                 &tickerInfo.active,
                 &tickerInfo.metaData);
         if err != nil {
-            log.Fatal(err);
+            log.Println(err);
         }
         allTickerInfo = append(allTickerInfo, tickerInfo);
     }
     err = rows.Err()
     if err != nil {
-        log.Fatal(err);
+        log.Println(err);
     }
     log.Println("Found", len(allTickerInfo), "ticker info");
     return allTickerInfo;
