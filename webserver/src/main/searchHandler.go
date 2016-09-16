@@ -22,8 +22,7 @@ func NewStandardSearchHandler(metricDatabase *MetricDatabase) *StandardSearchHan
     return searchHandler;
 }
 
-func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
-    var param url.Values = r.URL.Query();
+func (searchHandler *StandardSearchHandler) findTableAndMetricNames(param url.Values) (string, []string) {
     searchTypes, ok1 := param["type"];
     searchIds, ok2 := param["id"];
 
@@ -51,22 +50,59 @@ func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
         }
     }
 
+    if len(metricNames) == 0 {
+        metricNames = append(metricNames, "");
+    }
+
     log.Println(tableName, metricNames);
+    return tableName, metricNames;
+}
+
+func (searchHandler *StandardSearchHandler) chooseChartType(tableName string, metricName string) string {
+    if metricName == "volume" {
+        return "bar";
+    }
+    return "line";
+}
+
+func (searchHandler *StandardSearchHandler) adjustMetrics(metrics []ResultMetric) []ResultMetric {
+    const maxDetailedPoint int = 300;
+    const maxSparsePoint int = 300;
+
+    if len(metrics) > maxDetailedPoint {
+        var adjustedMetrics []ResultMetric;
+        var step int;
+        step = (len(metrics) - maxDetailedPoint) / maxSparsePoint;
+        if step < 1 {
+            step = 1;
+        }
+        for i := 0; i < len(metrics) - maxDetailedPoint; i+=step {
+            adjustedMetrics = append(adjustedMetrics, metrics[i]); 
+        }
+        adjustedMetrics = append(adjustedMetrics, metrics[len(metrics) - maxDetailedPoint:]...);
+        return adjustedMetrics;
+    } else {
+        return metrics;
+    }
+}
+
+func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
+    var param url.Values = r.URL.Query();
+    tableName, metricNames := searchHandler.findTableAndMetricNames(param);
+
     if tableName != "" {
         var graph Graph;
         graph.Title = tableName
         graph.Plots = make(map[string]Plot);
 
-        if len(metricNames) == 0 {
-            metricNames = append(metricNames, "");
-        }
-
         for _, metricName := range metricNames {
             metrics := searchHandler.metricDatabase.getMetricWithName(tableName, metricName);
+            adjustedMetrics := searchHandler.adjustMetrics(metrics);
+
             dataSet := DataSet {
                 Title: tableName,
-                Type: "line",
-                Data: metrics,
+                Type: searchHandler.chooseChartType(tableName, metricName),
+                Data: adjustedMetrics,
             }
             plot := Plot {
                 Title: tableName,
