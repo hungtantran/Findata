@@ -2,6 +2,7 @@ Common/constants_config.py
 webserver/node_modules
 webserver/static/generated
 webserver/npm-debug.log
+webserver/src/main/config.go
 npm-debug.log
 *.txt
 *.pyc
