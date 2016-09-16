@@ -130,5 +130,5 @@ func main() {
     http.HandleFunc("/", indexHandler);
     http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css/"))));
     http.Handle("/generated/", http.StripPrefix("/generated/", http.FileServer(http.Dir("static/generated/"))));
-    http.ListenAndServe(":8080", nil);
+    http.ListenAndServe(httpAddressAndPort, nil);
 }
