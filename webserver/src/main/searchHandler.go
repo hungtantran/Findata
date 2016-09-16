@@ -45,11 +45,9 @@ func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
         searchTerms, ok3 := param["term"];
         if (ok3 && len(searchTerms) > 0 && searchTerms[0] != "") {
             log.Println(searchTerms[0]);
-            if searchTypes[0] == "Equities" {
-                tableName = searchTerms[0] + "_metrics";
-                metricNames = append(metricNames, "adj_close");
-                metricNames = append(metricNames, "volume");
-            }
+            tableName = searchTerms[0] + "_metrics";
+            metricNames = append(metricNames, "adj_close");
+            metricNames = append(metricNames, "volume");
         }
     }
 
@@ -59,24 +57,24 @@ func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
         graph.Title = tableName
         graph.Plots = make(map[string]Plot);
 
-        if len(metricNames) > 0 {
-            for _, metricName := range metricNames {
-                metrics := searchHandler.metricDatabase.getMetricWithName(tableName, metricName);
-                dataSet := DataSet {
-                    Title: tableName,
-                    Type: "line",
-                    Data: metrics,
-                }
-                plot := Plot {
-                    Title: tableName,
-                    DataSets: map[string]DataSet {
-                        metricName: dataSet,
-                    },
-                }
-                graph.Plots[tableName + " " + metricName] = plot;
+        if len(metricNames) == 0 {
+            metricNames = append(metricNames, "");
+        }
+
+        for _, metricName := range metricNames {
+            metrics := searchHandler.metricDatabase.getMetricWithName(tableName, metricName);
+            dataSet := DataSet {
+                Title: tableName,
+                Type: "line",
+                Data: metrics,
             }
-        } else {
-            // TODO here
+            plot := Plot {
+                Title: tableName,
+                DataSets: map[string]DataSet {
+                    metricName: dataSet,
+                },
+            }
+            graph.Plots[tableName + " " + metricName] = plot;
         }
 
         graphJson, _ := json.Marshal(graph);
