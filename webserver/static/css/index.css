@@ -65,8 +65,8 @@
   padding: 2px;
   
   border-style: solid;
-  border-width: 1px;
-  border-color: black;
+  border-width: 0.5px;
+  border-color: lightgray;
 }
 
 /* Style of the 1st column in search bar */

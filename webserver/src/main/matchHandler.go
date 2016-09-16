@@ -24,6 +24,19 @@ func NewStandardMatchHandler(allTickerInfo []TickerInfo, allEconomicsInfo []Econ
     return matchHandler;
 }
 
+func (matchHandler *StandardMatchHandler) StringMatchPart(matchString string, fullString string) bool {
+    match := true;
+    
+    matchParts := strings.Split(matchString, " ");
+    for _, part := range matchParts {
+        if !strings.Contains(fullString, part) {
+            match = false;
+        }
+    }
+
+    return match;
+}
+
 func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
     var param url.Values = r.URL.Query();
     matches, ok := param["match"];
@@ -32,12 +45,14 @@ func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
     }
 
     allMatches := make(map[string][]MatchResult);
+    upperMatch := strings.ToUpper(matches[0]);
     // Find all metrics matches
     var count int = 0;
     var matchMetrics []MatchResult;
     for _, v := range matchHandler.allTickerInfo {
-        if strings.HasPrefix(strings.ToUpper(v.name.String), strings.ToUpper(matches[0])) ||
-           strings.Contains(strings.ToUpper(v.ticker.String), strings.ToUpper(matches[0])) {
+        upperName := strings.ToUpper(v.name.String);
+        upperTicker := strings.ToUpper(v.ticker.String);
+        if (strings.HasPrefix(upperTicker, upperMatch) || matchHandler.StringMatchPart(upperMatch, upperName)) {
             metadata := make(map[string]interface{});
             metadata["Id"] = v.ticker.String;
             matchResult := MatchResult{
@@ -60,9 +75,8 @@ func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
     count = 0;
     var matchEonomicsInfo []MatchResult;
     for _, v := range matchHandler.allEconomicsInfo {
-        // TODO don't convert upper everytime, precompute
-        if strings.HasPrefix(strings.ToUpper(v.name.String), strings.ToUpper(matches[0])) ||
-           strings.Contains(strings.ToUpper(v.name.String), strings.ToUpper(matches[0])) {
+        upperName := strings.ToUpper(v.name.String);
+        if matchHandler.StringMatchPart(upperMatch, upperName) {
             metadata := make(map[string]interface{});
             metadata["Id"] = v.id.Int64;
             metadata["Ca"] = v.category.String;
