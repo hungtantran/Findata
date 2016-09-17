@@ -97,25 +97,29 @@ func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
 
     if tableName != "" {
         var graph Graph;
-        graph.Title = tableName
+        graph.Title = tableName;
         graph.Plots = make(map[string]Plot);
 
         for _, metricName := range metricNames {
+            metricNameStr := metricName;
+            if metricNameStr == "" {
+                metricNameStr = tableName;
+            }
             metrics := searchHandler.metricDatabase.getMetricWithName(tableName, metricName);
             adjustedMetrics := searchHandler.adjustMetrics(metrics);
 
             dataSet := DataSet {
-                Title: tableName,
+                Title: metricNameStr,
                 Type: searchHandler.chooseChartType(tableName, metricName),
                 Data: adjustedMetrics,
             }
             plot := Plot {
-                Title: tableName,
+                Title: metricNameStr,
                 DataSets: map[string]DataSet {
                     metricName: dataSet,
                 },
             }
-            graph.Plots[tableName + " " + metricName] = plot;
+            graph.Plots[metricNameStr] = plot;
         }
 
         graphJson, _ := json.Marshal(graph);

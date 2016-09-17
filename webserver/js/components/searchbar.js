@@ -14,6 +14,21 @@ class SearchBar extends React.Component {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.handleMouseOver = this.handleMouseOver.bind(this);
+    }
+
+    handleMouseUp(event) {
+        // Only react to left click
+        if (event.button == 0) {
+            this.handleSubmit();
+        }
+    }
+
+    handleMouseOver(event) {
+        var curTarget = event.currentTarget;
+        var curIndex = curTarget.id;
+        this.setState({highlightIndex: curIndex});
     }
 
     handleKeyDown(event) {
@@ -104,15 +119,19 @@ class SearchBar extends React.Component {
         var index = result[1]
 
         var autoSuggestion = [];
+        var curTotalIndex = 0;
         for (var type in this.state.suggestions) {
             // Append the header like "Economics Info", "Metrics", etc...
             var typeStr = MetricTypeToString(type);
             autoSuggestion = autoSuggestion.concat(<li className="react-search__menu-header">{typeStr}</li>)
             // Append the actual entries
             autoSuggestion = autoSuggestion.concat(this.state.suggestions[type].map((suggestion, curIndex) => {
+                curTotalIndex++;
                 var selected = this.state.highlightIndex != 0 && index == curIndex + 1 && type == key;
                 var rowName;
-                if (type == "Economics Indicators") {
+
+                // 
+                if (type == 2 /* Economics Indicators */) {
                     rowName = (
                         <ul className="react-search__menu-item row-result-name multiple-line">
                             <li className="react-search__menu-item row-result-name first-line">{suggestion.Name}</li>
@@ -122,19 +141,22 @@ class SearchBar extends React.Component {
                 } else {
                     rowName = suggestion.Name;
                 }
+
+                // Abbreviation first column, name second column
                 var rowResult = (
                     <ul className="react-search__menu-item row-result">
                         <li className="react-search__menu-item row-result-abbrv">{suggestion.Abbrv}</li>
                         <li className="react-search__menu-item row-result-name">{rowName}</li>
                     </ul>
                 );
+
                 if (selected) { 
                     return (
-                        <li className="react-search__menu-item selected">{rowResult}</li>
+                        <li id={curTotalIndex} className="react-search__menu-item selected" onMouseMove={this.handleMouseOver}>{rowResult}</li>
                     );
                 } else {
                     return (
-                        <li className="react-search__menu-item">{rowResult}</li>
+                        <li id={curTotalIndex} className="react-search__menu-item" onMouseMove={this.handleMouseOver}>{rowResult}</li>
                     );
                 }
             }));
@@ -142,7 +164,9 @@ class SearchBar extends React.Component {
         var dropdown = '';
         if (autoSuggestion.length) {
             dropdown =
-                <div className="react-search__menu react-search__menu--open">
+                <div
+                    className="react-search__menu react-search__menu--open"
+                    onMouseUp={this.handleMouseUp}>
                     <ul className="react-search__menu-items">
                         {autoSuggestion}
                     </ul>

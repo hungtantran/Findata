@@ -49,6 +49,8 @@
   background: #fff;
   border: 1px solid #b7b7b7;
   padding: 0px;
+  position: absolute;
+  min-width: 1000px;
 }
 
 .react-search__menu--hidden {
@@ -71,8 +73,9 @@
 
 /* Style of the 1st column in search bar */
 .react-search__menu-item .row-result-abbrv {
-  width: 10%;
+  width: 20%;
   font-weight: bold;
+  overflow: hidden;
 }
 
 /* Style of the 2nd column in search bar */
@@ -97,4 +100,5 @@
  */
 .graph {
   border: 2px solid black;
+  margin-bottom: 100px;
 }
