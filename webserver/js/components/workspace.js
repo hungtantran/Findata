@@ -75,8 +75,19 @@ class Workspace extends React.Component {
     }
 
     handleSearchSubmit(submission) {
-        fetch($SCRIPT_ROOT + '/search' + '?term=' + submission.term + '&type=' + submission.type + '&id=' + submission.id, {mode: 'no-cors'})
-            .then(function(response) {
+        fetch($SCRIPT_ROOT + '/search', {
+                mode: 'no-cors',
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    term: String(submission.term),
+                    type: String(submission.type),
+                    id: String(submission.id),
+                })
+            }).then(function(response) {
                 return response.json();
             }).catch(function(ex) {
                 console.log('parsing failed', ex);

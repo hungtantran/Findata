@@ -108,7 +108,16 @@ func initializeConfiguration() {
             "economics_info");
     allEconomicsInfo := economicsInfoDatabase.getAllEconomicsInfo();
 
-    matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo);
+    var exchangeIndexInfoDatabase *ExchangeIndexInfoDatabase = NewExchangeIndexInfoDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
+    allExchangeIndexInfo := exchangeIndexInfoDatabase.getAllExchangeIndexInfo();
+
+    matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
     
     // Initialize search handler
     metricDatabase = NewMetricDatabase(dbType,

@@ -15,12 +15,17 @@ type MatchHandler interface {
 type StandardMatchHandler struct {
     allTickerInfo []TickerInfo
     allEconomicsInfo []EconomicsInfo
+    allExchangeIndexInfo []ExchangeIndexInfo
 }
 
-func NewStandardMatchHandler(allTickerInfo []TickerInfo, allEconomicsInfo []EconomicsInfo) *StandardMatchHandler {
+func NewStandardMatchHandler(
+        allTickerInfo []TickerInfo,
+        allEconomicsInfo []EconomicsInfo,
+        allExchangeIndexInfo []ExchangeIndexInfo) *StandardMatchHandler {
     var matchHandler *StandardMatchHandler = new(StandardMatchHandler);
     matchHandler.allEconomicsInfo = allEconomicsInfo;
     matchHandler.allTickerInfo = allTickerInfo;
+    matchHandler.allExchangeIndexInfo = allExchangeIndexInfo;
     return matchHandler;
 }
 
@@ -44,10 +49,35 @@ func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
         return "";
     }
 
-    allMatches := make(map[string][]MatchResult);
+    allMatches := make(map[MetricType][]MatchResult);
     upperMatch := strings.ToUpper(matches[0]);
     // Find all metrics matches
     var count int = 0;
+    var matchIndices []MatchResult;
+    for _, v := range matchHandler.allExchangeIndexInfo {
+        upperName := strings.ToUpper(v.Name.String);
+        upperIndex := strings.ToUpper(v.Index.String);
+        if (strings.HasPrefix(upperIndex, upperMatch) || matchHandler.StringMatchPart(upperMatch, upperName)) {
+            metadata := make(map[string]interface{});
+            metadata["Id"] = v.Id.Int64;
+            matchResult := MatchResult{
+                    Abbrv: v.Index.String,
+                    Name: v.Name.String,
+                    Metadata: metadata,}
+            matchIndices = append(matchIndices, matchResult);
+            count++;
+            if (count >= maxNumMatchesReturned) {
+                break;
+            }
+        }
+    }
+
+    if len(matchIndices) > 0 {
+        allMatches[Indices] = matchIndices;
+    }
+
+    // Find all metrics matches
+    count = 0;
     var matchMetrics []MatchResult;
     for _, v := range matchHandler.allTickerInfo {
         upperName := strings.ToUpper(v.name.String);
@@ -68,7 +98,7 @@ func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
     }
 
     if len(matchMetrics) > 0 {
-        allMatches["Equities"] = matchMetrics;
+        allMatches[Equities] = matchMetrics;
     }
 
     // Find all economics info matches
@@ -94,7 +124,7 @@ func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
     }
 
     if len(matchEonomicsInfo) > 0 {
-        allMatches["Economics Indicators"] = matchEonomicsInfo;
+        allMatches[EconIndicator] = matchEonomicsInfo;
     }
 
     matchJsonString := "{}";

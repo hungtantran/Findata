@@ -1,4 +1,5 @@
 import React from 'react';
+import MetricTypeToString from './metricType';
 
 class SearchBar extends React.Component {
 
@@ -105,7 +106,8 @@ class SearchBar extends React.Component {
         var autoSuggestion = [];
         for (var type in this.state.suggestions) {
             // Append the header like "Economics Info", "Metrics", etc...
-            autoSuggestion = autoSuggestion.concat(<li className="react-search__menu-header">{type}</li>)
+            var typeStr = MetricTypeToString(type);
+            autoSuggestion = autoSuggestion.concat(<li className="react-search__menu-header">{typeStr}</li>)
             // Append the actual entries
             autoSuggestion = autoSuggestion.concat(this.state.suggestions[type].map((suggestion, curIndex) => {
                 var selected = this.state.highlightIndex != 0 && index == curIndex + 1 && type == key;

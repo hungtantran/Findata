@@ -62,6 +62,19 @@ fixedincome_ustreasurybill_metrics
 
 exchange_index_metrics
 
+| exchange_index_info | CREATE TABLE `exchange_index_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `index` varchar(32) DEFAULT NULL,
+  `index_type` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `sector` varchar(255) DEFAULT NULL,
+  `industry` varchar(255) DEFAULT NULL,
+  `MetaData` text  DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index` (`index`, `name`, `location`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
+
 %_metrics
 | msft_metrics | CREATE TABLE `msft_metrics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

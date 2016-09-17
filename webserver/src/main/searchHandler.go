@@ -4,8 +4,8 @@ import (
     "encoding/json"
     "log"
     "net/http"
-    "net/url"
     "strings"
+    "strconv"
 )
 
 type SearchHandler interface {
@@ -22,32 +22,38 @@ func NewStandardSearchHandler(metricDatabase *MetricDatabase) *StandardSearchHan
     return searchHandler;
 }
 
-func (searchHandler *StandardSearchHandler) findTableAndMetricNames(param url.Values) (string, []string) {
-    searchTypes, ok1 := param["type"];
-    searchIds, ok2 := param["id"];
-
+func (searchHandler *StandardSearchHandler) findTableAndMetricNames(r *http.Request) (string, []string) {
     tableName := "";
     var metricNames []string;
-    if (ok1 && ok2 &&
-        len(searchTypes) > 0 && searchTypes[0] != "" &&
-        len(searchIds) > 0 && searchIds[0] != "0") {
-        log.Println(searchTypes[0], searchIds[0]);
 
-        if searchTypes[0] == "Equities" {
-            tableName = strings.ToLower(searchIds[0]) + "_metrics";
+    var param map[string]string;
+    err := json.NewDecoder(r.Body).Decode(&param)
+    if err != nil {
+        return tableName, metricNames;
+    }
+
+    searchType := param["type"];
+    searchMetricType, err := strconv.Atoi(searchType);
+    searchId := param["id"];
+    searchTerm := param["term"];
+
+    if (err == nil && searchId != "") {
+        switch MetricType(searchMetricType) {
+        case Equities:
+            tableName = strings.ToLower(searchId) + "_metrics";
             metricNames = append(metricNames, "adj_close");
             metricNames = append(metricNames, "volume");
-        } else if searchTypes[0] == "Economics Indicators" {
-            tableName = "economics_info_" + searchIds[0] + "_metrics";
-        }
-    } else {
-        searchTerms, ok3 := param["term"];
-        if (ok3 && len(searchTerms) > 0 && searchTerms[0] != "") {
-            log.Println(searchTerms[0]);
-            tableName = searchTerms[0] + "_metrics";
+        case EconIndicator:
+            tableName = "economics_info_" + searchId + "_metrics";
+        case Indices:
+            tableName = "exchange_index_info_" + searchId + "_metrics";
             metricNames = append(metricNames, "adj_close");
             metricNames = append(metricNames, "volume");
         }
+    } else if (searchTerm != "") {
+        tableName = searchTerm + "_metrics";
+        metricNames = append(metricNames, "adj_close");
+        metricNames = append(metricNames, "volume");
     }
 
     if len(metricNames) == 0 {
@@ -87,8 +93,7 @@ func (searchHandler *StandardSearchHandler) adjustMetrics(metrics []ResultMetric
 }
 
 func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
-    var param url.Values = r.URL.Query();
-    tableName, metricNames := searchHandler.findTableAndMetricNames(param);
+    tableName, metricNames := searchHandler.findTableAndMetricNames(r);
 
     if tableName != "" {
         var graph Graph;
