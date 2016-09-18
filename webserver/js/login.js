@@ -21,6 +21,7 @@ class Login extends React.Component {
         var password = document.getElementById('password').value;
 
         fetch('/login', {
+                credentials: 'same-origin',
                 mode: 'no-cors',
                 method: 'POST',
                 headers: {

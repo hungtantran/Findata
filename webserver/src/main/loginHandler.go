@@ -48,14 +48,8 @@ func (loginHandler *StandardLoginHandler) ProcessPost(w http.ResponseWriter, r *
         log.Println(cookies);
         session, _ := loginHandler.sessionManager.GetSession(r);
         log.Println(session.Values);
-        session.Values["user"] = "haha" + user.Fullname.String;
-        log.Println(session.Values);
+        session.Values["user"] = user;
         err = loginHandler.sessionManager.SaveSession(session, w, r);
-        log.Println(err);
-
-        session2, _ := loginHandler.sessionManager.GetSession(r);
-        log.Println(session2.Values);
-        log.Println("Done");
     }
 
     fmt.Fprintf(w, mapToJsonString(loginResult))

@@ -21,7 +21,6 @@ func NewFSSessionManager() *FSSessionManager {
 
     fsSessionManager.store.Options = &sessions.Options{
         Path:     "/",
-	    Domain:   "eazychart.com",
         MaxAge:   3600 * 4,
         HttpOnly: true,
     }
@@ -30,7 +29,7 @@ func NewFSSessionManager() *FSSessionManager {
 }
 
 func (fsSessionManager *FSSessionManager) GetSession(r *http.Request) (*sessions.Session, error) {
-    return fsSessionManager.store.Get(r, "session-name");
+    return fsSessionManager.store.Get(r, "sid");
 }
 
 func (fsSessionManager *FSSessionManager) SaveSession(session *sessions.Session, w http.ResponseWriter, r *http.Request) error {
