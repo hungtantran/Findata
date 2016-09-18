@@ -126,6 +126,6 @@ func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
         graphJsonString := string(graphJson);
         return graphJsonString;
     }
-
+    
     return ""
 }

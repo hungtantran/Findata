@@ -10,7 +10,8 @@ var Header = React.createClass({
         <nav className="col-sm-8">
           <p><a href="/about">About Us</a></p>
           <p><a href="/contact">Contact Us</a></p>
-          <p><a href="/signup">Sign Up</a></p>
+          <p><a href="/login">Login</a></p>
+          <p><a href="/signup">Register</a></p>
         </nav>
       </div>
     );

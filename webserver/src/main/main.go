@@ -66,19 +66,70 @@ func matchHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
-    p, err := loadPage("about")
-    if err != nil {
-       p, err = loadPage("404")
+    switch r.Method {
+    case "GET":
+        // Serve the resource.
+        page, err := loadPage("about")
+        if err != nil {
+            log.Prinln(err);
+            page, err = loadPage("404")
+        }
+        fmt.Fprintf(w, page)
+    default:
+        page, _ := loadPage("404")
+        fmt.Fprintf(w, page)
     }
-    fmt.Fprintf(w, p)
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
-    p, err := loadPage("contact")
-    if err != nil {
-       p, err = loadPage("404")
+    switch r.Method {
+    case "GET":
+        // Serve the resource.
+        page, err := loadPage("contact")
+        if err != nil {
+            page, err = loadPage("404")
+        }
+        fmt.Fprintf(w, page)
+    default:
+        page, _ := loadPage("404")
+        fmt.Fprintf(w, page)
     }
-    fmt.Fprintf(w, p)
+}
+
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+    switch r.Method {
+    case "GET":
+        // Serve the resource.
+        page, err := loadPage("login")
+        if err != nil {
+            log.Prinln(err);
+            page, err = loadPage("404")
+        }
+        fmt.Fprintf(w, page)
+    case "POST":
+        // Create a new record.
+    default:
+        page, _ := loadPage("404")
+        fmt.Fprintf(w, page)
+    }
+}
+
+func signupHandler(w http.ResponseWriter, r *http.Request) {
+    switch r.Method {
+    case "GET":
+        // Serve the resource.
+        page, err := loadPage("signup")
+        if err != nil {
+            log.Prinln(err);
+            page, err = loadPage("404")
+        }
+        fmt.Fprintf(w, page)
+    case "POST":
+        // Create a new record.
+    default:
+        page, _ := loadPage("404")
+        fmt.Fprintf(w, page)
+    }
 }
 
 func initializeConfiguration() {
@@ -136,6 +187,8 @@ func main() {
     http.HandleFunc("/contact", contactHandler);
     http.HandleFunc("/search", searchHandler);
     http.HandleFunc("/match", matchHandler);
+    http.HandleFunc("/login", loginHandler);
+    http.HandleFunc("/signup", signupHandler);
     http.HandleFunc("/", indexHandler);
     http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css/"))));
     http.Handle("/generated/", http.StripPrefix("/generated/", http.FileServer(http.Dir("static/generated/"))));
