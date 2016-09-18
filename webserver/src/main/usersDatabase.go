@@ -68,7 +68,7 @@ func NewUsersDatabase(
     return usersDatabase;
 }
 
-func (usersDatabase *UsersDatabase) CheckUser(username string, passwordHash string) *User {
+func (usersDatabase *UsersDatabase) GetUser(username string, passwordHash string) *User {
     rows, err := usersDatabase.db.Query("SELECT * FROM users WHERE username = ? AND passwordHash = ? LIMIT 1", username, passwordHash);
     if err != nil {
         log.Println(err)

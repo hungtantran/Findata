@@ -32,6 +32,8 @@ var metricDatabase *MetricDatabase;
 var searchHandlerObj SearchHandler;
 var matchHandlerObj MatchHandler;
 var signupHandlerObj SignupHandler;
+var loginHandlerObj LoginHandler;
+var sessionManager SessionManager;
 
 // TODO move database classes to their own package
 
@@ -85,21 +87,7 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-    switch r.Method {
-    case "GET":
-        // Serve the resource.
-        page, err := loadPage("login")
-        if err != nil {
-            log.Println(err);
-            page, err = loadPage("404")
-        }
-        fmt.Fprintf(w, page)
-    case "POST":
-        // Create a new record.
-    default:
-        page, _ := loadPage("404")
-        fmt.Fprintf(w, page)
-    }
+    loginHandlerObj.Process(w, r);
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
@@ -113,6 +101,9 @@ func initializeConfiguration() {
     // Initialize configuration constants
     var config *ProdConfig;
     config.initializeConfig();
+
+    // Initialize session manager
+    sessionManager = NewFSSessionManager();
 
     // Initialize match handler
     var tickerInfoDatabase *TickerInfoDatabase = NewTickerInfoDatabase(
@@ -144,6 +135,7 @@ func initializeConfiguration() {
 
     matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
 
+    // Initialize login and register handler
     var usersDatabase *UsersDatabase = NewUsersDatabase(
             dbType,
             mysqlUsername,
@@ -151,6 +143,7 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "");
+    loginHandlerObj = NewStandardLoginHandler(usersDatabase, sessionManager);
     signupHandlerObj = NewStandardSignupHandler(usersDatabase);
     
     // Initialize search handler

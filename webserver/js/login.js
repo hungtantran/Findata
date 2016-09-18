@@ -8,17 +8,67 @@ class Login extends React.Component {
         super(props);
 
         this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.parseLoginResult = this.parseLoginResult.bind(this);
+
+        this.state = {
+            success: "None",
+            message: ""
+        };
     }
 
     handleMouseUp(event) {
-        console.log(event);
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        fetch('/login', {
+                mode: 'no-cors',
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                })
+            }).then(function(response) {
+                return response.json();
+            }).catch(function(ex) {
+                console.log('parsing failed', ex);
+            }).then((json) => {
+                this.parseLoginResult(json);
+            });
+    }
+
+    parseLoginResult(json) {
+        var result = "false";
+        if (json.result == true) {
+            result = "true";
+        }
+        this.setState({
+            success: result,
+            message: json.message
+        });
     }
 
     render() {
-        return (
+        // TODO add form validator
+        if (this.state.success === "true") {
+            return (
+                <div className="row">
+                    <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
+                    <div className="formContainer col-lg-4 col-md-6">
+                        Successful login to Findata.
+                    </div>
+                </div>
+            )
+        }
+
+        var loginForm = (
             <div className="row">
                 <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
                 <div className="formContainer col-lg-4 col-md-6">
+                    {this.state.message}
                     <form>
                         <div className="form-group">
                             <label for="username">Username</label>
@@ -34,6 +84,8 @@ class Login extends React.Component {
                 <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
             </div>
         )
+
+        return loginForm;
     }
 }
 
