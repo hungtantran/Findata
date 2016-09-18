@@ -1,0 +1,9 @@
+.formContainer {
+    border-width: .2rem;
+    border: solid;
+    border-color: #f7f7f9;
+
+    margin-top: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}

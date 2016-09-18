@@ -11,16 +11,18 @@ type User struct {
     Id sql.NullInt64
     Username sql.NullString
     Fullname sql.NullString
+    Email sql.NullString
     Passwordhash sql.NullString
     Passwordsalt sql.NullString
     Isdisabled sql.NullBool
 }
 
 func (user *User) String() string {
-    return fmt.Sprintf("%d %s %s %s %s %t",
+    return fmt.Sprintf("%d %s %s %s %s %s %t",
 		user.Id.Int64,
         user.Username.String,
         user.Fullname.String,
+        user.Email.String,
         user.Passwordhash.String,
         user.Passwordsalt.String,
         user.Isdisabled.Bool);
@@ -80,6 +82,7 @@ func (usersDatabase *UsersDatabase) CheckUser(username string, passwordHash stri
                 &user.Id,
                 &user.Username,
                 &user.Fullname,
+                &user.Email,
                 &user.Passwordhash,
                 &user.Passwordsalt,
                 &user.Isdisabled);
@@ -90,8 +93,8 @@ func (usersDatabase *UsersDatabase) CheckUser(username string, passwordHash stri
     return user;
 }
 
-func (usersDatabase *UsersDatabase) InsertUser(username string, fullname string, password string) bool {
-    stmt, err := usersDatabase.db.Prepare("INSERT users SET username=?, fullname=?, passwordhash=?, passwordsalt=?, isdisabled=?");
+func (usersDatabase *UsersDatabase) InsertUser(username string, fullname string, email string, password string) bool {
+    stmt, err := usersDatabase.db.Prepare("INSERT users SET username=?, fullname=?, email=?, passwordhash=?, passwordsalt=?, isdisabled=?");
     if err != nil {
         log.Println(err);
         return false;
@@ -100,7 +103,7 @@ func (usersDatabase *UsersDatabase) InsertUser(username string, fullname string,
     // TODO actually calculate hash and salt
     passwordsalt := "";
     isdisabled := false;
-    res, err := stmt.Exec(username, fullname, password, passwordsalt, isdisabled);
+    res, err := stmt.Exec(username, fullname, email, password, passwordsalt, isdisabled);
     if err != nil {
         log.Println(err);
         return false;

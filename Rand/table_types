@@ -94,6 +94,7 @@ economics_info_%_metrics
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(64) DEFAULT NULL,
   `fullname` varchar(255) DEFAULT NULL,
+  `email` text,
   `passwordhash` text,
   `passwordsalt` text,
   `isdisabled` tinyint(1) DEFAULT NULL,

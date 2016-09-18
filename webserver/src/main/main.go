@@ -2,12 +2,9 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
     "log"
     "net/http"
-    "os"
 )
-
 
 type MatchResult struct {
     Abbrv string 
@@ -34,16 +31,7 @@ type Graph struct {
 var metricDatabase *MetricDatabase;
 var searchHandlerObj SearchHandler;
 var matchHandlerObj MatchHandler;
-
-
-func loadPage(title string) (string, error) {
-    filename :=  "templates" + string(os.PathSeparator) + title + ".html"
-    body, err := ioutil.ReadFile(filename)
-    if err != nil {
-        return "", err
-    }
-    return string(body), err
-}
+var signupHandlerObj SignupHandler;
 
 // TODO move database classes to their own package
 
@@ -71,7 +59,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
         // Serve the resource.
         page, err := loadPage("about")
         if err != nil {
-            log.Prinln(err);
+            log.Println(err);
             page, err = loadPage("404")
         }
         fmt.Fprintf(w, page)
@@ -102,7 +90,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
         // Serve the resource.
         page, err := loadPage("login")
         if err != nil {
-            log.Prinln(err);
+            log.Println(err);
             page, err = loadPage("404")
         }
         fmt.Fprintf(w, page)
@@ -115,21 +103,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
-    switch r.Method {
-    case "GET":
-        // Serve the resource.
-        page, err := loadPage("signup")
-        if err != nil {
-            log.Prinln(err);
-            page, err = loadPage("404")
-        }
-        fmt.Fprintf(w, page)
-    case "POST":
-        // Create a new record.
-    default:
-        page, _ := loadPage("404")
-        fmt.Fprintf(w, page)
-    }
+    signupHandlerObj.Process(w, r);
 }
 
 func initializeConfiguration() {
@@ -169,6 +143,15 @@ func initializeConfiguration() {
     allExchangeIndexInfo := exchangeIndexInfoDatabase.getAllExchangeIndexInfo();
 
     matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
+
+    var usersDatabase *UsersDatabase = NewUsersDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
+    signupHandlerObj = NewStandardSignupHandler(usersDatabase);
     
     // Initialize search handler
     metricDatabase = NewMetricDatabase(dbType,

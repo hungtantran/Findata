@@ -62,13 +62,8 @@ class Workspace extends React.Component {
     }
 
     loadModelsFromJSON(json) {
-        console.log("Load Model");
         var model = this.state.graphModel;
         model["graphs"][json.Title] = json;
-        console.log(json);
-        console.log(model);
-        console.log("Done Load Model");
-
         this.setState({
             graphModel: model
         });
