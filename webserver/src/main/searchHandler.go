@@ -2,15 +2,12 @@ package main
 
 import (
     "encoding/json"
+    "fmt"
     "log"
     "net/http"
     "strings"
     "strconv"
 )
-
-type SearchHandler interface {
-    Search(r *http.Request) string 
-}
 
 type StandardSearchHandler struct {
     metricDatabase *MetricDatabase
@@ -92,7 +89,7 @@ func (searchHandler *StandardSearchHandler) adjustMetrics(metrics []ResultMetric
     }
 }
 
-func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
+func (searchHandler *StandardSearchHandler) ProcessPost(w http.ResponseWriter, r *http.Request) {
     tableName, metricNames := searchHandler.findTableAndMetricNames(r);
 
     if tableName != "" {
@@ -124,8 +121,21 @@ func (searchHandler *StandardSearchHandler) Search(r *http.Request) string {
 
         graphJson, _ := json.Marshal(graph);
         graphJsonString := string(graphJson);
-        return graphJsonString;
+        fmt.Fprintf(w, graphJsonString);
     }
     
-    return ""
+    fmt.Fprintf(w, "");
+}
+
+func (searchHandler *StandardSearchHandler) Process(w http.ResponseWriter, r *http.Request) {
+    switch r.Method {
+    case "GET":
+        page, _ := loadPage("404");
+        fmt.Fprintf(w, page);
+    case "POST":
+        searchHandler.ProcessPost(w, r);
+    default:
+        page, _ := loadPage("404");
+        fmt.Fprintf(w, page);
+    }
 }

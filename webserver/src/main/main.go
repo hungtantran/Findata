@@ -1,93 +1,52 @@
 package main
 
 import (
-	"fmt"
+    "encoding/gob"
     "log"
     "net/http"
 )
 
-type MatchResult struct {
-    Abbrv string 
-    Name string
-    Metadata map[string]interface{}
-}
-
-type DataSet struct {
-    Title string
-    Type string
-    Data []ResultMetric
-}
-
-type Plot struct {
-    Title string
-    DataSets map[string]DataSet
-}
-
-type Graph struct {
-    Title string
-    Plots map[string]Plot
-}
+var indexHandlerObj HttpHandler;
+var searchHandlerObj HttpHandler;
+var matchHandlerObj HttpHandler;
+var signupHandlerObj HttpHandler;
+var loginHandlerObj HttpHandler;
+var logoutHandlerObj HttpHandler;
+var contactHandlerObj HttpHandler;
+var aboutHandlerObj HttpHandler;
 
 var metricDatabase *MetricDatabase;
-var searchHandlerObj SearchHandler;
-var matchHandlerObj MatchHandler;
-var signupHandlerObj SignupHandler;
-var loginHandlerObj LoginHandler;
+
 var sessionManager SessionManager;
 
 // TODO move database classes to their own package
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-    p, err := loadPage("index")
-    if err != nil {
-       p, err = loadPage("404")
-    }
-    fmt.Fprintf(w, p)
+    indexHandlerObj.Process(w, r);
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
-    graphJsonString := searchHandlerObj.Search(r);
-    fmt.Fprintf(w, graphJsonString);
+    searchHandlerObj.Process(w, r);
 }
 
 func matchHandler(w http.ResponseWriter, r *http.Request) {
-    matchJsonString := matchHandlerObj.Match(r);
-    fmt.Fprintf(w, matchJsonString);
+    matchHandlerObj.Process(w, r);
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
-    switch r.Method {
-    case "GET":
-        // Serve the resource.
-        page, err := loadPage("about")
-        if err != nil {
-            log.Println(err);
-            page, err = loadPage("404")
-        }
-        fmt.Fprintf(w, page)
-    default:
-        page, _ := loadPage("404")
-        fmt.Fprintf(w, page)
-    }
+    aboutHandlerObj.Process(w, r);
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
-    switch r.Method {
-    case "GET":
-        // Serve the resource.
-        page, err := loadPage("contact")
-        if err != nil {
-            page, err = loadPage("404")
-        }
-        fmt.Fprintf(w, page)
-    default:
-        page, _ := loadPage("404")
-        fmt.Fprintf(w, page)
-    }
+    contactHandlerObj.Process(w, r);
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
     loginHandlerObj.Process(w, r);
+}
+
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+    logoutHandlerObj.Process(w, r);
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
@@ -104,6 +63,12 @@ func initializeConfiguration() {
 
     // Initialize session manager
     sessionManager = NewFSSessionManager();
+    gob.Register(&User{});
+
+    // Initialize simple handlers
+    indexHandlerObj = NewStandardIndexHandler();
+    contactHandlerObj = NewStandardContactHandler();
+    aboutHandlerObj = NewStandardAboutHandler();
 
     // Initialize match handler
     var tickerInfoDatabase *TickerInfoDatabase = NewTickerInfoDatabase(
@@ -135,7 +100,7 @@ func initializeConfiguration() {
 
     matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
 
-    // Initialize login and register handler
+    // Initialize login, logout and register handler
     var usersDatabase *UsersDatabase = NewUsersDatabase(
             dbType,
             mysqlUsername,
@@ -144,6 +109,7 @@ func initializeConfiguration() {
             mysqlDatabase,
             "");
     loginHandlerObj = NewStandardLoginHandler(usersDatabase, sessionManager);
+    logoutHandlerObj = NewStandardLogoutHandler(usersDatabase, sessionManager);
     signupHandlerObj = NewStandardSignupHandler(usersDatabase);
     
     // Initialize search handler
@@ -164,9 +130,12 @@ func main() {
     http.HandleFunc("/search", searchHandler);
     http.HandleFunc("/match", matchHandler);
     http.HandleFunc("/login", loginHandler);
+    http.HandleFunc("/logout", logoutHandler);
     http.HandleFunc("/signup", signupHandler);
     http.HandleFunc("/", indexHandler);
     http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css/"))));
     http.Handle("/generated/", http.StripPrefix("/generated/", http.FileServer(http.Dir("static/generated/"))));
+
+    log.Println("Start listen and serve from ", httpAddressAndPort);
     http.ListenAndServe(httpAddressAndPort, nil);
 }

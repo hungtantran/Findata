@@ -2,15 +2,12 @@ package main
 
 import (
     "encoding/json"
+    "fmt"
     "log"
     "net/http"
     "net/url"
     "strings"
 )
-
-type MatchHandler interface {
-    Match(r *http.Request) string 
-}
 
 type StandardMatchHandler struct {
     allTickerInfo []TickerInfo
@@ -42,11 +39,12 @@ func (matchHandler *StandardMatchHandler) StringMatchPart(matchString string, fu
     return match;
 }
 
-func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
+func (matchHandler *StandardMatchHandler) ProcessGet(w http.ResponseWriter, r *http.Request) {
     var param url.Values = r.URL.Query();
     matches, ok := param["match"];
     if !ok {
-        return "";
+        fmt.Fprintf(w, "");
+        return;
     }
 
     allMatches := make(map[MetricType][]MatchResult);
@@ -133,5 +131,18 @@ func (matchHandler *StandardMatchHandler) Match(r *http.Request) string {
         log.Println("error:", err)
     }
     matchJsonString = string(matchJson);
-    return matchJsonString;
+    fmt.Fprintf(w, matchJsonString)
+}
+
+func (matchHandler *StandardMatchHandler) Process(w http.ResponseWriter, r *http.Request) {
+    switch r.Method {
+    case "GET":
+        matchHandler.ProcessGet(w, r);
+    case "POST":
+        page, _ := loadPage("404");
+        fmt.Fprintf(w, page);
+    default:
+        page, _ := loadPage("404");
+        fmt.Fprintf(w, page);
+    }
 }

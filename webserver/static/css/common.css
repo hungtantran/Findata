@@ -27,12 +27,41 @@
 #header p {
   padding: 0 20px;
   margin: 0;
+  
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 #header a {
   color: white;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+/* Drop down menu */
+.dropdown_menu{ 
+  display: none;
+  position: absolute;
+  list-style-type: none;
+}
+
+.dropdown:hover .dropdown_menu{
+  display : block;
+  background-color: darkgray;
+}
+
+.dropdown_menu:hover .dropdown_menu{
+  display : block;
+  background-color: darkgray;
+}
+
+.dropdown_item {
+  margin: 0.5rem;
+}
+
+.dropdown:hover .ok{
+  display : none;
 }
 
 /*

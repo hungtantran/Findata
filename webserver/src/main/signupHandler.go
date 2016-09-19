@@ -7,10 +7,6 @@ import (
     "net/http"
 )
 
-type SignupHandler interface {
-    Process(w http.ResponseWriter, r *http.Request) 
-}
-
 type StandardSignupHandler struct {
     usersDatabase *UsersDatabase
 }

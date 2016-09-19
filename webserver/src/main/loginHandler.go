@@ -7,10 +7,6 @@ import (
     "net/http"
 )
 
-type LoginHandler interface {
-    Process(w http.ResponseWriter, r *http.Request) 
-}
-
 type StandardLoginHandler struct {
     usersDatabase *UsersDatabase
     sessionManager SessionManager
@@ -44,12 +40,18 @@ func (loginHandler *StandardLoginHandler) ProcessPost(w http.ResponseWriter, r *
     if (user != nil) {
         loginResult["result"] = true;
         loginResult["message"] = "Login succeeds.";
-        cookies := r.Cookies();
-        log.Println(cookies);
-        session, _ := loginHandler.sessionManager.GetSession(r);
-        log.Println(session.Values);
+        session, _ := loginHandler.sessionManager.GetSession(r, "sid");
         session.Values["user"] = user;
         err = loginHandler.sessionManager.SaveSession(session, w, r);
+        if err != nil {
+            log.Println(err);
+        }
+
+        // Set extra cookie
+        cookie := http.Cookie{Name: "Username", Value: user.Username.String};
+        http.SetCookie(w, &cookie);
+        cookie = http.Cookie{Name: "Fullname", Value: user.Fullname.String};
+        http.SetCookie(w, &cookie);
     }
 
     fmt.Fprintf(w, mapToJsonString(loginResult))
