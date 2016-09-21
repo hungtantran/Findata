@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom'
 import React, { Component } from 'react'
-import { Router, Route } from 'react-router'
+import { Router, Route, Link, browserHistory } from 'react-router'
 import Index from './index'
 import About from './about'
 import Contact from './contact'
@@ -9,12 +9,12 @@ import Signup from './signup'
 import NotFound from './notfound'
 
 ReactDOM.render((
-  <Router>
+  <Router history={browserHistory}>
     <Route path="/" component={Index} />
     <Route path="/about" component={About} />
     <Route path="/contact" component={Contact} />
     <Route path="/login" component={Login} />
     <Route path="/signup" component={Signup} />
-    <Route path="/notfound" component={NotFound} />
+    <Route path="/404" component={NotFound} />
   </Router>
 ), document.getElementById('root'));
