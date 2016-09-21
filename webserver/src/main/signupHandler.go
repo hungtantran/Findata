@@ -29,6 +29,7 @@ func (signupHandler *StandardSignupHandler) ProcessPost(w http.ResponseWriter, r
         return;
     }
 
+    typeStr := param["type"];
     fullname := param["fullname"];
     email := param["email"];
     username := param["username"];
@@ -36,7 +37,7 @@ func (signupHandler *StandardSignupHandler) ProcessPost(w http.ResponseWriter, r
 
     // TODO a lot of validation of user inputs here
     log.Println(fullname, email, username, password);
-    result := signupHandler.usersDatabase.InsertUser(username, fullname, email, password);
+    result := signupHandler.usersDatabase.InsertUser(typeStr, username, fullname, email, password);
     registerResult["result"] = result;
     if (result) {
         registerResult["message"] = "Registeration succeeds.";

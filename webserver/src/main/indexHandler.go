@@ -15,7 +15,7 @@ func NewStandardIndexHandler() *StandardIndexHandler {
 }
 
 func (indexHandler *StandardIndexHandler) ProcessGet(w http.ResponseWriter, r *http.Request) {
-    page, err := loadPage("Index");
+    page, err := loadPage("index");
     if err != nil {
         log.Println(err);
         page, err = loadPage("404");

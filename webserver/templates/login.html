@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta name="google-signin-client_id" content="292129338715-hv2qf7rlvgq00dpjn9h7q04otkoan1fh.apps.googleusercontent.com">
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <script type=text/javascript>
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
@@ -12,7 +13,7 @@
   <!-- Bootstrap -->
   <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
 </head>
 <body>
   <div id="header" class='container'></div>

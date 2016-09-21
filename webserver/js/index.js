@@ -4,14 +4,16 @@ import Workspace from './components/workspace';
 import Footer from './components/footer';
 import Header from './components/header';
 
-ReactDOM.render(
-  <Footer />,
-  document.getElementById('footer'));
+class Home extends React.Component {
+  render() {
+    return (
+      <div>
+        <Header />
+        <Workspace />
+        <Footer />
+      </div>
+    );
+  }
+}
 
-ReactDOM.render(
-  <Header />,
-  document.getElementById('header'));
-
-ReactDOM.render(
-  <Workspace />,
-  document.getElementById('content'));
+export default Home;

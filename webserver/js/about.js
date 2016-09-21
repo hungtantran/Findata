@@ -3,24 +3,18 @@ import React from 'react'
 import Footer from './components/footer'
 import Header from './components/header'
 
-var About = React.createClass({
-  render: function() {
+class About extends React.Component {
+  render() {
     return (
-      <div className="about">
-        About Us
+      <div>
+        <Header />
+        <div className="about">
+          About Us
+        </div>
+        <Footer />
       </div>
     );
   }
-});
+}
 
-ReactDOM.render(
-  <Footer />,
-  document.getElementById('footer'));
-
-ReactDOM.render(
-  <Header />,
-  document.getElementById('header'));
-
-ReactDOM.render(
-  <About />,
-  document.getElementById('content'));
+export default About;

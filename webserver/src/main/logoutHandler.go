@@ -17,11 +17,15 @@ func NewStandardLogoutHandler(usersDatabase *UsersDatabase, sessionManager Sessi
     return logoutHandler;
 }
 
-func (logoutHandler *StandardLogoutHandler) ProcessGet(w http.ResponseWriter, r *http.Request) {
+func (logoutHandler *StandardLogoutHandler) Logout(w http.ResponseWriter, r *http.Request) {
     logoutHandler.sessionManager.ClearSession(w, "Username");
     logoutHandler.sessionManager.ClearSession(w, "Fullname");
     logoutHandler.sessionManager.ClearSession(w, "sid");
     http.Redirect(w, r, "/", 302);
+}
+
+func (logoutHandler *StandardLogoutHandler) ProcessGet(w http.ResponseWriter, r *http.Request) {
+    logoutHandler.Logout(w, r);
 }
 
 func (logoutHandler *StandardLogoutHandler) Process(w http.ResponseWriter, r *http.Request) {

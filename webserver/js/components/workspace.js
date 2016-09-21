@@ -54,9 +54,11 @@ class Workspace extends React.Component {
         });
 
         return (
-            <div className="workspace">
-                <SearchBar onSearchSubmit={this.handleSearchSubmit} />
-                <div style={{position:'relative'}}>{this.graphs}</div>
+            <div id="content" className='container'>
+                <div className="workspace">
+                    <SearchBar onSearchSubmit={this.handleSearchSubmit} />
+                    <div style={{position:'relative'}}>{this.graphs}</div>
+                </div>
             </div>
         );
     }

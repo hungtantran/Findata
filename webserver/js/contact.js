@@ -3,24 +3,18 @@ import React from 'react'
 import Footer from './components/footer'
 import Header from './components/header'
 
-var Contact = React.createClass({
-  render: function() {
+class Contact extends React.Component {
+  render() {
     return (
-      <div className="contact">
-        Contact Us
+      <div>
+        <Header />
+        <div className="contact">
+          Contact Us
+        </div>
+        <Footer />
       </div>
     );
   }
-});
+}
 
-ReactDOM.render(
-  <Footer />,
-  document.getElementById('footer'));
-
-ReactDOM.render(
-  <Header />,
-  document.getElementById('header'));
-
-ReactDOM.render(
-  <Contact />,
-  document.getElementById('content'));
+export default Contact;
