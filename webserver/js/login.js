@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom'
 import React from 'react' 
 import Footer from './components/footer'
 import Header from './components/header'
+import GoogleSignin from './components/googleSignin'
 
 class Login extends React.Component {
     constructor(props) {
@@ -29,6 +30,7 @@ class Login extends React.Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    type: "Findata",
                     username: username,
                     password: password,
                 })
@@ -66,10 +68,13 @@ class Login extends React.Component {
         }
 
         var loginForm = (
+        <div>
+            <Header />
             <div className="row">
                 <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
                 <div className="formContainer col-lg-4 col-md-6">
-                    {this.state.message}
+                    <div className="g-signin2" id="g-signin2" data-onsuccess="onSignIn"></div>            
+                    <GoogleSignin />
                     <form>
                         <div className="form-group">
                             <label for="username">Username</label>
@@ -84,20 +89,12 @@ class Login extends React.Component {
                 </div>
                 <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
             </div>
+            <Footer />
+        </div>
         )
 
         return loginForm;
     }
 }
 
-ReactDOM.render(
-  <Footer />,
-  document.getElementById('footer'));
-
-ReactDOM.render(
-  <Header />,
-  document.getElementById('header'));
-
-ReactDOM.render(
-  <Login />,
-  document.getElementById('content'));
+export default Login;

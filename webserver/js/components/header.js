@@ -36,11 +36,13 @@ class Header extends React.Component {
       }
 
       var header = (
-        <div className="row">
-          <h1 className="col-sm-4">
-            <a href="/">Findata</a>
-          </h1>
-          {navMenu}
+        <div id="header" className='container'>
+          <div className="row">
+            <h1 className="col-sm-4">
+              <a href="/">Findata</a>
+            </h1>
+            {navMenu}
+          </div>
         </div>
       );
       return header;
