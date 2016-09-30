@@ -28,9 +28,15 @@ class Graph extends React.Component {
     }
 
     render() {
-        return <svg className="graph" width={this.props.width} height={this.props.height} style={this.props.style} > 
-            {this.state.plots}
-        </svg>;
+        return (
+            <div className="grid-stack-item" id={this.props.index}>
+                <div className="grid-stack-item-content">
+                    <svg className="graph" width={this.props.width} height={this.props.height} style={this.props.style} > 
+                        {this.state.plots}
+                    </svg>
+                </div>
+            </div>
+        );
     }
 }
 
