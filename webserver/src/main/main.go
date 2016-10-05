@@ -20,7 +20,6 @@ var metricDatabase *MetricDatabase;
 var sessionManager SessionManager;
 
 // TODO move database classes to their own package
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
     indexHandlerObj.Process(w, r);
 }
@@ -78,7 +77,8 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "");
-    allTickerInfo := tickerInfoDatabase.getAllTickerInfo();
+    tickerInfoChan := make(chan []TickerInfo);
+    go func() { tickerInfoChan <- tickerInfoDatabase.getAllTickerInfo(); }();
 
     var economicsInfoDatabase *EconomicsInfoDatabase = NewEconomicsInfoDatabase(
             dbType,
@@ -87,7 +87,8 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "economics_info");
-    allEconomicsInfo := economicsInfoDatabase.getAllEconomicsInfo();
+    economicsInfoChan := make(chan []EconomicsInfo);
+    go func() { economicsInfoChan <- economicsInfoDatabase.getAllEconomicsInfo(); }();
 
     var exchangeIndexInfoDatabase *ExchangeIndexInfoDatabase = NewExchangeIndexInfoDatabase(
             dbType,
@@ -96,8 +97,12 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "");
-    allExchangeIndexInfo := exchangeIndexInfoDatabase.getAllExchangeIndexInfo();
+    exchangeIndexInfoChan := make(chan []ExchangeIndexInfo);
+    go func() { exchangeIndexInfoChan <- exchangeIndexInfoDatabase.getAllExchangeIndexInfo(); }();
 
+    allTickerInfo := <-tickerInfoChan;
+    allEconomicsInfo := <-economicsInfoChan;
+    allExchangeIndexInfo := <-exchangeIndexInfoChan;
     matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
 
     // Initialize login, logout and register handler

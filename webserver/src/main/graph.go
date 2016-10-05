@@ -9,7 +9,8 @@ type MatchResult struct {
 type DataSet struct {
     Title string
     Type string
-    Data []ResultMetric
+    // This is a metadata that tells the server what data to fetch
+    DataDesc map[string]string
 }
 
 type Plot struct {

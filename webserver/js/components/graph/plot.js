@@ -1,169 +1,78 @@
 import React from 'react';
-import Line from './line';
-import Bar from './bar';
-import XAxis from './xaxis';
-import YAxis from './yaxis';
-import {scaleLinear, scaleTime, scaleOrdinal, schemeCategory10} from 'd3-scale';
-import {max, min, bisector} from 'd3-array';
-import {zoom} from 'd3-zoom';
-import {select, event} from 'd3-selection';
-import Legend from '../legend/legend.js';
-import Entries from 'object.entries';
-
-
-function valueIsInDomain(value, domain) {
-    return value >= domain[0] && value <= domain[1];
-}
-
-function getDataXDomain(dataSets) {
-    return [
-        min(Entries(dataSets), function (pair) {
-            return new Date(pair[1].Data[0].T);
-        }),
-        max(Entries(dataSets), function (pair) {
-            return new Date(pair[1].Data[pair[1].Data.length - 1].T);
-        })
-    ];
-}
-
-function getValueDataSetsMax(dataSets) {
-    return max(Entries(dataSets), function (pair) {
-        return max(pair[1].Data, function (d) {
-            return d.V;
-        });
-    });
-}
-
-function getDataYDomain(dataSets) {
-    return [0, getValueDataSetsMax(dataSets) * 1.05];
-}
-
-function getPlotTranslation(left, top) {
-    return `translate(${left}, ${top})`;
-}
-
-function getXScaleTranslation(height) {
-    return `translate(0, ${height})`;
-}
-
-function getYScaleTranslation(width) {
-    return `translate(${width}, 0)`;
-}
+import PlotDisplay from './plotDisplay';
 
 class Plot extends React.Component {
     constructor(props) {
         super(props);
-        this.updateZoom = this.updateZoom.bind(this);
-        this.buildScale = this.buildScales.bind(this);
-        this.buildItems = this.buildItems.bind(this);
-        this.onMouseMove = this.onMouseMove.bind(this);
-        this.onMouseLeave = this.onMouseLeave.bind(this);
-        this.setInitialState = this.setInitialState.bind(this);
+        this.getData = this.getData.bind(this);
+        this.getPlotData = this.getPlotData.bind(this);
 
-        this.buildScales();
-        this.zoomGenerator = zoom().extent([[0, 0], [this.props.width * .95, this.props.height]]).translateExtent([[0, 0], [this.props.width * .95, this.props.height]]).scaleExtent([1, Infinity]).on('zoom', this.updateZoom);
-        this.setInitialState();
-    }
-
-    updateZoom() {
-        console.log(event.transform);
-        //select(this.refs.items).attr('transform', 'translate(' + event.transform.x + ', 0) scale(' + event.transform.k + ', 1)');
-        this.setState({transformedXScale : event.transform.rescaleX(this.xscale)});
-    }
-
-    buildScales() {
-        this.xscale = scaleTime()
-            .domain(getDataXDomain(this.props.dataSets))
-            .range([0, this.props.width * .95]);
-        this.yscale = scaleLinear()
-            .domain(getDataYDomain(this.props.dataSets))
-            .range([this.props.height, 0]);
-        this.colorscale = scaleOrdinal(schemeCategory10);        
-    }
-
-    setInitialState() {
+        this.plotDisplay = undefined;
         this.state = {
-            hoverLines: [],
-            hoverValues: [],
-            transformedXScale: this.xscale
+            data: {},
         };
     }
 
-    buildItems() {
-        return Entries(this.props.dataSets).map((pair) => {
-            if(pair[1].Type === 'line')
-                return <Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={pair[1].Data} key={pair[0]} colorid={pair[0]} />;
-            else if(pair[1].Type === 'bar')
-                return <Bar xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={pair[1].Data} key={pair[0]} colorid={pair[0]} />;
-        });
-    }
-
-    onMouseMove(event) {
-        var elX = event.pageX - this.refs.element.parentNode.getBoundingClientRect().left - this.props.xOffset - window.pageXOffset;
-        var xVal = this.state.transformedXScale.invert(elX);
-        if(valueIsInDomain(xVal, this.state.transformedXScale.domain())) {
-            var style = {strokeWidth: '1', strokeLinecap: 'round', strokeDasharray: '5,5'};
-            var lines = [<Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{T: xVal, V: 0}, {T: xVal, V: this.yscale.domain()[1]}]} key={'hoverLinex'} colorid={'0'} style={style} />];
-            var dateBisector = bisector(function(d) {
-                return new Date(d.T);
-            }).right;
-            var yVal = Entries(this.props.dataSets).map((pair) => {
-                var index = dateBisector(pair[1].Data, xVal);
-                return pair[1].Data[index].V;
-            });
-
-            yVal.forEach((val, index) => {
-                lines.push(<Line xscale={this.state.transformedXScale} yscale={this.yscale} colorscale={this.colorscale} dataSet={[{T: this.state.transformedXScale.domain()[0], V: val}, {T: this.state.transformedXScale.domain()[1], V: val}]} key={`hoverLiney${index}`} colorid={'0'} style={style} />);
-            });
-
-            var values = [<text x={elX} y={this.yscale.range()[0]} fontFamily="sans-serif" fontSize="15px" fill="red" key={'hovervaluex'}>{xVal.toDateString()}</text>];
-            yVal.forEach((val, index) => {
-                values.push(<text x={this.state.transformedXScale.range()[1]} y={this.yscale(val)} fontFamily="sans-serif" fontSize="15px" fill="red" key={`hovervaluey${index}`}>{val}</text>);
-            });
-
-            this.setState({
-                hoverLines: lines,
-                hoverValues: values
-            });
-        } else if(this.state.hoverLines.length > 0) {
-            this.setState({
-                hoverLines: [],
-                hoverValues: []
+    getData(dataDesc) {
+        var key = JSON.stringify(dataDesc);
+        var data = this.state.data;
+        if (!(key in data)) {
+            data[key] = [];
+            fetch($SCRIPT_ROOT + '/search', {
+                mode: 'no-cors',
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    action: "GetData",
+                    metricName: dataDesc.metricName,
+                    tableName: dataDesc.tableName,
+                })
+            }).then(function(response) {
+                return response.json();
+            }).catch(function(ex) {
+                console.log('parsing failed', ex);
+            }).then((json) => {
+                console.log("New Data");
+                data[key] = json;
+                this.setState({
+                    data: data
+                });
             });
         }
-    }   
-
-    onMouseLeave() {
-        if(this.state.hoverLines.length > 0) {
-            this.setState({
-                hoverLines: [],
-                hoverValues: []
-            });
-        }
+        return data[key];
     }
 
-    componentDidMount() {
-        this.refs.element.parentNode.addEventListener('mousemove', this.onMouseMove);
-        this.refs.element.parentNode.addEventListener('mouseleave', this.onMouseLeave);
-        select(this.refs.zoom).call(this.zoomGenerator);
+    getPlotData() {
+        // plotData is an array of map object that has 3 keys: title (string), type (string) and data (array) 
+        var plotData = []
+        for (var key in this.props.dataSets) {
+            var dataSet = this.props.dataSets[key];
+            var data = {};
+            data["Title"] = dataSet.Title;
+            data["Type"] = dataSet.Type;
+            data["Data"] = this.getData(dataSet.DataDesc);
+            plotData.push(data);
+        }
+        return plotData;
     }
 
     render() {
-        var items = this.buildItems();
-
+        var plotData = this.getPlotData();
+        // Remove this hack to force child rerender
+        var key = Math.random();
         return (
-            <g className="plot" transform={getPlotTranslation(this.props.xOffset, this.props.yOffset)} ref="element" >
-                <g ref="items" >
-                    {items}
-                    <XAxis key="axis" scale={this.state.transformedXScale} translate={getXScaleTranslation(this.props.height)} />
-                </g>
-                {this.state.hoverLines}
-                {this.state.hoverValues}
-                <YAxis key="yaxis" scale={this.yscale} translate={getYScaleTranslation(this.props.width * .95)} />
-                <Legend xpos={this.props.width * .95} ypos={0} colorscale={this.colorscale} items={this.props.dataSets} />
-                <rect width={this.props.width * .95} height={this.props.height} fill="none" pointerEvents="all" ref="zoom" />
-            </g>
-        );
+            <PlotDisplay
+                key={key}
+                width={this.props.width}
+                height={this.props.height}
+                xOffset={this.props.xOffset}
+                yOffset={this.props.yOffset}
+                title={this.props.title}
+                plotData={plotData}
+            />);
     }
 }
 
@@ -171,8 +80,9 @@ Plot.propTypes = {
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     xOffset: React.PropTypes.number,
-    dataSets: React.PropTypes.object,
-    yOffset: React.PropTypes.number
+    yOffset: React.PropTypes.number,
+    title: React.PropTypes.object,
+    dataSets: React.PropTypes.object
 };
 
 export default Plot;

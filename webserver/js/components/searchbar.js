@@ -74,12 +74,10 @@ class SearchBar extends React.Component {
         var index = result[1] 
         if (index > 0) {
             searchType = key;
-            console.log(this.state.suggestions);
             searchId = this.state.suggestions[key][index - 1].Metadata.Id;
         }
 
         if (searchTerm.length > 0 || (!searchType && !searchId)) {
-            console.log(searchTerm, searchType, searchId);
             this.props.onSearchSubmit({ term: searchTerm, type: searchType, id: searchId});
             this.setState({
                 search: this.props.initialSearch,
