@@ -14,7 +14,6 @@ function Line(props) {
     props.style.d = scaledData;
     props.style.stroke = props.colorscale(props.colorid);
     props.style.fill = 'none';
-
     return <path {...props.style} />;
 }
 

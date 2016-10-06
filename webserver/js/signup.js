@@ -23,27 +23,28 @@ class Signup extends React.Component {
         var username = document.getElementById('username').value;
         var password = document.getElementById('password').value;
 
+        // TODO change this to use /user handle instead
         fetch('/signup', {
-                mode: 'no-cors',
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    type: "Findata",
-                    fullname: fullname,
-                    email: email,
-                    username: username,
-                    password: password,
-                })
-            }).then(function(response) {
-                return response.json();
-            }).catch(function(ex) {
-                console.log('parsing failed', ex);
-            }).then((json) => {
-                this.parseRegisterResult(json);
-            });
+            mode: 'no-cors',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: "Findata",
+                fullname: fullname,
+                email: email,
+                username: username,
+                password: password,
+            })
+        }).then(function(response) {
+            return response.json();
+        }).catch(function(ex) {
+            console.log('parsing failed', ex);
+        }).then((json) => {
+            this.parseRegisterResult(json);
+        });
     }
 
     parseRegisterResult(json) {

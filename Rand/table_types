@@ -113,3 +113,14 @@ economics_info_%_metrics
   KEY `userid` (`userid`),
   CONSTRAINT `usersession_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
+
+| grids | CREATE TABLE `grids` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `userid` int(11) NOT NULL,
+  `grid` text NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`,`userid`),
+  KEY `usersession_ibfk_1` (`userid`),
+  CONSTRAINT `usersession_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 |

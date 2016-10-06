@@ -9,18 +9,16 @@ import (
 var indexHandlerObj HttpHandler;
 var searchHandlerObj HttpHandler;
 var matchHandlerObj HttpHandler;
+var userHandlerObj HttpHandler;
 var signupHandlerObj HttpHandler;
 var loginHandlerObj HttpHandler;
 var logoutHandlerObj HttpHandler;
 var contactHandlerObj HttpHandler;
 var aboutHandlerObj HttpHandler;
 
-var metricDatabase *MetricDatabase;
-
 var sessionManager SessionManager;
 
 // TODO move database classes to their own package
-
 func indexHandler(w http.ResponseWriter, r *http.Request) {
     indexHandlerObj.Process(w, r);
 }
@@ -41,6 +39,10 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
     contactHandlerObj.Process(w, r);
 }
 
+func userHandler(w http.ResponseWriter, r *http.Request) {
+    userHandlerObj.Process(w, r);
+}
+
 func loginHandler(w http.ResponseWriter, r *http.Request) {
     loginHandlerObj.Process(w, r);
 }
@@ -54,13 +56,6 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func initializeConfiguration() {
-    // Initialize logger to output filename
-    log.SetFlags(log.Lshortfile);
-    
-    // Initialize configuration constants
-    var config *ProdConfig;
-    config.initializeConfig();
-
     // Initialize session manager
     sessionManager = NewFSSessionManager();
     gob.Register(&User{});
@@ -78,7 +73,8 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "");
-    allTickerInfo := tickerInfoDatabase.getAllTickerInfo();
+    tickerInfoChan := make(chan []TickerInfo);
+    go func() { tickerInfoChan <- tickerInfoDatabase.getAllTickerInfo(); }();
 
     var economicsInfoDatabase *EconomicsInfoDatabase = NewEconomicsInfoDatabase(
             dbType,
@@ -87,7 +83,8 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "economics_info");
-    allEconomicsInfo := economicsInfoDatabase.getAllEconomicsInfo();
+    economicsInfoChan := make(chan []EconomicsInfo);
+    go func() { economicsInfoChan <- economicsInfoDatabase.getAllEconomicsInfo(); }();
 
     var exchangeIndexInfoDatabase *ExchangeIndexInfoDatabase = NewExchangeIndexInfoDatabase(
             dbType,
@@ -96,8 +93,12 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "");
-    allExchangeIndexInfo := exchangeIndexInfoDatabase.getAllExchangeIndexInfo();
+    exchangeIndexInfoChan := make(chan []ExchangeIndexInfo);
+    go func() { exchangeIndexInfoChan <- exchangeIndexInfoDatabase.getAllExchangeIndexInfo(); }();
 
+    allTickerInfo := <-tickerInfoChan;
+    allEconomicsInfo := <-economicsInfoChan;
+    allExchangeIndexInfo := <-exchangeIndexInfoChan;
     matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
 
     // Initialize login, logout and register handler
@@ -108,27 +109,43 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "");
+    var gridsDatabase *GridsDatabase = NewGridsDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
     loginHandlerObj = NewStandardLoginHandler(usersDatabase, sessionManager);
     logoutHandlerObj = NewStandardLogoutHandler(usersDatabase, sessionManager);
     signupHandlerObj = NewStandardSignupHandler(usersDatabase);
+    userHandlerObj = NewStandardUserHandler(usersDatabase, sessionManager, gridsDatabase);
     
     // Initialize search handler
-    metricDatabase = NewMetricDatabase(dbType,
-        mysqlUsername,
-        mysqlPassword,
-        mysqlServer,
-        mysqlDatabase,
-        "");
+    var metricDatabase *MetricDatabase = NewMetricDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
     searchHandlerObj = NewStandardSearchHandler(metricDatabase);
 }
 
 func main() {
+    // Initialize logger to output filename
+    log.SetFlags(log.Lshortfile);
+    // Initialize configuration constants
+    var config *ProdConfig;
+    config.initializeConfig();
+
     go initializeConfiguration();
 
     http.HandleFunc("/about", aboutHandler);
     http.HandleFunc("/contact", contactHandler);
     http.HandleFunc("/search", searchHandler);
     http.HandleFunc("/match", matchHandler);
+    http.HandleFunc("/user", userHandler);
     http.HandleFunc("/login", loginHandler);
     http.HandleFunc("/logout", logoutHandler);
     http.HandleFunc("/signup", signupHandler);

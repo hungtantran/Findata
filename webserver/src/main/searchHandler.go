@@ -19,16 +19,9 @@ func NewStandardSearchHandler(metricDatabase *MetricDatabase) *StandardSearchHan
     return searchHandler;
 }
 
-func (searchHandler *StandardSearchHandler) findTableAndMetricNames(r *http.Request) (string, []string) {
+func (searchHandler *StandardSearchHandler) findTableAndMetricNames(param map[string]string) (string, []string) {
     tableName := "";
     var metricNames []string;
-
-    var param map[string]string;
-    err := json.NewDecoder(r.Body).Decode(&param)
-    if err != nil {
-        return tableName, metricNames;
-    }
-
     searchType := param["type"];
     searchMetricType, err := strconv.Atoi(searchType);
     searchId := param["id"];
@@ -57,7 +50,6 @@ func (searchHandler *StandardSearchHandler) findTableAndMetricNames(r *http.Requ
         metricNames = append(metricNames, "");
     }
 
-    log.Println(tableName, metricNames);
     return tableName, metricNames;
 }
 
@@ -89,42 +81,87 @@ func (searchHandler *StandardSearchHandler) adjustMetrics(metrics []ResultMetric
     }
 }
 
-func (searchHandler *StandardSearchHandler) ProcessPost(w http.ResponseWriter, r *http.Request) {
-    tableName, metricNames := searchHandler.findTableAndMetricNames(r);
+func (searchHandler *StandardSearchHandler) ProcessGetData(w http.ResponseWriter, param map[string]string) {
+    tableName := param["tableName"];
+    metricName := param["metricName"];
 
-    if tableName != "" {
-        var graph Graph;
-        graph.Title = tableName;
-        graph.Plots = make(map[string]Plot);
+    metrics := searchHandler.metricDatabase.getMetricWithName(tableName, metricName);
+    adjustedMetrics := searchHandler.adjustMetrics(metrics);
+    metricsJson, _ := json.Marshal(adjustedMetrics);
+    metricsJsonString := string(metricsJson);
+    fmt.Fprintf(w, metricsJsonString);
+}
 
-        for _, metricName := range metricNames {
-            metricNameStr := metricName;
-            if metricNameStr == "" {
-                metricNameStr = tableName;
-            }
-            metrics := searchHandler.metricDatabase.getMetricWithName(tableName, metricName);
-            adjustedMetrics := searchHandler.adjustMetrics(metrics);
+func (searchHandler *StandardSearchHandler) ProcessGetGraph(w http.ResponseWriter, param map[string]string) {
+    tableName, metricNames := searchHandler.findTableAndMetricNames(param);
+    if tableName == "" {
+        http.Error(w, "Error", 400);
+        return;
+    }
 
-            dataSet := DataSet {
-                Title: metricNameStr,
-                Type: searchHandler.chooseChartType(tableName, metricName),
-                Data: adjustedMetrics,
-            }
-            plot := Plot {
-                Title: metricNameStr,
-                DataSets: map[string]DataSet {
-                    metricName: dataSet,
-                },
-            }
-            graph.Plots[metricNameStr] = plot;
+    var graph Graph;
+    graph.Title = tableName;
+    graph.Plots = make(map[string]Plot);
+
+    for _, metricName := range metricNames {
+        metricNameStr := metricName;
+        if metricNameStr == "" {
+            metricNameStr = tableName;
         }
 
-        graphJson, _ := json.Marshal(graph);
-        graphJsonString := string(graphJson);
-        fmt.Fprintf(w, graphJsonString);
+        // TODO don't send down table name, only send down id
+        dataDesc := make(map[string]string);
+        dataDesc["metricName"] = metricName;
+        dataDesc["tableName"] = tableName;
+        dataSet := DataSet {
+            Title: metricNameStr,
+            Type: searchHandler.chooseChartType(tableName, metricName),
+            DataDesc: dataDesc,
+        }
+        plot := Plot {
+            Title: metricNameStr,
+            DataSets: map[string]DataSet {
+                metricName: dataSet,
+            },
+        }
+        graph.Plots[metricNameStr] = plot;
     }
-    
-    fmt.Fprintf(w, "");
+
+    graphJson, _ := json.Marshal(graph);
+    graphJsonString := string(graphJson);
+    fmt.Fprintf(w, graphJsonString);
+}
+
+func (searchHandler *StandardSearchHandler) ProcessPost(w http.ResponseWriter, r *http.Request) {
+    var param map[string]string;
+    err := json.NewDecoder(r.Body).Decode(&param)
+    if err != nil {
+        http.Error(w, "Error", 400);
+        return;
+    }
+
+    action, ok := param["action"];
+    if (!ok) {
+        http.Error(w, "Error", 400);
+        return;
+    }
+
+    switch action {
+    case "GetGraph":
+        searchHandler.ProcessGetGraph(w, param);
+        return;
+    case "GetData":
+        searchHandler.ProcessGetData(w, param);
+        return;
+    default:
+        log.Printf("Receive non-existing search action %s", action);
+        http.Error(w, "Error", 400);
+        return;
+    }
+}
+
+func (searchHandler *StandardSearchHandler) ProcessGet(w http.ResponseWriter, r *http.Request) {
+    http.Error(w, "Error", 400);
 }
 
 func (searchHandler *StandardSearchHandler) Process(w http.ResponseWriter, r *http.Request) {

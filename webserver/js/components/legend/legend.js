@@ -10,15 +10,20 @@ class Legend extends React.Component {
     }
 
     render() {
-        var items = Object.keys(this.props.items).map((key, index)=> {
-            var color = {fill: this.props.colorscale(key)};
-            return <text x="2em" y={`${index}em`} style={color} key={`text${key}`}>{this.props.items[key].Title}</text>;
+        var items = Array.from(this.props.items, (val, index) => {
+            var key = val.Title;
+            var color = { fill: this.props.colorscale(key) };
+            return (
+                <text x="2em" y={`${index}em`} style={color} key={`text${key}`}>
+                    {key}
+                </text>
+            );
         });
 
-        var colors = Object.keys(this.props.items).map((key, index)=> {
+        var colors = Array.from(this.props.items, (val, index) => {
+            var key = val.Title;
             var cy = `${-.25 + 1*index}em`;
-            var color = {fill: this.props.colorscale(key)};
-            
+            var color = { fill: this.props.colorscale(key) };
             return <circle cx="1em" cy={cy} r="0.4em" style={color} key={`cirlce${key}`} />;
         });
 
@@ -34,7 +39,7 @@ class Legend extends React.Component {
 Legend.propTypes = {
     xpos: React.PropTypes.number,
     ypos: React.PropTypes.number,
-    items: React.PropTypes.object,
+    items: React.PropTypes.array,
     colorscale: React.PropTypes.func
 };
 
