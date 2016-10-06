@@ -5,7 +5,6 @@ import (
     "fmt"
     "log"
     "net/http"
-    "io/ioutil"
 )
 
 type StandardLoginHandler struct {
@@ -22,7 +21,7 @@ func NewStandardLoginHandler(usersDatabase *UsersDatabase, sessionManager Sessio
 
 func (loginHandler *StandardLoginHandler) SaveSession(w http.ResponseWriter, r *http.Request, user *User) error {
     session, _ := loginHandler.sessionManager.GetSession(r, "sid");
-    session.Values["user"] = user;
+    session.Values["user"], _ = json.Marshal(user);
     err := loginHandler.sessionManager.SaveSession(session, w, r);
     if err != nil {
         log.Println(err);
@@ -51,9 +50,6 @@ func (loginHandler *StandardLoginHandler) HandleGoogleLogin(w http.ResponseWrite
     resp, err := http.Get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + id_token);
     defer resp.Body.Close()
     if err == nil {
-        body, err := ioutil.ReadAll(resp.Body)
-        log.Println(body);
-
         user := loginHandler.usersDatabase.GetUser(username, password);
         // If user doesn't exist, register him 
         if user == nil {

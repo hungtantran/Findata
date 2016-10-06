@@ -7,6 +7,7 @@ class Grid extends React.Component {
         super(props);
 
         this.saveGrid = this.saveGrid.bind(this);
+        this.loadGrid = this.loadGrid.bind(this);
         this.addGraph = this.addGraph.bind(this);
 
         this.numColumns = 48;
@@ -17,20 +18,6 @@ class Grid extends React.Component {
         this.defaultGraphHeightInCell = 10;
         this.defaultGraphContainerWidthInCell = 16;
         this.defaultGraphContainerHeightInCell = 11;
-    }
-
-    // Function call when there is new update to the dom to add new graph to the gridstacl
-    // TODO: in the future, thing change doesn't mean new graph
-    addGraph() {
-        this.grid = $('.grid-stack').data('gridstack');
-        var node = {
-            x: 0,
-            y: 0,
-            width: 4,
-            height: 15
-        };
-        this.grid.addWidget($('#' + (this.props.model.length - 1)),
-            node.x, node.y, node.width, node.height);
     }
 
     // Function call to save the gridstack information for user and send to server
@@ -49,6 +36,26 @@ class Grid extends React.Component {
                 height: node.height
             };
         }.bind(this));
+        this.props.saveGridToServer(JSON.stringify(res));
+    }
+
+    // Function call to load the gridstack information for user
+    loadGrid() {
+        this.props.loadGridFromServer();
+    }
+
+    // Function call when there is new update to the dom to add new graph to the gridstacl
+    // TODO: in the future, thing change doesn't mean new graph
+    addGraph() {
+        this.grid = $('.grid-stack').data('gridstack');
+        var node = {
+            x: 0,
+            y: 0,
+            width: 4,
+            height: 15
+        };
+        this.grid.addWidget($('#' + (this.props.model.length - 1)),
+            node.x, node.y, node.width, node.height);
     }
 
     componentDidMount() {
@@ -76,6 +83,7 @@ class Grid extends React.Component {
         return (
             <div>
                 <button type="button" className="btn btn-primary" onClick={this.saveGrid}>Save Dashboard</button>
+                <button type="button" className="btn btn-primary" onClick={this.loadGrid}>Load Dashboard</button>
                 <div className="grid-stack" data-gs-width="12" data-gs-animate="yes">
                     {graphs}
                 </div>

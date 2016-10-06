@@ -9,13 +9,12 @@ import (
 var indexHandlerObj HttpHandler;
 var searchHandlerObj HttpHandler;
 var matchHandlerObj HttpHandler;
+var userHandlerObj HttpHandler;
 var signupHandlerObj HttpHandler;
 var loginHandlerObj HttpHandler;
 var logoutHandlerObj HttpHandler;
 var contactHandlerObj HttpHandler;
 var aboutHandlerObj HttpHandler;
-
-var metricDatabase *MetricDatabase;
 
 var sessionManager SessionManager;
 
@@ -40,6 +39,10 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
     contactHandlerObj.Process(w, r);
 }
 
+func userHandler(w http.ResponseWriter, r *http.Request) {
+    userHandlerObj.Process(w, r);
+}
+
 func loginHandler(w http.ResponseWriter, r *http.Request) {
     loginHandlerObj.Process(w, r);
 }
@@ -53,13 +56,6 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func initializeConfiguration() {
-    // Initialize logger to output filename
-    log.SetFlags(log.Lshortfile);
-    
-    // Initialize configuration constants
-    var config *ProdConfig;
-    config.initializeConfig();
-
     // Initialize session manager
     sessionManager = NewFSSessionManager();
     gob.Register(&User{});
@@ -113,27 +109,43 @@ func initializeConfiguration() {
             mysqlServer,
             mysqlDatabase,
             "");
+    var gridsDatabase *GridsDatabase = NewGridsDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
     loginHandlerObj = NewStandardLoginHandler(usersDatabase, sessionManager);
     logoutHandlerObj = NewStandardLogoutHandler(usersDatabase, sessionManager);
     signupHandlerObj = NewStandardSignupHandler(usersDatabase);
+    userHandlerObj = NewStandardUserHandler(usersDatabase, sessionManager, gridsDatabase);
     
     // Initialize search handler
-    metricDatabase = NewMetricDatabase(dbType,
-        mysqlUsername,
-        mysqlPassword,
-        mysqlServer,
-        mysqlDatabase,
-        "");
+    var metricDatabase *MetricDatabase = NewMetricDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
     searchHandlerObj = NewStandardSearchHandler(metricDatabase);
 }
 
 func main() {
+    // Initialize logger to output filename
+    log.SetFlags(log.Lshortfile);
+    // Initialize configuration constants
+    var config *ProdConfig;
+    config.initializeConfig();
+
     go initializeConfiguration();
 
     http.HandleFunc("/about", aboutHandler);
     http.HandleFunc("/contact", contactHandler);
     http.HandleFunc("/search", searchHandler);
     http.HandleFunc("/match", matchHandler);
+    http.HandleFunc("/user", userHandler);
     http.HandleFunc("/login", loginHandler);
     http.HandleFunc("/logout", logoutHandler);
     http.HandleFunc("/signup", signupHandler);

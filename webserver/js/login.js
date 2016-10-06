@@ -21,26 +21,27 @@ class Login extends React.Component {
         var username = document.getElementById('username').value;
         var password = document.getElementById('password').value;
 
+        // TODO change this to GET request and use /user handle instead
         fetch('/login', {
-                credentials: 'same-origin',
-                mode: 'no-cors',
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    type: "Findata",
-                    username: username,
-                    password: password,
-                })
-            }).then(function(response) {
-                return response.json();
-            }).catch(function(ex) {
-                console.log('parsing failed', ex);
-            }).then((json) => {
-                this.parseLoginResult(json);
-            });
+            credentials: 'same-origin',
+            mode: 'no-cors',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: "Findata",
+                username: username,
+                password: password,
+            })
+        }).then(function(response) {
+            return response.json();
+        }).catch(function(ex) {
+            console.log('parsing failed', ex);
+        }).then((json) => {
+            this.parseLoginResult(json);
+        });
     }
 
     parseLoginResult(json) {

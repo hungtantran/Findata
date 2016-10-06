@@ -133,7 +133,6 @@ func (searchHandler *StandardSearchHandler) ProcessGetGraph(w http.ResponseWrite
 }
 
 func (searchHandler *StandardSearchHandler) ProcessPost(w http.ResponseWriter, r *http.Request) {
-    // TODO fix this fucking ugly mess of a hack
     var param map[string]string;
     err := json.NewDecoder(r.Body).Decode(&param)
     if err != nil {
@@ -168,7 +167,8 @@ func (searchHandler *StandardSearchHandler) ProcessGet(w http.ResponseWriter, r 
 func (searchHandler *StandardSearchHandler) Process(w http.ResponseWriter, r *http.Request) {
     switch r.Method {
     case "GET":
-        searchHandler.ProcessGet(w, r);
+        page, _ := loadPage("404");
+        fmt.Fprintf(w, page);
     case "POST":
         searchHandler.ProcessPost(w, r);
     default:

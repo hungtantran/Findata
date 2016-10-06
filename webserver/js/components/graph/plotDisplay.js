@@ -224,6 +224,11 @@ class PlotDisplay extends React.Component {
         select(this.refs.zoom).call(this.zoomGenerator);
     }
 
+    componentWillUnmount() {
+        this.refs.element.parentNode.removeEventListener('mousemove', this.onMouseMove);
+        this.refs.element.parentNode.removeEventListener('mouseleave', this.onMouseLeave);
+    }
+
     render() {
         var items = this.buildItems(this.props.plotData);
         return (
