@@ -3,6 +3,9 @@ webserver/node_modules
 webserver/static/generated
 webserver/npm-debug.log
 webserver/src/main/config.go
+webserver/pkg/*
+webserver/bin/*
+webserver/src/github.com/*
 npm-debug.log
 *.txt
 *.pyc
