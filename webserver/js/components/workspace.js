@@ -17,6 +17,45 @@ class Workspace extends React.Component {
         this.loadGridFromServer = this.loadGridFromServer.bind(this);
         this.saveNewGridState = this.saveNewGridState.bind(this);
 
+        /* model is an array like this
+        [{
+            "id": 0,
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 15,
+            "graph": {
+                "Title": "data_metrics",
+                "Plots": {
+                    "adj_close": {
+                        "Title": "adj_close",
+                        "DataSets": {
+                            "adj_close": {
+                                "Title": "adj_close",
+                                "Type": "line",
+                                "DataDesc": {
+                                    "metricName": "adj_close",
+                                    "tableName": "data_metrics"
+                                }
+                            }
+                        }
+                    },
+                    "volume": {
+                        "Title": "volume",
+                        "DataSets": {
+                            "volume": {
+                                "Title": "volume",
+                                "Type": "bar",
+                                "DataDesc": {
+                                    "metricName": "volume",
+                                    "tableName": "data_metrics"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }]*/
         this.state = {
             model: []
         };
