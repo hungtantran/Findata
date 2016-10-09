@@ -121,7 +121,7 @@ class SearchBar extends React.Component {
         for (var type in this.state.suggestions) {
             // Append the header like "Economics Info", "Metrics", etc...
             var typeStr = MetricTypeToString(type);
-            autoSuggestion = autoSuggestion.concat(<li className="react-search__menu-header">{typeStr}</li>)
+            autoSuggestion = autoSuggestion.concat(<li key={Math.random()} className="react-search__menu-header">{typeStr}</li>)
             // Append the actual entries
             autoSuggestion = autoSuggestion.concat(this.state.suggestions[type].map((suggestion, curIndex) => {
                 curTotalIndex++;
@@ -150,11 +150,11 @@ class SearchBar extends React.Component {
 
                 if (selected) { 
                     return (
-                        <li id={curTotalIndex} className="react-search__menu-item selected" onMouseMove={this.handleMouseOver}>{rowResult}</li>
+                        <li key={Math.random()} id={curTotalIndex} className="react-search__menu-item selected" onMouseMove={this.handleMouseOver}>{rowResult}</li>
                     );
                 } else {
                     return (
-                        <li id={curTotalIndex} className="react-search__menu-item" onMouseMove={this.handleMouseOver}>{rowResult}</li>
+                        <li key={Math.random()} id={curTotalIndex} className="react-search__menu-item" onMouseMove={this.handleMouseOver}>{rowResult}</li>
                     );
                 }
             }));

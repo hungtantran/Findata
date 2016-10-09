@@ -7,10 +7,15 @@ class Workspace extends React.Component {
     constructor(props) {
         super(props);
 
+        this.addGraphToModel = this.addGraphToModel.bind(this);
+
+        // Callback for Searchbar object
+        this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+
+        // Callback for Grid object
         this.saveGridToServer = this.saveGridToServer.bind(this);
         this.loadGridFromServer = this.loadGridFromServer.bind(this);
-        this.addJsonToModel = this.addJsonToModel.bind(this);
-        this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
+        this.saveNewGridState = this.saveNewGridState.bind(this);
 
         this.state = {
             model: []
@@ -18,8 +23,8 @@ class Workspace extends React.Component {
     }
     
     // Function call to send grid information to server to save 
-    saveGridToServer(gridJson) {
-        console.log(gridJson);
+    saveGridToServer() {
+        var gridJson = JSON.stringify(this.state.model);
         fetch($SCRIPT_ROOT + '/user', {
             credentials: 'same-origin',
             mode: 'no-cors',
@@ -37,8 +42,13 @@ class Workspace extends React.Component {
         }).catch(function(ex) {
             console.log('parsing failed', ex);
         }).then((json) => {
-            console.log("Save response", json);
+            // TODO do something to indicate save successful
         });
+    }
+
+    saveNewGridState(grid) {
+        // TODO validate gridJson
+        this.state.model = grid;
     }
 
     // Function call to load the gridstack information for user
@@ -60,16 +70,24 @@ class Workspace extends React.Component {
         }).catch(function(ex) {
             console.log('parsing failed', ex);
         }).then((json) => {
-            console.log("Load grid", json);
+            var model = JSON.parse(json);
             this.setState({
-                model: json
+                model: model
             });
         });
     }
 
-    addJsonToModel(json) {
+    addGraphToModel(graph) {
+        var modelElem = {};
+        modelElem["id"] = -1;
+        modelElem["x"] = -1;
+        modelElem["y"] = -1;
+        modelElem["width"] = -1;
+        modelElem["height"] = -1;
+        modelElem["graph"] = graph;
+
         var model = this.state.model;
-        model.push(json);
+        model.push(modelElem);
         this.setState({
             model: model
         });
@@ -96,7 +114,9 @@ class Workspace extends React.Component {
         }).catch(function(ex) {
             console.log('parsing failed', ex);
         }).then((json) => {
-            this.addJsonToModel(json);
+            // TODO validate json
+            var graph = json;
+            this.addGraphToModel(graph);
         });
     }
 
@@ -109,6 +129,7 @@ class Workspace extends React.Component {
                         model={this.state.model}
                         saveGridToServer={this.saveGridToServer}
                         loadGridFromServer={this.loadGridFromServer}
+                        saveNewGridState={this.saveNewGridState}
                     />
                 </div>
             </div>

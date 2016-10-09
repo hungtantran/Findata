@@ -85,13 +85,14 @@ func (gridsDatabase *GridsDatabase) GetGrid(userid int64) *Grid {
 }
 
 func (gridsDatabase *GridsDatabase) InsertGrid(name string, userid int64, grid string) bool {
-    stmt, err := gridsDatabase.db.Prepare("INSERT grids SET name=?, userid=?, grid=?");
+    stmt, err := gridsDatabase.db.Prepare(
+            "INSERT grids SET name=?, userid=?, grid=? ON DUPLICATE KEY UPDATE grid=?");
     if err != nil {
         log.Println(err);
         return false;
     }
 
-    res, err := stmt.Exec(name, userid, grid);
+    res, err := stmt.Exec(name, userid, grid, grid);
     if err != nil {
         log.Println(err);
         return false;

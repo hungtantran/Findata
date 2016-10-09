@@ -15,13 +15,13 @@ class Header extends React.Component {
           <nav className="col-sm-8">
               <p><a href="/about">About Us</a></p>
               <p><a href="/contact">Contact Us</a></p>
-              <p className="dropdown">
+              <div className="dropdown">
                 <a href="#">{fullname} ({username})</a>
                 <ul className="dropdown_menu">
                   <li className="dropdown_item"><a href="#">Manager Account</a></li>
                   <li className="dropdown_item"><a href="/logout">Sign out</a></li>
                 </ul>
-              </p>
+              </div>
           </nav>
         );
       } else {

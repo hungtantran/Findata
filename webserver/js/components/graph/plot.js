@@ -35,7 +35,6 @@ class Plot extends React.Component {
             }).catch(function(ex) {
                 console.log('parsing failed', ex);
             }).then((json) => {
-                console.log("New Data");
                 data[key] = json;
                 this.setState({
                     data: data
