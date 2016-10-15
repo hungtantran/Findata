@@ -1,5 +1,5 @@
 import React from 'react'
-import GetCookie from './utilities';
+import GetCookie from '../utilities/utilities';
 
 class Header extends React.Component {
   constructor(props) {

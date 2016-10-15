@@ -1,5 +1,5 @@
 import React from 'react';
-import Graph from './graph';
+import Graph from '../graph/graph';
 import Entries from 'object.entries';
 
 class Grid extends React.Component {

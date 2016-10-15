@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import React from 'react'; 
-import Workspace from './components/workspace';
+import Workspace from './components/workspace/workspace';
 import Footer from './components/footer';
 import Header from './components/header';
 
