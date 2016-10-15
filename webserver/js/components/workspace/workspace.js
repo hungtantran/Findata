@@ -117,8 +117,10 @@ class Workspace extends React.Component {
             console.log('parsing failed', ex);
         }).then((json) => {
             var model = JSON.parse(json);
+            var activeDash = Object.keys(model).length > 0 ? Object.keys(model)[0] : ''; 
             this.setState({
-                model: model
+                model: model,
+                activeDashboard: activeDash
             });
         });
     }
@@ -186,12 +188,12 @@ class Workspace extends React.Component {
         return (
             <div id="content" className='container'>
                 <div className="workspace">
+                    <button type="button" className="btn btn-primary" onClick={this.saveGridToServer}>Save Dashboard</button>
+                    <button type="button" className="btn btn-primary" onClick={this.loadGridFromServer}>Load Dashboard</button>
                     <SearchBar onSearchSubmit={this.handleSearchSubmit} />
                     <DashboardTabs tabs={Object.keys(this.state.model) } activeTab={this.state.activeDashboard} onActivateDashboard={this.activateDashboard} onAddDashboard={this.addDashboard} />
                     <Grid
                         model={this.state.model[this.state.activeDashboard]}
-                        saveGridToServer={this.saveGridToServer}
-                        loadGridFromServer={this.loadGridFromServer}
                         saveNewGridState={this.saveNewGridState}
                     />
                 </div>

@@ -6,8 +6,6 @@ class Grid extends React.Component {
     constructor(props) {
         super(props);
 
-        this.saveGrid = this.saveGrid.bind(this);
-        this.loadGrid = this.loadGrid.bind(this);
         this.addGraph = this.addGraph.bind(this);
         this.exportGraphState = this.exportGraphState.bind(this);
 
@@ -43,16 +41,6 @@ class Grid extends React.Component {
             });
         }.bind(this));
         this.props.saveNewGridState(res);
-    }
-
-    // Function call to save the gridstack information for user and send to server
-    saveGrid() {
-        this.props.saveGridToServer();
-    }
-
-    // Function call to load the gridstack information for user
-    loadGrid() {
-        this.props.loadGridFromServer();
     }
 
     // Function call when there is new update to the dom to add new graph to the gridstacl
@@ -117,8 +105,6 @@ class Grid extends React.Component {
 
         return (
             <div>
-                <button type="button" className="btn btn-primary" onClick={this.saveGrid}>Save Dashboard</button>
-                <button type="button" className="btn btn-primary" onClick={this.loadGrid}>Load Dashboard</button>
                 <div className="grid-stack" data-gs-width="12" data-gs-animate="yes">
                     {graphs}
                 </div>
