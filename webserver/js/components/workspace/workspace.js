@@ -66,7 +66,6 @@ class Workspace extends React.Component {
             model: initialModel,
             activeDashboard: 'Dashboard 1'
         };
-        console.log(this.state);
     }
     
     // Function call to send grid information to server to save 
@@ -184,8 +183,11 @@ class Workspace extends React.Component {
         });
     }
 
+    componentDidMount() {
+        this.loadGridFromServer();
+    }
+
     render() {
-        console.log(this.state);
         return (
             <div id="content" className='container'>
                 <div className="workspace">

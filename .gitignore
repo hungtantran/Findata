@@ -6,6 +6,8 @@ webserver/src/main/config.go
 webserver/pkg/*
 webserver/bin/*
 webserver/src/github.com/*
+webserver/src/golang.org/*
+webserver/src/gopkg.in/*
 npm-debug.log
 *.txt
 *.pyc
