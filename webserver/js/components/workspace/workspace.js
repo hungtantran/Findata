@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBar from './searchbar';
 import Grid from './grid';
 import DashboardTabs from './dashboardTabs';
+import DataPane from './dataPane';
 
 class Workspace extends React.Component {
 
@@ -188,14 +189,19 @@ class Workspace extends React.Component {
         return (
             <div id="content" className='container'>
                 <div className="workspace">
-                    <button type="button" className="btn btn-primary" onClick={this.saveGridToServer}>Save Dashboard</button>
-                    <button type="button" className="btn btn-primary" onClick={this.loadGridFromServer}>Load Dashboard</button>
-                    <SearchBar onSearchSubmit={this.handleSearchSubmit} />
-                    <DashboardTabs tabs={Object.keys(this.state.model) } activeTab={this.state.activeDashboard} onActivateDashboard={this.activateDashboard} onAddDashboard={this.addDashboard} />
-                    <Grid
-                        model={this.state.model[this.state.activeDashboard]}
-                        saveNewGridState={this.saveNewGridState}
-                    />
+                    <div key='sidebar' className="col-sm-3 col-md-2">
+                        <button type="button" className="btn btn-primary" onClick={this.saveGridToServer}>Save Dashboard</button>
+                        <button type="button" className="btn btn-primary" onClick={this.loadGridFromServer}>Load Dashboard</button>
+                        <SearchBar onSearchSubmit={this.handleSearchSubmit} />
+                        <DataPane/>
+                    </div>
+                    <div key='main' className="col-sm-9 col-md-10">
+                        <DashboardTabs tabs={Object.keys(this.state.model) } activeTab={this.state.activeDashboard} onActivateDashboard={this.activateDashboard} onAddDashboard={this.addDashboard} />
+                        <Grid
+                            model={this.state.model[this.state.activeDashboard]}
+                            saveNewGridState={this.saveNewGridState}
+                        />
+                    </div>
                 </div>
             </div>
         );
