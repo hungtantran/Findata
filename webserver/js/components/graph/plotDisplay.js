@@ -98,15 +98,30 @@ class PlotDisplay extends React.Component {
         var firstVal = xscale.invert(xscale.range()[0]);
         var lastVal = xscale.invert(xscale.range()[1]);
 
-        console.log(firstVal, lastVal);
-
         var yDomain = this.getDataYDomain(this.props.plotData, firstVal, lastVal);
-        console.log(yDomain);
         this.yscale.domain(yDomain);
     }
 
     updateZoom() {
         var newX = event.transform.rescaleX(this.xscale);
+        console.log(event.transform);
+
+        var isPan = function(dom1, dom2) {
+            var dom1Diff = dom1[1] - dom1[0];
+            var dom2Diff = dom2[1] - dom2[0];
+            console.log(dom1Diff, dom2Diff);
+            return Math.abs(dom1Diff - dom2Diff) <= 1;
+        };
+
+        if(!isPan(newX.domain(), this.state.transformedXScale.domain())) {
+            console.log("Panning");
+            var domDiff = newX.domain()[1] - this.state.transformedXScale.domain()[1];
+            var domain = newX.domain();
+            var NewDiff = domain[1] - domain[0];
+            domain[1] = this.state.transformedXScale.domain()[1];
+            domain[0] = Math.max((domain[1] - NewDiff), this.xscale.domain()[0]);
+            newX.domain(domain);
+        }
         this.getNewYScaleFromXScale(newX);
 
         this.setState({
