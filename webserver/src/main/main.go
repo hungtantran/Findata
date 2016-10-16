@@ -18,40 +18,54 @@ var aboutHandlerObj HttpHandler;
 
 var sessionManager SessionManager;
 
+// Check if this is thread-safe
+func getRequestUser(w http.ResponseWriter, r *http.Request) *User {
+    return sessionManager.GetUserFromSession(w, r);
+}
+
 // TODO move database classes to their own package
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     indexHandlerObj.Process(w, r);
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     searchHandlerObj.Process(w, r);
 }
 
 func matchHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     matchHandlerObj.Process(w, r);
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     aboutHandlerObj.Process(w, r);
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     contactHandlerObj.Process(w, r);
 }
 
 func userHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     userHandlerObj.Process(w, r);
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     loginHandlerObj.Process(w, r);
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     logoutHandlerObj.Process(w, r);
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
     signupHandlerObj.Process(w, r);
 }
 
@@ -64,6 +78,36 @@ func initializeConfiguration() {
     indexHandlerObj = NewStandardIndexHandler();
     contactHandlerObj = NewStandardContactHandler();
     aboutHandlerObj = NewStandardAboutHandler();
+
+    // Initialize login, logout and register handler
+    var usersDatabase *UsersDatabase = NewUsersDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
+    var gridsDatabase *GridsDatabase = NewGridsDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
+    loginHandlerObj = NewStandardLoginHandler(usersDatabase);
+    logoutHandlerObj = NewStandardLogoutHandler(usersDatabase);
+    signupHandlerObj = NewStandardSignupHandler(usersDatabase);
+    userHandlerObj = NewStandardUserHandler(usersDatabase, gridsDatabase);
+    
+    // Initialize search handler
+    var metricDatabase *MetricDatabase = NewMetricDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
+    searchHandlerObj = NewStandardSearchHandler(metricDatabase);
 
     // Initialize match handler
     var tickerInfoDatabase *TickerInfoDatabase = NewTickerInfoDatabase(
@@ -100,36 +144,6 @@ func initializeConfiguration() {
     allEconomicsInfo := <-economicsInfoChan;
     allExchangeIndexInfo := <-exchangeIndexInfoChan;
     matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
-
-    // Initialize login, logout and register handler
-    var usersDatabase *UsersDatabase = NewUsersDatabase(
-            dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "");
-    var gridsDatabase *GridsDatabase = NewGridsDatabase(
-            dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "");
-    loginHandlerObj = NewStandardLoginHandler(usersDatabase, sessionManager);
-    logoutHandlerObj = NewStandardLogoutHandler(usersDatabase, sessionManager);
-    signupHandlerObj = NewStandardSignupHandler(usersDatabase);
-    userHandlerObj = NewStandardUserHandler(usersDatabase, sessionManager, gridsDatabase);
-    
-    // Initialize search handler
-    var metricDatabase *MetricDatabase = NewMetricDatabase(
-            dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "");
-    searchHandlerObj = NewStandardSearchHandler(metricDatabase);
 }
 
 func main() {

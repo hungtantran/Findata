@@ -1,6 +1,7 @@
 package main
 
 import (
+    "encoding/json"
     "github.com/gorilla/sessions"
     "net/http"
 )
@@ -9,6 +10,8 @@ type SessionManager interface {
     GetSession(r *http.Request, sessionName string) (*sessions.Session, error) ;
     SaveSession(session *sessions.Session, w http.ResponseWriter, r *http.Request) error;
     ClearSession(w http.ResponseWriter, sessionName string);
+    ClearAllSession(w http.ResponseWriter);
+    GetUserFromSession(w http.ResponseWriter, r *http.Request) *User;
 }
 
 type FSSessionManager struct {
@@ -21,7 +24,7 @@ func NewFSSessionManager() *FSSessionManager {
 
     fsSessionManager.store.Options = &sessions.Options{
         Path:     "/",
-        MaxAge:   3600,
+        MaxAge:   36000,
         HttpOnly: true,
     }
 
@@ -44,4 +47,27 @@ func (fsSessionManager *FSSessionManager) ClearSession(w http.ResponseWriter, se
         MaxAge: -1,
     }
     http.SetCookie(w, cookie);
+}
+
+func (fsSessionManager *FSSessionManager) ClearAllSession(w http.ResponseWriter) {
+    sessionNames := [3]string{"Username", "Fullname", "sid"};
+    for _, sessionName := range sessionNames {
+        fsSessionManager.ClearSession(w, sessionName);
+    }
+}
+
+func (fsSessionManager *FSSessionManager) GetUserFromSession(w http.ResponseWriter, r *http.Request) *User {
+    session, _ := fsSessionManager.GetSession(r, "sid"); 
+    userInf, ok := session.Values["user"];
+    if (!ok) {
+        fsSessionManager.ClearAllSession(w);
+        return nil;
+    }
+    user := new(User);
+    json.Unmarshal(userInf.([]byte), user)
+    if (!ok) {
+        fsSessionManager.ClearAllSession(w);
+        return nil;
+    }
+    return user;
 }

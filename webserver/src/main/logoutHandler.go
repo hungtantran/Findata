@@ -7,20 +7,16 @@ import (
 
 type StandardLogoutHandler struct {
     usersDatabase *UsersDatabase
-    sessionManager SessionManager
 }
 
-func NewStandardLogoutHandler(usersDatabase *UsersDatabase, sessionManager SessionManager) *StandardLogoutHandler {
+func NewStandardLogoutHandler(usersDatabase *UsersDatabase) *StandardLogoutHandler {
     var logoutHandler *StandardLogoutHandler = new(StandardLogoutHandler);
     logoutHandler.usersDatabase = usersDatabase;
-    logoutHandler.sessionManager = sessionManager;
     return logoutHandler;
 }
 
 func (logoutHandler *StandardLogoutHandler) Logout(w http.ResponseWriter, r *http.Request) {
-    logoutHandler.sessionManager.ClearSession(w, "Username");
-    logoutHandler.sessionManager.ClearSession(w, "Fullname");
-    logoutHandler.sessionManager.ClearSession(w, "sid");
+    sessionManager.ClearAllSession(w);
     http.Redirect(w, r, "/", 302);
 }
 

@@ -9,41 +9,24 @@ import (
 
 type StandardUserHandler struct {
     usersDatabase *UsersDatabase
-    sessionManager SessionManager
     gridsDatabase *GridsDatabase
 }
 
 func NewStandardUserHandler(
         usersDatabase *UsersDatabase,
-        sessionManager SessionManager,
         gridsDatabase *GridsDatabase) *StandardUserHandler {
     var userHandler *StandardUserHandler = new(StandardUserHandler);
     userHandler.usersDatabase = usersDatabase;
-    userHandler.sessionManager = sessionManager;
     userHandler.gridsDatabase = gridsDatabase;
     return userHandler;
 }
-
-func (userHandler *StandardUserHandler) GetUserFromSession(r *http.Request) *User {
-    session, _ := userHandler.sessionManager.GetSession(r, "sid"); 
-    userInf, ok := session.Values["user"];
-    if (!ok) {
-        return nil;
-    }
-    user := new(User);
-    json.Unmarshal(userInf.([]byte), user)
-    if (!ok) {
-        return nil;
-    }
-    return user;
-} 
 
 func (userHandler *StandardUserHandler) ProcessSaveGrid(w http.ResponseWriter, r *http.Request, param map[string]string) {
     saveResult := make(map[string]interface{});
     saveResult["result"] = false;
     saveResult["message"] = "Save fails.";
     
-    user := userHandler.GetUserFromSession(r);
+    user := sessionManager.GetUserFromSession(w, r);
     if (user == nil) {
         http.Error(w, "Error", 400);
         return;
@@ -56,7 +39,7 @@ func (userHandler *StandardUserHandler) ProcessSaveGrid(w http.ResponseWriter, r
 }
 
 func (userHandler *StandardUserHandler) ProcessLoadGrid(w http.ResponseWriter, r *http.Request, param map[string]string) {
-    user := userHandler.GetUserFromSession(r);
+    user := sessionManager.GetUserFromSession(w, r);
     if (user == nil) {
         http.Error(w, "Error", 400);
         return;

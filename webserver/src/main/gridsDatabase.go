@@ -104,7 +104,6 @@ func (gridsDatabase *GridsDatabase) InsertGrid(name string, userid int64, grid s
         return false;
     }
 
-    log.Println(id);
     return true;
 }
 

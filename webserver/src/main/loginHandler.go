@@ -9,20 +9,18 @@ import (
 
 type StandardLoginHandler struct {
     usersDatabase *UsersDatabase
-    sessionManager SessionManager
 }
 
-func NewStandardLoginHandler(usersDatabase *UsersDatabase, sessionManager SessionManager) *StandardLoginHandler {
+func NewStandardLoginHandler(usersDatabase *UsersDatabase) *StandardLoginHandler {
     var loginHandler *StandardLoginHandler = new(StandardLoginHandler);
     loginHandler.usersDatabase = usersDatabase;
-    loginHandler.sessionManager = sessionManager;
     return loginHandler;
 }
 
 func (loginHandler *StandardLoginHandler) SaveSession(w http.ResponseWriter, r *http.Request, user *User) error {
-    session, _ := loginHandler.sessionManager.GetSession(r, "sid");
+    session, _ := sessionManager.GetSession(r, "sid");
     session.Values["user"], _ = json.Marshal(user);
-    err := loginHandler.sessionManager.SaveSession(session, w, r);
+    err := sessionManager.SaveSession(session, w, r);
     if err != nil {
         log.Println(err);
         return err;
