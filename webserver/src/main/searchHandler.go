@@ -11,11 +11,21 @@ import (
 
 type StandardSearchHandler struct {
     metricDatabase *MetricDatabase
+    allTickerInfo []TickerInfo
+    allEconomicsInfo []EconomicsInfo
+    allExchangeIndexInfo []ExchangeIndexInfo
 }
 
-func NewStandardSearchHandler(metricDatabase *MetricDatabase) *StandardSearchHandler {
+func NewStandardSearchHandler(
+        metricDatabase *MetricDatabase,
+        allTickerInfo []TickerInfo,
+        allEconomicsInfo []EconomicsInfo,
+        allExchangeIndexInfo []ExchangeIndexInfo) *StandardSearchHandler {
     var searchHandler *StandardSearchHandler = new(StandardSearchHandler);
     searchHandler.metricDatabase = metricDatabase;
+    searchHandler.allEconomicsInfo = allEconomicsInfo;
+    searchHandler.allTickerInfo = allTickerInfo;
+    searchHandler.allExchangeIndexInfo = allExchangeIndexInfo;
     return searchHandler;
 }
 

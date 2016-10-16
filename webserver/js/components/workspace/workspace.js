@@ -21,45 +21,47 @@ class Workspace extends React.Component {
         this.activateDashboard = this.activateDashboard.bind(this);
         this.addDashboard = this.addDashboard.bind(this);
 
-        /* model is an array like this
-        [{
-            "id": 0,
-            "x": 0,
-            "y": 0,
-            "width": 4,
-            "height": 15,
-            "graph": {
-                "Title": "data_metrics",
-                "Plots": {
-                    "adj_close": {
-                        "Title": "adj_close",
-                        "DataSets": {
-                            "adj_close": {
-                                "Title": "adj_close",
-                                "Type": "line",
-                                "DataDesc": {
-                                    "metricName": "adj_close",
-                                    "tableName": "data_metrics"
+        /* model is an map like this
+        {"Dashboard 1":
+            [{
+                "id": 0,
+                "x": 0,
+                "y": 0,
+                "width": 4,
+                "height": 15,
+                "graph": {
+                    "Title": "data_metrics",
+                    "Plots": {
+                        "adj_close": {
+                            "Title": "adj_close",
+                            "DataSets": {
+                                "adj_close": {
+                                    "Title": "adj_close",
+                                    "Type": "line",
+                                    "DataDesc": {
+                                        "metricName": "adj_close",
+                                        "tableName": "data_metrics"
+                                    }
                                 }
                             }
-                        }
-                    },
-                    "volume": {
-                        "Title": "volume",
-                        "DataSets": {
-                            "volume": {
-                                "Title": "volume",
-                                "Type": "bar",
-                                "DataDesc": {
-                                    "metricName": "volume",
-                                    "tableName": "data_metrics"
+                        },
+                        "volume": {
+                            "Title": "volume",
+                            "DataSets": {
+                                "volume": {
+                                    "Title": "volume",
+                                    "Type": "bar",
+                                    "DataDesc": {
+                                        "metricName": "volume",
+                                        "tableName": "data_metrics"
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
-        }]*/
+            }]
+        }*/
         var initialModel = {'Dashboard 1' : []};
 
         this.state = {
@@ -212,13 +214,17 @@ class Workspace extends React.Component {
             <div id="content" className='container'>
                 <div className="workspace">
                     <div key='sidebar' className="col-sm-3 col-md-2">
-                        <button type="button" className="btn btn-primary" onClick={this.saveGridToServer}>Save Dashboard</button>
-                        <button type="button" className="btn btn-primary" onClick={this.loadGridFromServer}>Load Dashboard</button>
                         <SearchBar onSearchSubmit={this.handleSearchSubmit} />
-                        <DataPane/>
+                        <DataPane model={this.state.model[this.state.activeDashboard]} />
                     </div>
                     <div key='main' className="col-sm-9 col-md-10">
-                        <DashboardTabs tabs={Object.keys(this.state.model) } activeTab={this.state.activeDashboard} onActivateDashboard={this.activateDashboard} onAddDashboard={this.addDashboard} />
+                        <DashboardTabs
+                            tabs={Object.keys(this.state.model)}
+                            activeTab={this.state.activeDashboard}
+                            onActivateDashboard={this.activateDashboard}
+                            onAddDashboard={this.addDashboard}
+                            saveGridToServer={this.saveGridToServer}
+                            loadGridFromServer={this.loadGridFromServer} />
                         <Grid
                             model={this.state.model[this.state.activeDashboard]}
                             saveNewGridState={this.saveNewGridState}

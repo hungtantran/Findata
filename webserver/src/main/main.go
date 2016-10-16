@@ -98,16 +98,6 @@ func initializeConfiguration() {
     logoutHandlerObj = NewStandardLogoutHandler(usersDatabase);
     signupHandlerObj = NewStandardSignupHandler(usersDatabase);
     userHandlerObj = NewStandardUserHandler(usersDatabase, gridsDatabase);
-    
-    // Initialize search handler
-    var metricDatabase *MetricDatabase = NewMetricDatabase(
-            dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "");
-    searchHandlerObj = NewStandardSearchHandler(metricDatabase);
 
     // Initialize match handler
     var tickerInfoDatabase *TickerInfoDatabase = NewTickerInfoDatabase(
@@ -144,6 +134,21 @@ func initializeConfiguration() {
     allEconomicsInfo := <-economicsInfoChan;
     allExchangeIndexInfo := <-exchangeIndexInfoChan;
     matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
+
+        
+    // Initialize search handler
+    var metricDatabase *MetricDatabase = NewMetricDatabase(
+            dbType,
+            mysqlUsername,
+            mysqlPassword,
+            mysqlServer,
+            mysqlDatabase,
+            "");
+    searchHandlerObj = NewStandardSearchHandler(
+        metricDatabase,
+        allTickerInfo,
+        allEconomicsInfo,
+        allExchangeIndexInfo);
 }
 
 func main() {

@@ -52,9 +52,9 @@ class Grid extends React.Component {
 
         this.props.model.forEach((modelElem, index) => {
             var x = modelElem.x < 0 ? 0 : modelElem.x;
-            var y = modelElem.y < 0 ? 0 : modelElem.y;
+            var y = modelElem.y < 0 ? 1000 : modelElem.y;
             var width = modelElem.width < 0 ? 4 : modelElem.width;
-            var height = modelElem.height < 0 ? 15 : modelElem.height;
+            var height = modelElem.height < 0 ? 8 : modelElem.height;
             var node = {
                 x: x,
                 y: y,

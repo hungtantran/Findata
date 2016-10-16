@@ -98,7 +98,7 @@ func (gridsDatabase *GridsDatabase) InsertGrid(name string, userid int64, grid s
         return false;
     }
 
-    id, err := res.LastInsertId();
+    _, err = res.LastInsertId();
     if err != nil {
         log.Println(err);
         return false;

@@ -1,13 +1,13 @@
 import React from 'react';
 
-function DataPane() {
+function DataPane(props) {
+    var groupItems = props.model.map((graph) => {
+        return <li className="list-group-item" key={graph.graph.Title}>{graph.graph.Title}</li>;
+    });
+
     return (
     <ul className="list-group">
-        <li className="list-group-item">Cras justo odio</li>
-        <li className="list-group-item">Dapibus ac facilisis in</li>
-        <li className="list-group-item">Morbi leo risus</li>
-        <li className="list-group-item">Porta ac consectetur ac</li>
-        <li className="list-group-item">Vestibulum at eros</li>
+        {groupItems}
     </ul>
     );
 }
