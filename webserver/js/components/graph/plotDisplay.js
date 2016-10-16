@@ -233,10 +233,13 @@ class PlotDisplay extends React.Component {
         var items = this.buildItems(this.props.plotData);
         return (
             <g className="plot" transform={getPlotTranslation(this.props.xOffset, this.props.yOffset)} ref="element" >
-                <g ref="items" >
+                <clipPath id='clip'>
+                    <rect width={this.props.width * .95} height={this.props.height} />
+                </clipPath>
+                <g ref="items" clipPath='url(#clip)' >
                     {items}
-                    <XAxis key="axis" scale={this.state.transformedXScale} translate={getXScaleTranslation(this.props.height)} />
                 </g>
+                <XAxis key="axis" scale={this.state.transformedXScale} translate={getXScaleTranslation(this.props.height)} />
                 {this.state.hoverLines}
                 {this.state.hoverValues}
                 <YAxis key="yaxis" scale={this.yscale} translate={getYScaleTranslation(this.props.width * .95)} />
