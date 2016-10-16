@@ -40,7 +40,8 @@ class Grid extends React.Component {
                 graph: graphMetadata,
             });
         }.bind(this));
-        this.props.saveNewGridState(res);
+        if(res.length == this.props.model.length)
+            this.props.saveNewGridState(res);
     }
 
     // Function call when there is new update to the dom to add new graph to the gridstacl
@@ -72,8 +73,7 @@ class Grid extends React.Component {
     componentDidMount() {
         $(function () {
             var options = {
-                cellHeight: 20,
-                verticalMargin: 5
+                verticalMargin: 0
             };
             $('.grid-stack').gridstack(options);
         });
@@ -86,10 +86,15 @@ class Grid extends React.Component {
     }
 
     render() {
+        var grid = $('.grid-stack').data('gridstack');
+        var cellWidth = grid ? grid.cellWidth() : 20;
+        var cellHeight = grid ? grid.cellHeight() : 20;
+
         var margins = { top: 20, right: 40, bottom: 30, left: 10 };
         var graphs = this.props.model && Array.from(this.props.model, (graphJson, index) => {
-            var width = this.defaultGraphWidthInCell * this.cellSize;
-            var height = this.defaultGraphHeightInCell * this.cellSize;
+            var width = graphJson.width * cellWidth - 10;
+            var height = graphJson.height * cellHeight - 10;
+            console.log(height, cellHeight); 
             // TODO random as key is not good, quite inefficient
             return (
                 <Graph

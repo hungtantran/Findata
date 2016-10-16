@@ -94,7 +94,27 @@ class Workspace extends React.Component {
 
     saveNewGridState(grid) {
         // TODO validate gridJson
-        this.state.model[this.state.activeDashboard] = grid;
+        var totalModel = this.state.model;
+        var currModel = totalModel[this.state.activeDashboard];
+        var needsUpdate = false;
+
+        if( grid.length != currModel.length) {
+            console.log(grid.length, currModel.length);
+            needsUpdate = true;
+        } else {
+            grid.forEach((graph, index) => {
+                var currGraph = currModel[index];
+                if(currGraph.x != graph.x || currGraph.y != graph.y || currGraph.width != graph.width || currGraph.height != graph.height) {
+                    console.log(currGraph, graph);
+                    needsUpdate = true;
+                }
+            });
+        }
+
+        if(needsUpdate) {
+            totalModel[this.state.activeDashboard] = grid;
+            this.setState({model: totalModel});
+        }
     }
 
     // Function call to load the gridstack information for user
