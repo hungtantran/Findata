@@ -36,6 +36,7 @@ class PlotDisplay extends React.Component {
         this.onMouseLeave = this.onMouseLeave.bind(this);
         this.getDataXDomain = this.getDataXDomain.bind(this);
         this.getDataYDomain = this.getDataYDomain.bind(this);
+        this.getNewYScaleFromXScale = this.getNewYScaleFromXScale.bind(this);
 
         this.buildScales(this.props.plotData);
         this.zoomGenerator = zoom().extent([[0, 0], [this.props.width * .95, this.props.height]]).translateExtent(
@@ -63,19 +64,29 @@ class PlotDisplay extends React.Component {
         return [xMin, xMax];
     }
 
-    getDataYDomain(plotData) {
+    getDataYDomain(plotData, dataMin, dataMax) {
+        var valid = function(date) {
+            return !dataMax || !dataMin || (date > dataMin && date < dataMax);
+        };
+
         var yMin = min(Array.from(plotData, (dataSeries) => {
             var data = dataSeries.Data;
-            var minVal = data.length == 0 ? 0 : min(Array.from(data, (val) => {
-                return val.V;
+            var minVal = data.length == 0 ? Infinity : min(Array.from(data, (val) => {
+                if(valid(new Date(val.T)))
+                    return val.V;
+                else
+                    return Infinity;
             }));
             return minVal;
         }));
 
         var yMax = max(Array.from(plotData, (dataSeries) => {
             var data = dataSeries.Data;
-            var maxVal = data.length == 0 ? 1000 : max(Array.from(data, (val) => {
-                return val.V;
+            var maxVal = data.length == 0 ? -Infinity : max(Array.from(data, (val) => {
+                if(valid(new Date(val.T)))
+                    return val.V;
+                else
+                    return -Infinity;
             }));
             return maxVal;
         }));
@@ -83,9 +94,23 @@ class PlotDisplay extends React.Component {
         return [yMin * 0.95, yMax * 1.05];
     }
 
+    getNewYScaleFromXScale(xscale) {
+        var firstVal = xscale.invert(xscale.range()[0]);
+        var lastVal = xscale.invert(xscale.range()[1]);
+
+        console.log(firstVal, lastVal);
+
+        var yDomain = this.getDataYDomain(this.props.plotData, firstVal, lastVal);
+        console.log(yDomain);
+        this.yscale.domain(yDomain);
+    }
+
     updateZoom() {
+        var newX = event.transform.rescaleX(this.xscale);
+        this.getNewYScaleFromXScale(newX);
+
         this.setState({
-            transformedXScale : event.transform.rescaleX(this.xscale)
+            transformedXScale : newX
         });
     }
 
