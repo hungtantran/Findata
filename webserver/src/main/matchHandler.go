@@ -82,7 +82,7 @@ func (matchHandler *StandardMatchHandler) ProcessGet(w http.ResponseWriter, r *h
         upperTicker := strings.ToUpper(v.ticker.String);
         if (strings.HasPrefix(upperTicker, upperMatch) || matchHandler.StringMatchPart(upperMatch, upperName)) {
             metadata := make(map[string]interface{});
-            metadata["Id"] = v.ticker.String;
+            metadata["Id"] = v.id.Int64;
             matchResult := MatchResult{
                     Abbrv: v.ticker.String,
                     Name: v.name.String,

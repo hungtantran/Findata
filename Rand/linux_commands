@@ -1,0 +1,5 @@
+sudo fdisk -l // List device
+sudo fdisk /dev/sdb // Create new partition, etc...
+sudo mkfs.ext4 /dev/sdb // Format the device partition
+sudo mount -t ext4 /dev/sdb /elastic/ // Mount a partition
+sudo chown -R hungtantran:hungtantran /elastic/ // Change ownership of a directory

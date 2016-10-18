@@ -24,7 +24,7 @@ func NewFSSessionManager() *FSSessionManager {
 
     fsSessionManager.store.Options = &sessions.Options{
         Path:     "/",
-        MaxAge:   36000,
+        MaxAge:   60 * 60 * 24 * 30 /* 30 days */,
         HttpOnly: true,
     }
 

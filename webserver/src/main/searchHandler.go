@@ -5,7 +5,6 @@ import (
     "fmt"
     "log"
     "net/http"
-    "strings"
     "strconv"
 )
 
@@ -40,7 +39,7 @@ func (searchHandler *StandardSearchHandler) findTableAndMetricNames(param map[st
     if (err == nil && searchId != "") {
         switch MetricType(searchMetricType) {
         case Equities:
-            tableName = strings.ToLower(searchId) + "_metrics";
+            tableName = "ticker_info_" + searchId + "_metrics";
             metricNames = append(metricNames, "adj_close");
             metricNames = append(metricNames, "volume");
         case EconIndicator:
