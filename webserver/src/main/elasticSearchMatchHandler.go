@@ -216,6 +216,7 @@ func (matchHandler *ElasticSearchMatchHandler) ProcessGet(w http.ResponseWriter,
     }
 
     match := matches[0];
+    fmt.Println(match);
     allMatches := make(map[MetricType][]MatchResult);
 
     // Find all exchange index info matches

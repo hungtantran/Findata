@@ -9,24 +9,24 @@ import (
 
 // Data type
 type TickerInfo struct {
-    Id sql.NullInt64
-    Ticker sql.NullString
-    TickerType sql.NullString
-    Name sql.NullString
-    Location sql.NullString
-    Cik sql.NullString
-    IpoYear sql.NullInt64
-    Sector sql.NullString
-    Industry sql.NullString
-    Exchange sql.NullString
-    Sic sql.NullInt64
-    Naics sql.NullInt64
-    ClassShare sql.NullString
-    FundType sql.NullString
-    FundFamily sql.NullString
-    AssetClass sql.NullString
-    Active sql.NullInt64
-    MetaData sql.NullString
+    Id sql.NullInt64 `json:"id"`
+    Ticker sql.NullString `json:"ticker"`
+    TickerType sql.NullString `json:"ticker_type"`
+    Name sql.NullString `json:"name"`
+    Location sql.NullString `json:"location"`
+    Cik sql.NullString `json:"cik"`
+    IpoYear sql.NullInt64 `json:"ipo_year"`
+    Sector sql.NullString `json:"sector"`
+    Industry sql.NullString `json:"industry"`
+    Exchange sql.NullString `json:"exchange"`
+    Sic sql.NullInt64 `json:"sic"`
+    Naics sql.NullInt64 `json:"naics"`
+    ClassShare sql.NullString `json:"class_share"`
+    FundType sql.NullString `json:"fund_type"`
+    FundFamily sql.NullString `json:"fund_family"`
+    AssetClass sql.NullString `json:"asset_class"`
+    Active sql.NullInt64 `json:"active"`
+    MetaData sql.NullString `json:"metadata"`
 }
 
 func (tickerInfo *TickerInfo) String() string {
@@ -101,14 +101,14 @@ func (user *User) String() string {
 }
 
 type ExchangeIndexInfo struct {
-    Id sql.NullInt64
-    Index sql.NullString
-    IndexType sql.NullString
-    Name sql.NullString
-    Location sql.NullString
-    Sector sql.NullString
-    Industry sql.NullString
-    Metadata sql.NullString
+    Id sql.NullInt64 `json:"id"`
+    Index sql.NullString `json:"index"`
+    IndexType sql.NullString `json:"index_type"`
+    Name sql.NullString `json:"name"`
+    Location sql.NullString `json:"location"`
+    Sector sql.NullString `json:"sector"`
+    Industry sql.NullString `json:"industry"`
+    Metadata sql.NullString `json:"metadata"`
 }
 
 func (exchangeIndexInfo *ExchangeIndexInfo) String() string {
@@ -123,13 +123,13 @@ func (exchangeIndexInfo *ExchangeIndexInfo) String() string {
 }
 
 type EconomicsInfo struct {
-    Id sql.NullInt64
-    Name sql.NullString
-    Location sql.NullString
-    Category sql.NullString
-    TypeStr sql.NullString
-    Source sql.NullString
-    Metadata sql.NullString   
+    Id sql.NullInt64 `json:"id"`
+    Name sql.NullString `json:"name"`
+    Location sql.NullString `json:"location"`
+    Category sql.NullString `json:"category"`
+    TypeStr sql.NullString `json:"type"`
+    Source sql.NullString `json:"source"`
+    Metadata sql.NullString `json:"metadata"` 
 }
 
 func (economicsInfo *EconomicsInfo) String() string {

@@ -7,6 +7,9 @@ var mysqlPassword string;
 var mysqlServer string;
 var mysqlDatabase string;
 
+var elasticSearchIp string;
+var elasticSearchPort int;
+
 var maxNumMatchesReturned int;
 
 var httpAddressAndPort string;
@@ -28,6 +31,9 @@ func (config *ProdConfig) initializeConfig() {
     mysqlPassword = "testtest";
     mysqlServer = "104.154.40.63";
     mysqlDatabase = "models";
+
+    elasticSearchIp = "104.198.15.187";
+    elasticSearchPort = 9200;
 
     maxNumMatchesReturned = 10;
 
