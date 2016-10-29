@@ -11,15 +11,6 @@ import (
 	elastic "gopkg.in/olivere/elastic.v3"
 )
 
-type News struct {
-	Id int
-    Source string
-    Date string
-    Title string
-    Summary string
-	Content string
-}
-
 func main() {
 	// Create a client
 	client, err := elastic.NewClient(

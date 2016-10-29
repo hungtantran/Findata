@@ -124,3 +124,28 @@ economics_info_%_metrics
   KEY `usersession_ibfk_1` (`userid`),
   CONSTRAINT `usersession_ibfk_1` FOREIGN KEY (`userid`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 |
+
+| news_info | CREATE TABLE `news_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `source` varchar(32) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `headline` varchar(255) DEFAULT NULL,
+  `print_headline` varchar(255) DEFAULT NUL
+  `abstract` text,
+  `section` varchar(255) DEFAULT NULL,
+  `subsection` varchar(255) DEFAULT NULL,
+  `tags` varchar(255) DEFAULT NULL,
+  `keywords` varchar(255) DEFAULT NULL,
+  `link` varchar(255) DEFAULT NULL,
+  `authors` varchar(255) DEFAULT NULL,
+  `metadata` text,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `index` (`link`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
+
+| news_content | CREATE TABLE `news_content` (
+  `id` int(11) NOT NULL,
+  `full_data` text NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `news_content_ibfk_1` FOREIGN KEY (`id`) REFERENCES `news_info` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |

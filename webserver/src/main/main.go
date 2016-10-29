@@ -4,6 +4,8 @@ import (
     "encoding/gob"
     "log"
     "net/http"
+
+    "fin_database"
 )
 
 var indexHandlerObj HttpHandler;
@@ -19,60 +21,60 @@ var aboutHandlerObj HttpHandler;
 var sessionManager SessionManager;
 
 // Check if this is thread-safe
-func getRequestUser(w http.ResponseWriter, r *http.Request) *User {
+func getRequestUser(w http.ResponseWriter, r *http.Request) *fin_database.User {
     return sessionManager.GetUserFromSession(w, r);
+}
+
+func ProcessGeneralRequest(handlerObj HttpHandler, w http.ResponseWriter, r *http.Request) {
+    getRequestUser(w, r);
+    if (handlerObj == nil) {
+        http.Error(w, "Error", 400);
+        return;
+    }
+    handlerObj.Process(w, r);
 }
 
 // TODO move database classes to their own package
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    indexHandlerObj.Process(w, r);
+    ProcessGeneralRequest(indexHandlerObj, w, r);
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    searchHandlerObj.Process(w, r);
+    ProcessGeneralRequest(searchHandlerObj, w, r);
 }
 
 func matchHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    matchHandlerObj.Process(w, r);
+    ProcessGeneralRequest(matchHandlerObj, w, r);
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    aboutHandlerObj.Process(w, r);
+    ProcessGeneralRequest(aboutHandlerObj, w, r);
 }
 
 func contactHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    contactHandlerObj.Process(w, r);
+    ProcessGeneralRequest(contactHandlerObj, w, r);
 }
 
 func userHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    userHandlerObj.Process(w, r);
+    ProcessGeneralRequest(userHandlerObj, w, r);
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    loginHandlerObj.Process(w, r);
+    ProcessGeneralRequest(loginHandlerObj, w, r);
 }
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    logoutHandlerObj.Process(w, r);
+    ProcessGeneralRequest(logoutHandlerObj, w, r);
 }
 
 func signupHandler(w http.ResponseWriter, r *http.Request) {
-    getRequestUser(w, r);
-    signupHandlerObj.Process(w, r);
+    ProcessGeneralRequest(signupHandlerObj, w, r);
 }
 
 func initializeConfiguration() {
     // Initialize session manager
     sessionManager = NewFSSessionManager();
-    gob.Register(&User{});
+    gob.Register(&fin_database.User{});
 
     // Initialize simple handlers
     indexHandlerObj = NewStandardIndexHandler();
@@ -80,20 +82,20 @@ func initializeConfiguration() {
     aboutHandlerObj = NewStandardAboutHandler();
 
     // Initialize login, logout and register handler
-    var usersDatabase *UsersDatabase = NewUsersDatabase(
-            dbType,
+    var mysqlConnector *fin_database.MySqlConnector =  fin_database.NewMySqlConnector(
             mysqlUsername,
             mysqlPassword,
             mysqlServer,
-            mysqlDatabase,
-            "");
-    var gridsDatabase *GridsDatabase = NewGridsDatabase(
+            mysqlDatabase);
+
+    var usersDatabase *fin_database.UsersDatabase = fin_database.NewUsersDatabase(
             dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "");
+            "users",
+            mysqlConnector);
+    var gridsDatabase *fin_database.GridsDatabase = fin_database.NewGridsDatabase(
+            dbType,
+            "grids",
+            mysqlConnector);
     loginHandlerObj = NewStandardLoginHandler(usersDatabase);
     logoutHandlerObj = NewStandardLogoutHandler(usersDatabase);
     signupHandlerObj = NewStandardSignupHandler(usersDatabase);
@@ -103,48 +105,33 @@ func initializeConfiguration() {
     matchHandlerObj = NewElasticSearchMatchHandler(elasticSearchIp, elasticSearchPort);
 
     // Initialize search handler
-    var tickerInfoDatabase *TickerInfoDatabase = NewTickerInfoDatabase(
+    var tickerInfoDatabase *fin_database.TickerInfoDatabase = fin_database.NewTickerInfoDatabase(
             dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "");
-    tickerInfoChan := make(chan []TickerInfo);
-    go func() { tickerInfoChan <- tickerInfoDatabase.getAllTickerInfo(); }();
+            "ticker_info",
+            mysqlConnector);
+    tickerInfoChan := make(chan []fin_database.TickerInfo);
+    go func() { tickerInfoChan <- tickerInfoDatabase.GetAllTickerInfo(); }();
 
-    var economicsInfoDatabase *EconomicsInfoDatabase = NewEconomicsInfoDatabase(
+    var economicsInfoDatabase *fin_database.EconomicsInfoDatabase = fin_database.NewEconomicsInfoDatabase(
             dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "economics_info");
-    economicsInfoChan := make(chan []EconomicsInfo);
-    go func() { economicsInfoChan <- economicsInfoDatabase.getAllEconomicsInfo(); }();
+            "economics_info",
+            mysqlConnector);
+    economicsInfoChan := make(chan []fin_database.EconomicsInfo);
+    go func() { economicsInfoChan <- economicsInfoDatabase.GetAllEconomicsInfo(); }();
 
-    var exchangeIndexInfoDatabase *ExchangeIndexInfoDatabase = NewExchangeIndexInfoDatabase(
+    var exchangeIndexInfoDatabase *fin_database.ExchangeIndexInfoDatabase = fin_database.NewExchangeIndexInfoDatabase(
             dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "");
-    exchangeIndexInfoChan := make(chan []ExchangeIndexInfo);
-    go func() { exchangeIndexInfoChan <- exchangeIndexInfoDatabase.getAllExchangeIndexInfo(); }();
+            "exchange_index_info",
+            mysqlConnector);
+    exchangeIndexInfoChan := make(chan []fin_database.ExchangeIndexInfo);
+    go func() { exchangeIndexInfoChan <- exchangeIndexInfoDatabase.GetAllExchangeIndexInfo(); }();
 
     allTickerInfo := <-tickerInfoChan;
     allEconomicsInfo := <-economicsInfoChan;
     allExchangeIndexInfo := <-exchangeIndexInfoChan;
-    //matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
 
-    var metricDatabase *MetricDatabase = NewMetricDatabase(
-            dbType,
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase,
-            "");
+    var metricDatabase *fin_database.MetricDatabase = fin_database.NewMetricDatabase(
+            dbType, mysqlConnector);
     searchHandlerObj = NewStandardSearchHandler(
         metricDatabase,
         allTickerInfo,

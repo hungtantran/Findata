@@ -6,20 +6,22 @@ import (
     "log"
     "net/http"
     "strconv"
+
+    "fin_database"
 )
 
 type StandardSearchHandler struct {
-    metricDatabase *MetricDatabase
-    allTickerInfo []TickerInfo
-    allEconomicsInfo []EconomicsInfo
-    allExchangeIndexInfo []ExchangeIndexInfo
+    metricDatabase *fin_database.MetricDatabase
+    allTickerInfo []fin_database.TickerInfo
+    allEconomicsInfo []fin_database.EconomicsInfo
+    allExchangeIndexInfo []fin_database.ExchangeIndexInfo
 }
 
 func NewStandardSearchHandler(
-        metricDatabase *MetricDatabase,
-        allTickerInfo []TickerInfo,
-        allEconomicsInfo []EconomicsInfo,
-        allExchangeIndexInfo []ExchangeIndexInfo) *StandardSearchHandler {
+        metricDatabase *fin_database.MetricDatabase,
+        allTickerInfo []fin_database.TickerInfo,
+        allEconomicsInfo []fin_database.EconomicsInfo,
+        allExchangeIndexInfo []fin_database.ExchangeIndexInfo) *StandardSearchHandler {
     var searchHandler *StandardSearchHandler = new(StandardSearchHandler);
     searchHandler.metricDatabase = metricDatabase;
     searchHandler.allEconomicsInfo = allEconomicsInfo;
@@ -69,12 +71,12 @@ func (searchHandler *StandardSearchHandler) chooseChartType(tableName string, me
     return "line";
 }
 
-func (searchHandler *StandardSearchHandler) adjustMetrics(metrics []ResultMetric) []ResultMetric {
+func (searchHandler *StandardSearchHandler) adjustMetrics(metrics []fin_database.ResultMetric) []fin_database.ResultMetric {
     const maxDetailedPoint int = 300;
     const maxSparsePoint int = 300;
 
     if len(metrics) > maxDetailedPoint {
-        var adjustedMetrics []ResultMetric;
+        var adjustedMetrics []fin_database.ResultMetric;
         var step int;
         step = (len(metrics) - maxDetailedPoint) / maxSparsePoint;
         if step < 1 {
@@ -94,7 +96,7 @@ func (searchHandler *StandardSearchHandler) ProcessGetData(w http.ResponseWriter
     tableName := param["tableName"];
     metricName := param["metricName"];
 
-    metrics := searchHandler.metricDatabase.getMetricWithName(tableName, metricName);
+    metrics := searchHandler.metricDatabase.GetMetricWithName(tableName, metricName);
     adjustedMetrics := searchHandler.adjustMetrics(metrics);
     metricsJson, _ := json.Marshal(adjustedMetrics);
     metricsJsonString := string(metricsJson);

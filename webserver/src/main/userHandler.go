@@ -5,16 +5,18 @@ import (
     "fmt"
     "log"
     "net/http"
+
+    "fin_database"
 )
 
 type StandardUserHandler struct {
-    usersDatabase *UsersDatabase
-    gridsDatabase *GridsDatabase
+    usersDatabase *fin_database.UsersDatabase
+    gridsDatabase *fin_database.GridsDatabase
 }
 
 func NewStandardUserHandler(
-        usersDatabase *UsersDatabase,
-        gridsDatabase *GridsDatabase) *StandardUserHandler {
+        usersDatabase *fin_database.UsersDatabase,
+        gridsDatabase *fin_database.GridsDatabase) *StandardUserHandler {
     var userHandler *StandardUserHandler = new(StandardUserHandler);
     userHandler.usersDatabase = usersDatabase;
     userHandler.gridsDatabase = gridsDatabase;
@@ -45,7 +47,7 @@ func (userHandler *StandardUserHandler) ProcessLoadGrid(w http.ResponseWriter, r
         return;
     }
 
-    var grid *Grid = userHandler.gridsDatabase.GetGrid(user.Id.Int64);
+    var grid *fin_database.Grid = userHandler.gridsDatabase.GetGrid(user.Id.Int64);
     gridJsonString := "[]";
     if (grid != nil) {
         gridJson, _ := json.Marshal(grid.Grid.String);

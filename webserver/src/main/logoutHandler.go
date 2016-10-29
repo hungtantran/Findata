@@ -3,13 +3,15 @@ package main
 import (
     "fmt"
     "net/http"
+
+    "fin_database"
 )
 
 type StandardLogoutHandler struct {
-    usersDatabase *UsersDatabase
+    usersDatabase *fin_database.UsersDatabase
 }
 
-func NewStandardLogoutHandler(usersDatabase *UsersDatabase) *StandardLogoutHandler {
+func NewStandardLogoutHandler(usersDatabase *fin_database.UsersDatabase) *StandardLogoutHandler {
     var logoutHandler *StandardLogoutHandler = new(StandardLogoutHandler);
     logoutHandler.usersDatabase = usersDatabase;
     return logoutHandler;

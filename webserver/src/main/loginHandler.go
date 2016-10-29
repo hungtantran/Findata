@@ -5,19 +5,21 @@ import (
     "fmt"
     "log"
     "net/http"
+
+    "fin_database"
 )
 
 type StandardLoginHandler struct {
-    usersDatabase *UsersDatabase
+    usersDatabase *fin_database.UsersDatabase
 }
 
-func NewStandardLoginHandler(usersDatabase *UsersDatabase) *StandardLoginHandler {
+func NewStandardLoginHandler(usersDatabase *fin_database.UsersDatabase) *StandardLoginHandler {
     var loginHandler *StandardLoginHandler = new(StandardLoginHandler);
     loginHandler.usersDatabase = usersDatabase;
     return loginHandler;
 }
 
-func (loginHandler *StandardLoginHandler) SaveSession(w http.ResponseWriter, r *http.Request, user *User) error {
+func (loginHandler *StandardLoginHandler) SaveSession(w http.ResponseWriter, r *http.Request, user *fin_database.User) error {
     session, _ := sessionManager.GetSession(r, "sid");
     session.Values["user"], _ = json.Marshal(user);
     err := sessionManager.SaveSession(session, w, r);

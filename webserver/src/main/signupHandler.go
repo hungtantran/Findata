@@ -5,13 +5,15 @@ import (
     "fmt"
     "log"
     "net/http"
+
+    "fin_database"
 )
 
 type StandardSignupHandler struct {
-    usersDatabase *UsersDatabase
+    usersDatabase *fin_database.UsersDatabase
 }
 
-func NewStandardSignupHandler(usersDatabase *UsersDatabase) *StandardSignupHandler {
+func NewStandardSignupHandler(usersDatabase *fin_database.UsersDatabase) *StandardSignupHandler {
     var signupHandler *StandardSignupHandler = new(StandardSignupHandler);
     signupHandler.usersDatabase = usersDatabase;
     return signupHandler;

@@ -4,6 +4,8 @@ import (
     "encoding/json"
     "github.com/gorilla/sessions"
     "net/http"
+
+    "fin_database"
 )
 
 type SessionManager interface {
@@ -11,7 +13,7 @@ type SessionManager interface {
     SaveSession(session *sessions.Session, w http.ResponseWriter, r *http.Request) error;
     ClearSession(w http.ResponseWriter, sessionName string);
     ClearAllSession(w http.ResponseWriter);
-    GetUserFromSession(w http.ResponseWriter, r *http.Request) *User;
+    GetUserFromSession(w http.ResponseWriter, r *http.Request) *fin_database.User;
 }
 
 type FSSessionManager struct {
@@ -56,14 +58,14 @@ func (fsSessionManager *FSSessionManager) ClearAllSession(w http.ResponseWriter)
     }
 }
 
-func (fsSessionManager *FSSessionManager) GetUserFromSession(w http.ResponseWriter, r *http.Request) *User {
+func (fsSessionManager *FSSessionManager) GetUserFromSession(w http.ResponseWriter, r *http.Request) *fin_database.User {
     session, _ := fsSessionManager.GetSession(r, "sid"); 
     userInf, ok := session.Values["user"];
     if (!ok) {
         fsSessionManager.ClearAllSession(w);
         return nil;
     }
-    user := new(User);
+    user := new(fin_database.User);
     json.Unmarshal(userInf.([]byte), user)
     if (!ok) {
         fsSessionManager.ClearAllSession(w);
