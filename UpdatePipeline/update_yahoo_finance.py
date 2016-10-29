@@ -80,7 +80,7 @@ class UpdateYahooFinance(threading.Thread):
         raise NotImplementedError('Need to implement populate_work_queue')
 
     def get_metric_table_name(self, metric):
-        return '%s_metrics' % metric.ticker
+        return 'ticker_info_%s_metrics' % metric.id
 
     def get_csv_link(self, metric, beginning_date, end_date):
         return UpdateYahooFinance.SUMMARY_LINKS_TEMPLATE % (
@@ -99,7 +99,7 @@ class UpdateYahooFinance(threading.Thread):
         return dimension
 
     def get_earliest_and_latest_time(self, metric, metrics_db):
-        return metrics_db.get_earliest_and_latest_time()
+        return metrics_db.get_earliest_and_latest_time(metric_name='adj_close')
 
     def get_list_of_crawl_pages(self, latest_time, earliest_time):
         crawl_pages = []

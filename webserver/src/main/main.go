@@ -100,6 +100,9 @@ func initializeConfiguration() {
     userHandlerObj = NewStandardUserHandler(usersDatabase, gridsDatabase);
 
     // Initialize match handler
+    matchHandlerObj = NewElasticSearchMatchHandler(elasticSearchIp, elasticSearchPort);
+
+    // Initialize search handler
     var tickerInfoDatabase *TickerInfoDatabase = NewTickerInfoDatabase(
             dbType,
             mysqlUsername,
@@ -133,10 +136,8 @@ func initializeConfiguration() {
     allTickerInfo := <-tickerInfoChan;
     allEconomicsInfo := <-economicsInfoChan;
     allExchangeIndexInfo := <-exchangeIndexInfoChan;
-    matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
+    //matchHandlerObj = NewStandardMatchHandler(allTickerInfo, allEconomicsInfo, allExchangeIndexInfo);
 
-        
-    // Initialize search handler
     var metricDatabase *MetricDatabase = NewMetricDatabase(
             dbType,
             mysqlUsername,
