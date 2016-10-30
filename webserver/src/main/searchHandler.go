@@ -138,7 +138,10 @@ func (searchHandler *StandardSearchHandler) ProcessGetGraph(w http.ResponseWrite
         graph.Plots[metricNameStr] = plot;
     }
 
-    graphJson, _ := json.Marshal(graph);
+    response := make(map[string][]string);
+    response[tableName] = metricNames;
+
+    graphJson, _ := json.Marshal(response);
     graphJsonString := string(graphJson);
     fmt.Fprintf(w, graphJsonString);
 }

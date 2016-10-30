@@ -27,7 +27,7 @@ export default {
         include: 'node_modules/**',
         sourceMap: useSourceMaps,
         namedExports: {
-            'node_modules/react/react.js': ['PropTypes', 'createElement']
+            'node_modules/react/react.js': ['PropTypes', 'createElement'],
         }
     }),
     replace({

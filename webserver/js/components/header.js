@@ -1,5 +1,5 @@
 import React from 'react'
-import GetCookie from '../utilities/utilities';
+import GetCookie from '../redux/common/utilities';
 
 class Header extends React.Component {
   constructor(props) {
