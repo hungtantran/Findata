@@ -37,7 +37,7 @@ DashboardTabs.propTypes = {
 function mapStateToProps(state) {
     return {
         activeTab: state.dashboardTabs.activeTab,
-        tabs: state.dashboardTabs.tabs
+        tabs: Object.keys(state.dashboardTabs.tabs)
     };
 }
 

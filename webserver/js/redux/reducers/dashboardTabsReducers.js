@@ -1,24 +1,45 @@
 import * as Actions from '../actions/dashboardTabsActions';
+import {ADD_ELEMENT} from '../actions/elementActions';
 
 const initialState = {
-    tabs: ['Dashboard 1'],
+    tabs: {'Dashboard 1': []},
     activeTab: 'Dashboard 1'
 };
+
+function tabs(newTabName, currentTabs) {
+    return Object.assign({}, currentTabs, {
+        [newTabName]: []
+    });
+}
+
+function element(activeTab, currentTabs, newIds) {
+    return Object.assign({}, currentTabs, {
+        [activeTab]: newIds
+    });
+}
 
 function DashboardTabs(state=initialState, action) {
     switch(action.type) {
     case Actions.DASHBOARD_ADD:
-        var currentTabs = state.tabs.slice();
-        var newName = 'Dashboard ' + (currentTabs.length + 1);
-        currentTabs.push(newName);
-        return Object.assign({}, state, {
-            activeTab: newName,
-            tabs: currentTabs
-        });
+        {
+            let newName = 'Dashboard ' + (Object.keys(state.tabs).length + 1);
+            return Object.assign({}, state, {
+                activeTab: newName,
+                tabs: tabs(newName, state.tabs)
+            });
+        }
     case Actions.DASHBOARD_ACTIVATE:
         return Object.assign({}, state, {
             activeTab: action.name,
         });
+    case ADD_ELEMENT:
+        {
+            let currentIds = state.tabs[state.activeTab].slice();
+            currentIds.push(action.id);
+            return Object.assign({}, state, {
+                tabs: element(state.activeTab, state.tabs, currentIds)
+            });
+        }
     default:
         return state;
     }

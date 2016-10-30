@@ -1,4 +1,6 @@
 import {getSelectedKeyIndex} from '../common/utilities';
+import {addElement} from './elementActions';
+import Guid from 'guid';
 
 export const REQUEST_SUGGESTIONS = 'REQUEST_SUGGESTIONS';
 export const RECEIVE_SUGGESTIONS = 'RECEIVE_SUGGESTIONS';
@@ -83,6 +85,8 @@ function search(dispatch, getState) {
     }).then((json) => {
         // TODO validate json
         dispatch(receiveSearch(json));
+        let guid = Guid.raw();
+        dispatch(addElement(guid));
     });
 }
 

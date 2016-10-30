@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBar from './searchbar';
 import DataPane from './dataPane';
 import DashboardTabs from './dashboardTabs';
+import Grid from './grid';
 
 const App = () => (
     <div>
@@ -11,6 +12,7 @@ const App = () => (
         </div>
         <div key='main' className="col-sm-9 col-md-10">
             <DashboardTabs/>
+            <Grid/>
         </div>
     </div>
 );
