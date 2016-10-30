@@ -59,10 +59,10 @@ SearchBar.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        searchPlaceholder: state.searchPlaceholder,
-        currentSearch: state.currentSearch,
-        suggestions: state.suggestions,
-        selectedSuggestion: state.selectedSuggestion
+        searchPlaceholder: state.searchBar.searchPlaceholder,
+        currentSearch: state.searchBar.currentSearch,
+        suggestions: state.searchBar.suggestions,
+        selectedSuggestion: state.searchBar.selectedSuggestion
     };
 };
 

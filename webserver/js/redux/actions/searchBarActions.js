@@ -49,7 +49,7 @@ function receiveSearch(results) {
 }
 
 function search(dispatch, getState) {
-    const state = getState();
+    const state = getState().searchBar;
     const currentSearch = state.currentSearch;
     const selectedSuggestion = state.selectedSuggestion;
     const suggestions = state.suggestions;

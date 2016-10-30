@@ -1,18 +1,5 @@
 import * as Actions from '../actions/searchBarActions';
 
-// function results(state={items:[]}, action) {
-//     return Object.assign({}, state, {
-//         items: action.posts,
-//     });
-// }
-
-function instruments(state={}, action) {
-    if(action.type == Actions.RECEIVE_SEARCH)
-        return Object.assign({}, state, action.results);
-    else
-        return state;
-}
-
 const initialState = {
     searchPlaceholder: 'Search...',
     currentSearch: '',
@@ -22,7 +9,7 @@ const initialState = {
     instruments: {}
 };
 
-function root(state = initialState, action) {
+function SearchBar(state = initialState, action) {
     switch(action.type) {
     case Actions.REQUEST_SUGGESTIONS:
         return Object.assign({}, state, {
@@ -48,10 +35,6 @@ function root(state = initialState, action) {
             selectedSuggestion: 0,
             suggestions: {}
         });
-    case Actions.RECEIVE_SEARCH:
-        return Object.assign({}, state, {
-            instruments: instruments(state.instruments, action)
-        });
     case Actions.SUGGESTION_HOVERED:
         return Object.assign({}, state, {
             selectedSuggestion: action.id,
@@ -75,4 +58,4 @@ function root(state = initialState, action) {
     }
 }
 
-export default root;
+export default SearchBar;

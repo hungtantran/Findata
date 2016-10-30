@@ -1,9 +1,17 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
-import rootReducer from '../reducers/searchBarReducers';
+import searchBar from '../reducers/searchBarReducers';
+import dashboardTabs from '../reducers/dashboardTabsReducers';
+import instruments from '../reducers/instrumentsReducers';
 
 const loggerMiddleware = createLogger();
+
+const rootReducer = combineReducers({
+    searchBar,
+    dashboardTabs,
+    instruments
+});
 
 export default function configureStore(preloadedState) {
     return createStore(
