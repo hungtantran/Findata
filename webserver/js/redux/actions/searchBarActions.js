@@ -1,5 +1,6 @@
 import {getSelectedKeyIndex} from '../common/utilities';
 import {addElement} from './elementActions';
+import {addPlots} from './plotActions';
 import Guid from 'guid';
 
 export const REQUEST_SUGGESTIONS = 'REQUEST_SUGGESTIONS';
@@ -85,8 +86,11 @@ function search(dispatch, getState) {
     }).then((json) => {
         // TODO validate json
         dispatch(receiveSearch(json));
-        let guid = Guid.raw();
-        dispatch(addElement(guid));
+        let elementGuid = Guid.raw();
+        dispatch(addElement(elementGuid));
+        let adjCloseGuid = Guid.raw();
+        let volGuid = Guid.raw();
+        dispatch(addPlots([adjCloseGuid, volGuid], elementGuid));
     });
 }
 

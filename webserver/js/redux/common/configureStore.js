@@ -5,6 +5,7 @@ import searchBar from '../reducers/searchBarReducers';
 import dashboardTabs from '../reducers/dashboardTabsReducers';
 import instruments from '../reducers/instrumentsReducers';
 import elements from '../reducers/elementsReducers';
+import plots from '../reducers/plotsReducers';
 
 const loggerMiddleware = createLogger();
 
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     searchBar,
     dashboardTabs,
     instruments,
-    elements
+    elements,
+    plots
 });
 
 export default function configureStore(preloadedState) {
