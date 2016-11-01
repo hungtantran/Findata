@@ -1,22 +1,21 @@
 import {RECEIVE_SEARCH} from '../actions/searchBarActions';
 
-function Instruments(state={}, action) {
+function DataSets(state={}, action) {
     switch(action.type) {
     case RECEIVE_SEARCH:
         {
-            let instruments = {};
+            let dataSets = {};
             Object.keys(action.results).forEach((key) => {
                 let pairs = action.results[key];
-                instruments[key] = [];
                 pairs.forEach((pair) => {
-                    instruments[key].push(pair.id);
+                    dataSets[pair.id] = {name: pair.name, tableName: key};
                 });
             });
-            return Object.assign({}, state, instruments);
+            return Object.assign({}, state, dataSets);
         }
     default:
         return state;
     }
 }
 
-export default Instruments;
+export default DataSets;

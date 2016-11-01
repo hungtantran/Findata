@@ -85,7 +85,16 @@ function search(dispatch, getState) {
         console.log('parsing failed', ex);
     }).then((json) => {
         // TODO validate json
-        dispatch(receiveSearch(json));
+        let response = {};
+        Object.keys(json).forEach((key) => {
+            let attributes = json[key];
+            response[key] = [];
+            attributes.forEach((attribute) => {
+                let attributeId = Guid.raw();
+                response[key].push({name:attribute, id: attributeId});
+            });
+        });
+        dispatch(receiveSearch(response));
         let elementGuid = Guid.raw();
         dispatch(addElement(elementGuid));
         let adjCloseGuid = Guid.raw();
