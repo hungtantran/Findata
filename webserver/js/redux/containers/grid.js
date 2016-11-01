@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import React from 'react';
 import { updateGridLayout } from '../actions/gridActions';
+import Graph from './graph';
 
 class Grid extends React.Component {
 
@@ -48,10 +49,10 @@ class Grid extends React.Component {
 
         Object.keys(this.props.elements).forEach((key) => {
             let element = this.props.elements[key];
-            var x = element.x < 0 ? 0 : element.x;
-            var y = element.y < 0 ? 1000 : element.y;
-            var width = element.width < 0 ? 4 : element.width;
-            var height = element.height < 0 ? 8 : element.height;
+            var x = element.x <= 0 ? 0 : element.x;
+            var y = element.y <= 0 ? 1000 : element.y;
+            var width = element.width <= 0 ? 4 : element.width;
+            var height = element.height <= 0 ? 8 : element.height;
             var node = {
                 x: x,
                 y: y,
@@ -100,6 +101,7 @@ class Grid extends React.Component {
             return (
             <div className="grid-stack-item" id={id} key={id}>
                 <div className="grid-stack-item-content">
+                    <Graph id={id} key={id} />
                 </div>
             </div>
             );

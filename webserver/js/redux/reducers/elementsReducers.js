@@ -14,7 +14,7 @@ function Elements(state={}, action) {
         }
     case ADD_ELEMENT:
         {
-            let x = -1, y = -1, width = -1, height = -1;
+            let x = 0, y = 0, width = 0, height = 0;
             return Object.assign({}, state, {[action.id]:{x, y, width, height, plots: []}});   
         }
     case ADD_PLOTS:
@@ -22,8 +22,8 @@ function Elements(state={}, action) {
         {
             let plots = state[action.parentId].plots.slice();
             let {x, y, width, height} = state[action.parentId];
-            action.plotIds.forEach((id) => {
-                plots.push(id);
+            action.plots.forEach((plot) => {
+                plots.push(plot.id);
             });
             return Object.assign({}, state, {[action.parentId]: { plots, x, y, width, height}});   
         }

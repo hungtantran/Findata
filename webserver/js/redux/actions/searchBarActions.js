@@ -85,21 +85,26 @@ function search(dispatch, getState) {
         console.log('parsing failed', ex);
     }).then((json) => {
         // TODO validate json
+        let elementGuid = Guid.raw();
+        dispatch(addElement(elementGuid));
+
         let response = {};
+        let plotsToAdd = [];
         Object.keys(json).forEach((key) => {
             let attributes = json[key];
             response[key] = [];
             attributes.forEach((attribute) => {
                 let attributeId = Guid.raw();
                 response[key].push({name:attribute, id: attributeId});
+                if(attribute == 'adj_close' || attribute == 'volume') {
+                    let plotId = Guid.raw();
+                    plotsToAdd.push({id:plotId, dataSets:[attributeId]});
+                }
             });
         });
+        // will create data sets and instruments
         dispatch(receiveSearch(response));
-        let elementGuid = Guid.raw();
-        dispatch(addElement(elementGuid));
-        let adjCloseGuid = Guid.raw();
-        let volGuid = Guid.raw();
-        dispatch(addPlots([adjCloseGuid, volGuid], elementGuid));
+        dispatch(addPlots(plotsToAdd, elementGuid));
     });
 }
 

@@ -1,14 +1,19 @@
-import {ADD_PLOTS} from '../actions/plotActions';
+import * as Actions from '../actions/plotActions';
 
 function Plots(state={}, action) {
     switch(action.type) {
-    case ADD_PLOTS:
+    case Actions.ADD_PLOTS:
         {
             let newPlots = {};
-            action.plotIds.forEach((id) => {
-                newPlots[id] = {};
+            action.plots.forEach((plot) => {
+                newPlots[plot.id] = {dataSets: plot.dataSets};
             });
             return Object.assign({}, state, newPlots);
+        }
+    case Actions.POSITION_PLOT:
+        {
+            let plot = Object.assign({}, state[action.id], action.position);
+            return Object.assign({}, state, {[action.id]: plot});
         }
     default:
         return state;
