@@ -47,10 +47,13 @@ class Grid extends React.Component {
     addGraphs(oldElements) {
         var grid = $('.grid-stack').data('gridstack');
 
+        grid.batchUpdate();
+        grid.removeAll(false);
+
         Object.keys(this.props.elements).forEach((key) => {
             let element = this.props.elements[key];
             var x = element.x <= 0 ? 0 : element.x;
-            var y = element.y <= 0 ? 1000 : element.y;
+            var y = element.y <= 0 ? 0 : element.y;
             var width = element.width <= 0 ? 4 : element.width;
             var height = element.height <= 0 ? 8 : element.height;
             var node = {
@@ -59,21 +62,22 @@ class Grid extends React.Component {
                 width: width,
                 height: height,
             };
-            if(!oldElements[key]) {
-                grid.addWidget(
-                    $('#' + key),
-                    node.x,
-                    node.y,
-                    node.width,
-                    node.height);
-            }
+
+            grid.addWidget(
+                $('#' + key),
+                node.x,
+                node.y,
+                node.width,
+                node.height);
         });
+        grid.commit();
     }
 
     componentDidMount() {
         $(function () {
             var options = {
-                verticalMargin: 0
+                verticalMargin: 0,
+                float: true
             };
             $('.grid-stack').gridstack(options);
         });
