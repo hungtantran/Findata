@@ -85,12 +85,15 @@ function search(dispatch, getState) {
         console.log('parsing failed', ex);
     }).then((json) => {
         // TODO validate json
-        let elementGuid = Guid.raw();
-        dispatch(addElement(elementGuid));
+        let instruments = getState().instruments;
 
         let response = {};
         let plotsToAdd = [];
         Object.keys(json).forEach((key) => {
+            // don't add instruments we already know about.
+            if(instruments[key])
+                return;
+
             let attributes = json[key];
             response[key] = [];
             attributes.forEach((attribute) => {
@@ -102,9 +105,14 @@ function search(dispatch, getState) {
                 }
             });
         });
+
         // will create data sets and instruments
-        dispatch(receiveSearch(response));
-        dispatch(addPlots(plotsToAdd, elementGuid));
+        if(Object.keys(response).length > 0) {
+            let elementGuid = Guid.raw();
+            dispatch(addElement(elementGuid));
+            dispatch(receiveSearch(response));
+            dispatch(addPlots(plotsToAdd, elementGuid));
+        }
     });
 }
 
