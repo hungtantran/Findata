@@ -2,88 +2,10 @@ package main
 
 import (
 	"fmt"
-    "time"
-    "log"
-    "os"
-	"database/sql"
 	elastic "gopkg.in/olivere/elastic.v3"
 
 	"fin_database"
 )
-
-func defaultNullInt(val sql.NullInt64) int64 {
-	if val.Valid {
-		return val.Int64;
-	}
-
-	return 0;
-}
-
-func defaultNullString(val sql.NullString) string {
-	if val.Valid {
-		return val.String;
-	}
-
-	return "";
-}
-
-type TickerInfoElastic struct {
-    Id int64 `json:"id"`
-    Ticker string `json:"ticker"`
-    Ticker_type string `json:"ticker_type"`
-    Name string `json:"name"`
-    Location string `json:"location"`
-    Cik string `json:"cik"`
-    Ipo_year int64 `json:"ipo_year"`
-    Sector string `json:"sector"`
-    Industry string `json:"industry"`
-    Exchange string `json:"exchange"`
-    Sic int64 `json:"sic"`
-    Naics int64 `json:"naics"`
-    Class_share string `json:"class_share"`
-    Fund_type string `json:"fund_type"`
-    Fund_family string `json:"fund_family"`
-    Asset_class string `json:"asset_class"`
-    Active int64 `json:"active"`
-    Metadata string `json:"metadata"`
-}
-
-type ExchangeIndexInfoElastic struct {
-    Id int64 `json:"id"`
-    Index string `json:"index"`
-    IndexType string `json:"index_type"`
-    Name string `json:"name"`
-    Location string `json:"location"`
-    Sector string `json:"sector"`
-    Industry string `json:"industry"`
-    Metadata string `json:"metadata"`
-}
-
-type EconomicsInfoElastic struct {
-    Id int64 `json:"id"`
-    Name string `json:"name"`
-    Location string `json:"location"`
-    Category string `json:"category"`
-    TypeStr string `json:"type"`
-    Source string `json:"source"`
-    Metadata string `json:"metadata"`
-}
-
-func GetElasticSearchClient() *elastic.Client {
-	var connectionString string = elasticSearchIp + ":" + fmt.Sprintf("%d", elasticSearchPort);
-	client, err := elastic.NewClient(
-        elastic.SetURL(connectionString),
-        elastic.SetSniff(false),
-        elastic.SetHealthcheckInterval(10*time.Second),
-        elastic.SetMaxRetries(5),
-        elastic.SetErrorLog(log.New(os.Stderr, "ELASTIC ", log.LstdFlags)),
-        elastic.SetInfoLog(log.New(os.Stdout, "", log.LstdFlags)))
-	if err != nil {
-		// Handle error
-		panic(err)
-	}
-	return client;
-}
 
 func PopulateEconomicsInfo() {
 	// Create a client

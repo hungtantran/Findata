@@ -156,3 +156,24 @@ func (grid *Grid) String() string {
         grid.Userid.Int64,
         grid.Grid.String);
 }
+
+type NewsInfo struct {
+    Id sql.NullInt64
+    Source sql.NullString
+    Date time.Time
+    Headline sql.NullString
+    PrintHeadline sql.NullString
+    Abstract sql.NullString
+    Section sql.NullString
+    Subsection sql.NullString
+    Tags sql.NullString
+    Keywords sql.NullString
+    Link sql.NullString
+    Authors sql.NullString
+    Metadata sql.NullString
+}
+
+type NewsContent struct {
+    Id sql.NullInt64
+    FullData sql.NullString
+}

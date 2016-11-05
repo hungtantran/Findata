@@ -1,0 +1,131 @@
+curl '104.198.15.187:9200/_cat/health?v'
+curl '104.198.15.187:9200/_cat/nodes?v'
+curl '104.198.15.187:9200/_cat/indices?v'
+curl -XGET '104.198.15.187:9200/news/_mapping/news_info'
+curl -XGET '104.198.15.187:9200/news/'
+
+// Get setting
+curl -XGET '104.198.15.187:9200/news/_settings'
+curl -XGET '104.198.15.187:9200/news/_stats'
+curl -XGET '104.198.15.187:9200/news/_stats/store'
+
+// Query index
+curl -XGET '104.198.15.187:9200/news/news_info/1?pretty'
+curl -XGET '104.198.15.187:9200/news/_search?pretty=true&q=*:*'
+curl -XGET '104.198.15.187:9200/news/_search?pretty=true&q=*:*&size=20'
+curl -XGET '104.198.15.187:9200/news/news_info/_search?pretty=true&q=*a*'
+
+// Query index
+curl -XGET '104.198.15.187:9200/news/_search?pretty=true&q=*:*'
+curl -XGET '104.198.15.187:9200/news/_search?pretty=true&q=*:*&size=20'
+curl -XGET '104.198.15.187:9200/news/news_info/_search?pretty=true&q=*a*'
+
+curl -XGET '104.198.15.187:9200/news/news_info/_search?pretty' -d '{
+    "query" : {
+        "term" : { "headline" : "bmw" }
+    }
+}'
+
+curl -XGET '104.198.15.187:9200/news/news_info/_search?pretty' -d '{
+  "size": 0,
+  "query" : {
+    "term" : { "headline" : "clinton" }
+  },
+  "aggs": {
+    "group_by_date": {
+      "terms": {
+        "field": "date",
+        "size": 0
+      }
+    }
+  }
+}'
+
+curl -XGET '104.198.15.187:9200/news/news_info/_search?pretty' -d '{
+  "size": 0,
+  "query" : {
+    "term" : { "headline" : "clinton" }
+  },
+  "aggs" : {
+    "articles_over_time" : {
+      "date_histogram" : {
+        "field" : "date",
+        "interval" : "1w"
+      }
+    }
+  }
+}'
+
+curl -XGET '104.198.15.187:9200/news/news_info/_search?pretty' -d '{
+  "size": 0,
+  "query" : {
+    "term" : { "headline" : "death" }
+  },
+  "aggs" : {
+    "articles_over_time" : {
+      "date_histogram" : {
+        "field" : "date",
+        "interval" : "1w"
+      }
+    }
+  }
+}'
+
+
+// Create/Delete index
+curl -XDELETE '104.198.15.187:9200/news?pretty'
+
+curl -XPUT '104.198.15.187:9200/news?pretty' -d '
+{
+  "settings": {
+    "analysis": {
+      "filter": {
+        "english_stop": {
+          "type":       "stop",
+          "stopwords":  "_english_"
+        },
+        "english_stemmer": {
+          "type":       "stemmer",
+          "language":   "english" 
+        },
+        "english_possessive_stemmer": {
+          "type":       "stemmer",
+          "language":   "possessive_english" 
+        }
+      },
+      "analyzer": {
+        "english": {
+          "tokenizer":  "standard",
+          "filter": [
+            "english_possessive_stemmer",
+            "lowercase",
+            "english_stop",
+            "english_stemmer"
+          ]
+        }
+      }
+    }
+  }
+}'
+
+// Create type and mapping
+curl -XPUT '104.198.15.187:9200/news/news_info/_mapping' -d '
+{
+    "news_info": { 
+        "properties": { 
+            "id":             { "type": "long"  },
+            "source":         { "type": "string"  },
+            "date":           { "type": "date", "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis" }, 
+            "headline":       { "type": "string"  },
+            "print_headline": { "type": "string"  },
+            "abstract":       { "type": "string"  },
+            "section":        { "type": "string"  },
+            "subsection":     { "type": "string"  },
+            "tags":           { "type": "string"  },
+            "keywords":       { "type": "string"  },
+            "link":           { "type": "string"  },
+            "authors":        { "type": "string"  },
+            "metadata":       { "type": "string"  }
+        }
+    }
+}'

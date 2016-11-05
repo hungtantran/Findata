@@ -1,0 +1,419 @@
+{  
+   "response":{  
+      "meta":{  
+         "hits":15293735,
+         "time":1191,
+         "offset":0
+      },
+      "docs":[  
+         {  
+            "snippet":"Some Phoenix-area voters hoping to avoid long lines on Election Day by casting early ballots have ended up waiting anyway.",
+            "abstract":null,
+            "lead_paragraph":"Some Phoenix-area voters hoping to avoid long lines on Election Day by casting early ballots have ended up waiting anyway.",
+            "headline":{  
+               "main":"More Long Lines in Phoenix as People Vote Early",
+               "print_headline":"More Long Lines in Phoenix as People Vote Early"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"us",
+               "url":"http:\/\/www.nytimes.com\/section\/us",
+               "display_name":"U.S."
+            },
+            "subsection_name":[  
+
+            ],
+            "pub_date":"2016-11-03T07:42:46Z",
+            "created":"2016-11-03T07:42:46+0000",
+            "updated":"2016-11-03T03:42:46Z",
+            "source":"AP",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/aponline\/2016\/11\/03\/us\/ap-us-election-arizona-long-lines.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By THE ASSOCIATED PRESS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746053",
+            "_id":"581aea7f7c459f606398d498",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"Shawbrook Group Plc reported a 19 percent jump in net loans and advances to customers in the first nine months and said it had seen a minimal impact on its business from economic uncertainties brought on by Britain's vote to leave the European Union.",
+            "abstract":null,
+            "lead_paragraph":"Shawbrook Group Plc reported a 19 percent jump in net loans and advances to customers in the first nine months and said it had seen a minimal impact on its business from economic uncertainties brought on by Britain's vote to leave the European Union. ",
+            "headline":{  
+               "main":"Shawbrook Reports Jump in Nine-Month Net Loans and Advances",
+               "print_headline":"Shawbrook Reports Jump in Nine-Month Net Loans and Advances"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"business",
+               "url":"http:\/\/www.nytimes.com\/pages\/business\/index.html",
+               "display_name":"Business Day"
+            },
+            "subsection_name":[  
+
+            ],
+            "pub_date":"2016-11-03T07:42:27Z",
+            "created":"2016-11-03T07:42:27+0000",
+            "updated":"2016-11-03T03:42:27Z",
+            "source":"Reuters",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/reuters\/2016\/11\/03\/business\/03reuters-shawbrook-group-outlook.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By REUTERS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746052",
+            "_id":"581aea6b7c459f606398d497",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"British insurer RSA posted a five percent drop in net written premiums in the first nine months of 2016 due to the impact of asset disposals, the firm said on Thursday.",
+            "abstract":null,
+            "lead_paragraph":"British insurer RSA posted a five percent drop in net written premiums in the first nine months of 2016 due to the impact of asset disposals, the firm said on Thursday.",
+            "headline":{  
+               "main":"Insurer RSA Posts 5 Percent Drop in Nine-Month Premium",
+               "print_headline":"Insurer RSA Posts 5 Percent Drop in Nine-Month Premium"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"business",
+               "url":"http:\/\/www.nytimes.com\/pages\/business\/index.html",
+               "display_name":"Business Day"
+            },
+            "subsection_name":[  
+
+            ],
+            "pub_date":"2016-11-03T07:39:31Z",
+            "created":"2016-11-03T07:39:31+0000",
+            "updated":"2016-11-03T03:39:31Z",
+            "source":"Reuters",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/reuters\/2016\/11\/03\/business\/03reuters-rsa-results.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By REUTERS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746051",
+            "_id":"581ae9bc7c459f606398d496",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"Indonesian police deployed armored vehicles and armed personnel in the capital Jakarta ahead of a Friday protest planned by hardline Muslims groups against the governor, a Christian and the first ethnic Chinese in the job, over claims he insulted the...",
+            "abstract":null,
+            "lead_paragraph":"Indonesian police deployed armored vehicles and armed personnel in the capital Jakarta ahead of a Friday protest planned by hardline Muslims groups against the governor, a Christian and the first ethnic Chinese in the job, over claims he insulted the Koran.",
+            "headline":{  
+               "main":"Indonesia Police Brace for Hardline Islamic Protest",
+               "print_headline":"Indonesia Police Brace for Hardline Islamic Protest"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"world",
+               "url":"http:\/\/www.nytimes.com\/pages\/world\/index.html",
+               "display_name":"World"
+            },
+            "subsection_name":{  
+               "content":"asia",
+               "url":"http:\/\/www.nytimes.com\/pages\/world\/asia\/index.html",
+               "display_name":"Asia Pacific"
+            },
+            "pub_date":"2016-11-03T07:39:28Z",
+            "created":"2016-11-03T07:39:28+0000",
+            "updated":"2016-11-03T03:39:28Z",
+            "source":"Reuters",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/reuters\/2016\/11\/03\/world\/asia\/03reuters-indonesia-protests.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By REUTERS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746050",
+            "_id":"581ae9b67c459f606398d495",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"Next year is here.",
+            "abstract":null,
+            "lead_paragraph":"Next year is here.",
+            "headline":{  
+               "main":"'Next Year' Finally Arrives for Overjoyed Chicago Cubs Fans",
+               "print_headline":"'Next Year' Finally Arrives for Overjoyed Chicago Cubs Fans"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"us",
+               "url":"http:\/\/www.nytimes.com\/section\/us",
+               "display_name":"U.S."
+            },
+            "subsection_name":[  
+
+            ],
+            "pub_date":"2016-11-03T07:36:50Z",
+            "created":"2016-11-03T07:36:50+0000",
+            "updated":"2016-11-03T03:36:50Z",
+            "source":"AP",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/aponline\/2016\/11\/03\/us\/ap-bbo-world-series-cubs-fans.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By THE ASSOCIATED PRESS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746049",
+            "_id":"581ae91f7c459f606398d494",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"Investigators in Baltimore are focusing on speed as they delve into the collision between a school bus and a commuter bus that killed both drivers and four mass-transit riders.",
+            "abstract":null,
+            "lead_paragraph":"Investigators in Baltimore are focusing on speed as they delve into the collision between a school bus and a commuter bus that killed both drivers and four mass-transit riders.",
+            "headline":{  
+               "main":"2-Bus Crash Probe Focuses on Speed; No Quick Autopsy Results",
+               "print_headline":"2-Bus Crash Probe Focuses on Speed; No Quick Autopsy Results"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"us",
+               "url":"http:\/\/www.nytimes.com\/section\/us",
+               "display_name":"U.S."
+            },
+            "subsection_name":[  
+
+            ],
+            "pub_date":"2016-11-03T07:36:44Z",
+            "created":"2016-11-03T07:36:44+0000",
+            "updated":"2016-11-03T03:36:44Z",
+            "source":"AP",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/aponline\/2016\/11\/03\/us\/ap-us-baltimore-fatal-bus-crash.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By THE ASSOCIATED PRESS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746048",
+            "_id":"581ae9197c459f606398d493",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"China's state planner has called coal producers to a meeting on Thursday, its fourth last-minute gathering with the industry in two weeks, to admonish them for not doing enough to calm the red-hot market, according to a document seen by Reuters.",
+            "abstract":null,
+            "lead_paragraph":"China's state planner has called coal producers to a meeting on Thursday, its fourth last-minute gathering with the industry in two weeks, to admonish them for not doing enough to calm the red-hot market, according to a document seen by Reuters.",
+            "headline":{  
+               "main":"China Calls Another Meeting to Take Coal Miners to Task for Price Rally",
+               "print_headline":"China Calls Another Meeting to Take Coal Miners to Task for Price Rally"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"business",
+               "url":"http:\/\/www.nytimes.com\/pages\/business\/index.html",
+               "display_name":"Business Day"
+            },
+            "subsection_name":[  
+
+            ],
+            "pub_date":"2016-11-03T07:36:27Z",
+            "created":"2016-11-03T07:36:27+0000",
+            "updated":"2016-11-03T03:36:27Z",
+            "source":"Reuters",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/reuters\/2016\/11\/03\/business\/03reuters-china-coal-prices.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By REUTERS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746047",
+            "_id":"581ae9027c459f606398d492",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"This shapes up as a potential big season for plenty of teams that weren't big factors in last year's NCAA Tournament.",
+            "abstract":null,
+            "lead_paragraph":"This shapes up as a potential big season for plenty of teams that weren't big factors in last year's NCAA Tournament.",
+            "headline":{  
+               "main":"Top 25 Has Handful of Teams Left Out of Last Year's Tourney",
+               "print_headline":"Top 25 Has Handful of Teams Left Out of Last Year's Tourney"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"sports",
+               "url":"http:\/\/www.nytimes.com\/pages\/sports\/index.html",
+               "display_name":"Sports"
+            },
+            "subsection_name":{  
+               "content":"ncaabasketball",
+               "url":"http:\/\/www.nytimes.com\/pages\/sports\/ncaabasketball\/index.html",
+               "display_name":"College Basketball"
+            },
+            "pub_date":"2016-11-03T07:34:09Z",
+            "created":"2016-11-03T07:34:09+0000",
+            "updated":"2016-11-03T03:34:09Z",
+            "source":"AP",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/aponline\/2016\/11\/03\/sports\/ncaabasketball\/ap-bkc-new-contenders.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By THE ASSOCIATED PRESS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746046",
+            "_id":"581ae87a7c459f606398d491",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"South Africa's wealthy Gupta family, which has been accused of holding undue political sway over President Jacob Zuma, said on Thursday it would defend itself at a judicial inquiry demanded by an anti-corruption watchdog.",
+            "abstract":null,
+            "lead_paragraph":"South Africa's wealthy Gupta family, which has been accused of holding undue political sway over President Jacob Zuma, said on Thursday it would defend itself at a judicial inquiry demanded by an anti-corruption watchdog.",
+            "headline":{  
+               "main":"South Africa's Guptas to Challenge Influence-Peddling Report at Inquiry",
+               "print_headline":"South Africa's Guptas to Challenge Influence-Peddling Report at Inquiry"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"world",
+               "url":"http:\/\/www.nytimes.com\/pages\/world\/index.html",
+               "display_name":"World"
+            },
+            "subsection_name":{  
+               "content":"africa",
+               "url":"http:\/\/www.nytimes.com\/pages\/world\/africa\/index.html",
+               "display_name":"Africa"
+            },
+            "pub_date":"2016-11-03T07:33:31Z",
+            "created":"2016-11-03T07:33:31+0000",
+            "updated":"2016-11-03T03:33:31Z",
+            "source":"Reuters",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/reuters\/2016\/11\/03\/world\/africa\/03reuters-safrica-zuma.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By REUTERS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746045",
+            "_id":"581ae8517c459f606398d48f",
+            "timesmachine_url":null
+         },
+         {  
+            "snippet":"French luxury goods group Hermes on Thursday saw a slight acceleration in sales growth in the third-quarter to 8.8 percent at constant exchange rates, up from 8.1 percent in the previous three months.",
+            "abstract":null,
+            "lead_paragraph":"French luxury goods group Hermes on Thursday saw a slight acceleration in sales growth in the third-quarter to 8.8 percent at constant exchange rates, up from 8.1 percent in the previous three months. ",
+            "headline":{  
+               "main":"Hermes Enjoys Small Rise in Third-Quarter Sales",
+               "print_headline":"Hermes Enjoys Small Rise in Third-Quarter Sales"
+            },
+            "type_of_material":"News",
+            "news_desk":null,
+            "section_name":{  
+               "content":"business",
+               "url":"http:\/\/www.nytimes.com\/pages\/business\/index.html",
+               "display_name":"Business Day"
+            },
+            "subsection_name":[  
+
+            ],
+            "pub_date":"2016-11-03T07:33:27Z",
+            "created":"2016-11-03T07:33:27+0000",
+            "updated":"2016-11-03T03:33:27Z",
+            "source":"Reuters",
+            "print_section":null,
+            "print_page":null,
+            "nytddes":null,
+            "web_url":"http:\/\/www.nytimes.com\/reuters\/2016\/11\/03\/business\/03reuters-hermes-sales.html",
+            "taxonomy_nodes":null,
+            "keywords":[  
+
+            ],
+            "byline":"By REUTERS",
+            "pay":"N",
+            "multimedia":[  
+
+            ],
+            "document_type":"article",
+            "asset_id":"100000004746044",
+            "_id":"581ae8577c459f606398d490",
+            "timesmachine_url":null
+         }
+      ]
+   },
+   "status":"OK",
+   "copyright":"Copyright (c) 2013 The New York Times Company.  All Rights Reserved."
+}

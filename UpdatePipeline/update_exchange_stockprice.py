@@ -20,7 +20,7 @@ from update_yahoo_finance import UpdateYahooFinance
 
 
 class UpdateExchangeStockprice(UpdateYahooFinance):
-    MAX_PROCESSING_THREADS = 5
+    MAX_PROCESSING_THREADS = 3
 
     def __init__(self, db_type, username, password, server, database,
                  max_num_threads=None, update_frequency_seconds=None,
