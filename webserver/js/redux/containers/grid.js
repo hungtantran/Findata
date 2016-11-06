@@ -77,7 +77,7 @@ class Grid extends React.Component {
         $(function () {
             var options = {
                 verticalMargin: 0,
-                float: true
+                //float: true
             };
             $('.grid-stack').gridstack(options);
         });

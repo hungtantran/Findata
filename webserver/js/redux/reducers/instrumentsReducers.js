@@ -6,10 +6,15 @@ function Instruments(state={}, action) {
         {
             let instruments = {};
             Object.keys(action.results).forEach((key) => {
+                if (state[key]) {
+                    instruments[key] = Object.assign({}, state[key]);
+                } else {
+                    instruments[key] = {};
+                }
+
                 let pairs = action.results[key];
-                instruments[key] = [];
                 pairs.forEach((pair) => {
-                    instruments[key].push(pair.id);
+                    instruments[key][pair.name] = pair.id;
                 });
             });
             return Object.assign({}, state, instruments);

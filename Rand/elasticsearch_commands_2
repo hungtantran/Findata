@@ -59,18 +59,18 @@ curl -XGET '104.198.15.187:9200/news/news_info/_search?pretty' -d '{
 curl -XGET '104.198.15.187:9200/news/news_info/_search?pretty' -d '{
   "size": 0,
   "query" : {
-    "term" : { "headline" : "death" }
+    "term" : { "headline" : "bush" }
   },
   "aggs" : {
     "articles_over_time" : {
       "date_histogram" : {
         "field" : "date",
-        "interval" : "1w"
+        "interval" : "1w",
+        "min_doc_count" : 1
       }
     }
   }
 }'
-
 
 // Create/Delete index
 curl -XDELETE '104.198.15.187:9200/news?pretty'

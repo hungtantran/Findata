@@ -9,7 +9,13 @@ function DataSets(state={}, action) {
             Object.keys(action.results).forEach((key) => {
                 let pairs = action.results[key];
                 pairs.forEach((pair) => {
-                    dataSets[pair.id] = {name: pair.name, tableName: key, isFetching: false, data: [], domain: [], range: []};
+                    dataSets[pair.id] = {
+                        name: pair.name,
+                        tableName: key,
+                        isFetching: false,
+                        data: [],
+                        domain: [],
+                        range: []};
                 });
             });
             return Object.assign({}, state, dataSets);
@@ -41,7 +47,10 @@ function DataSets(state={}, action) {
                 return {t: date, v:pair.V};
             });
 
-            let dataSetInfo = Object.assign({}, state[action.id], {isFetching: false, data: newData, range: [yMin, yMax], domain: [xMin, xMax]});
+            let dataSetInfo = Object.assign(
+                {},
+                state[action.id],
+                {isFetching: false, data: newData, range: [yMin, yMax], domain: [xMin, xMax]});
             return Object.assign({}, state, {[action.id]: dataSetInfo});
         }
     default:

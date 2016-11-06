@@ -52,10 +52,11 @@ function receiveSearch(results) {
 }
 
 function search(dispatch, getState) {
-    const state = getState().searchBar;
-    const currentSearch = state.currentSearch;
-    const selectedSuggestion = state.selectedSuggestion;
-    const suggestions = state.suggestions;
+    const state = getState();
+    const searchBarState = state.searchBar;
+    const currentSearch = searchBarState.currentSearch;
+    const selectedSuggestion = searchBarState.selectedSuggestion;
+    const suggestions = searchBarState.suggestions;
     const [key, index] = getSelectedKeyIndex(suggestions, selectedSuggestion);
 
     if(!currentSearch && index == 0)
@@ -90,19 +91,28 @@ function search(dispatch, getState) {
         let response = {};
         let plotsToAdd = [];
         Object.keys(json).forEach((key) => {
-            // don't add instruments we already know about.
-            if(instruments[key])
-                return;
-
+            // key: tablename
+            // attributes: [adj_close, volume, etc...]
             let attributes = json[key];
             response[key] = [];
+            let instrument = state.instruments[key];
+            let attributeIdMap = {};
             attributes.forEach((attribute) => {
-                let attributeId = Guid.raw();
-                response[key].push({name:attribute, id: attributeId});
-                if(attribute == 'adj_close' || attribute == 'volume') {
-                    let plotId = Guid.raw();
-                    plotsToAdd.push({id:plotId, dataSets:[attributeId]});
+                // Don't add if instrument/attribute pair already exists
+                if (instrument && instrument[attribute]) {
+                    attributeIdMap[attribute] = instrument[attribute];
+                    return;
                 }
+
+                let attributeId = Guid.raw();
+                attributeIdMap[attribute] = attributeId;
+                response[key].push({name:attribute, id: attributeId});
+            });
+
+            Object.keys(attributeIdMap).forEach((key) => {
+                let attributeId = attributeIdMap[key];
+                let plotId = Guid.raw();
+                plotsToAdd.push({id:plotId, dataSets:[attributeId]});
             });
         });
 

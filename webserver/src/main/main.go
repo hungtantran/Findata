@@ -136,7 +136,9 @@ func initializeConfiguration() {
         metricDatabase,
         allTickerInfo,
         allEconomicsInfo,
-        allExchangeIndexInfo);
+        allExchangeIndexInfo,
+        elasticSearchIp,
+        elasticSearchPort);
 }
 
 func main() {
