@@ -8,6 +8,7 @@ import (
     "log"
     "net/http"
     "time"
+    "sync"
     //"github.com/davecgh/go-spew/spew"
 
     "fin_database"
@@ -95,6 +96,7 @@ var NYTIMES_API string = "http://query.nytimes.com/svc/add/v1/sitesearch.json?en
 var MAX_ERR int = 3;
 
 type NYTimesCrawler struct {
+    waitGroup *sync.WaitGroup
     newsInfoDatabase *fin_database.NewsInfoDatabase
     newsContentDatabase *fin_database.NewsContentDatabase
     startDayFromToday int
@@ -105,6 +107,7 @@ type NYTimesCrawler struct {
 }
 
 func NewNYTimesCrawler(
+        waitGroup *sync.WaitGroup,
         newsInfoDatabase *fin_database.NewsInfoDatabase,
         newsContentDatabase *fin_database.NewsContentDatabase,
         startDayFromToday int,
@@ -113,6 +116,7 @@ func NewNYTimesCrawler(
         updateFrequencySecs int,
         waitSecsBeforeRestart int) *NYTimesCrawler {
     var nytimesCrawler *NYTimesCrawler = new(NYTimesCrawler);
+    nytimesCrawler.waitGroup = waitGroup;
     nytimesCrawler.newsInfoDatabase = newsInfoDatabase;
     nytimesCrawler.newsContentDatabase = newsContentDatabase;
     nytimesCrawler.startDayFromToday = startDayFromToday;
@@ -128,6 +132,7 @@ func (nytimesCrawler *NYTimesCrawler) Crawl() {
         err := nytimesCrawler.CrawlOneTry();
         if (err != nil) {
             log.Println(err);
+            nytimesCrawler.waitGroup.Done();
             return;
         }
         time.Sleep(time.Duration(nytimesCrawler.updateFrequencySecs) * time.Second);
