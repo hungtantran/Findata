@@ -14,6 +14,7 @@ import (
     "golang.org/x/net/html"
 
     "fin_database"
+    "utilities"
 )
 
 type WSJDocObject struct {
@@ -143,23 +144,13 @@ func (wsjCrawler *WSJCrawler) ParseOnePage(content string) []WSJDocObject {
         return docs;
     }
 
-    var newsItemNode *html.Node;
-    var extractNewsItem func(n *html.Node);
-    extractNewsItem = func(n *html.Node) {
-        attributes := n.Attr;
-        if (n.Type == html.ElementNode &&
-            n.Data == "ul" &&
-            len(attributes) == 1 &&
-            attributes[0].Key == "class" &&
-            attributes[0].Val == "newsItem")  {
-            newsItemNode = n;
-            return;
-        }
-        for c := n.FirstChild; c != nil; c = c.NextSibling {
-            extractNewsItem(c)
-        }
+    var newsItemNodes []*html.Node;
+    utilities.ExtractItemsFromNode(
+        doc, "ul", "class", "newsItem", newsItemNodes);
+    if (len(newsItemNodes) != 1) {
+        log.Printf("Find %d news item node", len(newsItemNodes));
+        return docs;
     }
-    extractNewsItem(doc);
 
     var extractDocOjects func(newsNode *html.Node);
     // Each newsNode is like
@@ -213,6 +204,6 @@ func (wsjCrawler *WSJCrawler) ParseOnePage(content string) []WSJDocObject {
             }
         }
     }
-    extractDocOjects(newsItemNode);
+    extractDocOjects(newsItemNodes[0]);
     return docs;
 }

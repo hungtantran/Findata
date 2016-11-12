@@ -1,4 +1,4 @@
-package main
+package utilities
 
 import (
 	"database/sql"
@@ -7,6 +7,8 @@ import (
 	"os"
 	"log"
 	elastic "gopkg.in/olivere/elastic.v3"
+
+	"fin_database"
 )
 
 func defaultNullInt(val sql.NullInt64) int64 {
@@ -39,7 +41,7 @@ func defaultDate(date time.Time) string {
 }
 
 func GetElasticSearchClient() *elastic.Client {
-	var connectionString string = elasticSearchIp + ":" + fmt.Sprintf("%d", elasticSearchPort);
+	var connectionString string = ElasticSearchIp + ":" + fmt.Sprintf("%d", ElasticSearchPort);
 	client, err := elastic.NewClient(
         elastic.SetURL(connectionString),
         elastic.SetSniff(false),
@@ -52,4 +54,13 @@ func GetElasticSearchClient() *elastic.Client {
 		panic(err)
 	}
 	return client;
+}
+
+func GetDefaultMysqlConnector() *fin_database.MySqlConnector {
+	var mysqlConnector *fin_database.MySqlConnector = fin_database.NewMySqlConnector(
+		MysqlUsername,
+		MysqlPassword,
+		MysqlServer,
+		MysqlDatabase);
+	return mysqlConnector;
 }

@@ -50,6 +50,7 @@ func (newsContentDatabase *NewsContentDatabase) GetAllNewsContent() []NewsConten
 func (newsContentDatabase *NewsContentDatabase) InsertNewsContent(newsContent *NewsContent) bool {
     stmt, err := newsContentDatabase.dbConnector.GetConnector().Prepare(
             "INSERT " + newsContentDatabase.dbTableName + " SET id=?, full_data=?");
+    defer stmt.Close();
     if err != nil {
         log.Println(err);
         return false;
@@ -62,8 +63,6 @@ func (newsContentDatabase *NewsContentDatabase) InsertNewsContent(newsContent *N
         log.Println(err);
         return false;
     }
-
-    stmt.Close();
 
     return true;
 }

@@ -6,6 +6,7 @@ import (
     "net/http"
 
     "fin_database"
+    "utilities"
 )
 
 var indexHandlerObj HttpHandler;
@@ -82,18 +83,14 @@ func initializeConfiguration() {
     aboutHandlerObj = NewStandardAboutHandler();
 
     // Initialize login, logout and register handler
-    var mysqlConnector *fin_database.MySqlConnector =  fin_database.NewMySqlConnector(
-            mysqlUsername,
-            mysqlPassword,
-            mysqlServer,
-            mysqlDatabase);
+    var mysqlConnector *fin_database.MySqlConnector =  utilities.GetDefaultMysqlConnector();
 
     var usersDatabase *fin_database.UsersDatabase = fin_database.NewUsersDatabase(
-            dbType,
+            utilities.DbType,
             "users",
             mysqlConnector);
     var gridsDatabase *fin_database.GridsDatabase = fin_database.NewGridsDatabase(
-            dbType,
+            utilities.DbType,
             "grids",
             mysqlConnector);
     loginHandlerObj = NewStandardLoginHandler(usersDatabase);
@@ -102,25 +99,26 @@ func initializeConfiguration() {
     userHandlerObj = NewStandardUserHandler(usersDatabase, gridsDatabase);
 
     // Initialize match handler
-    matchHandlerObj = NewElasticSearchMatchHandler(elasticSearchIp, elasticSearchPort);
+    matchHandlerObj = NewElasticSearchMatchHandler(
+        utilities.ElasticSearchIp, utilities.ElasticSearchPort);
 
     // Initialize search handler
     var tickerInfoDatabase *fin_database.TickerInfoDatabase = fin_database.NewTickerInfoDatabase(
-            dbType,
+            utilities.DbType,
             "ticker_info",
             mysqlConnector);
     tickerInfoChan := make(chan []fin_database.TickerInfo);
     go func() { tickerInfoChan <- tickerInfoDatabase.GetAllTickerInfo(); }();
 
     var economicsInfoDatabase *fin_database.EconomicsInfoDatabase = fin_database.NewEconomicsInfoDatabase(
-            dbType,
+            utilities.DbType,
             "economics_info",
             mysqlConnector);
     economicsInfoChan := make(chan []fin_database.EconomicsInfo);
     go func() { economicsInfoChan <- economicsInfoDatabase.GetAllEconomicsInfo(); }();
 
     var exchangeIndexInfoDatabase *fin_database.ExchangeIndexInfoDatabase = fin_database.NewExchangeIndexInfoDatabase(
-            dbType,
+            utilities.DbType,
             "exchange_index_info",
             mysqlConnector);
     exchangeIndexInfoChan := make(chan []fin_database.ExchangeIndexInfo);
@@ -131,22 +129,22 @@ func initializeConfiguration() {
     allExchangeIndexInfo := <-exchangeIndexInfoChan;
 
     var metricDatabase *fin_database.MetricDatabase = fin_database.NewMetricDatabase(
-            dbType, mysqlConnector);
+            utilities.DbType, mysqlConnector);
     searchHandlerObj = NewStandardSearchHandler(
         metricDatabase,
         allTickerInfo,
         allEconomicsInfo,
         allExchangeIndexInfo,
-        elasticSearchIp,
-        elasticSearchPort);
+        utilities.ElasticSearchIp,
+        utilities.ElasticSearchPort);
 }
 
 func main() {
     // Initialize logger to output filename
     log.SetFlags(log.Lshortfile);
     // Initialize configuration constants
-    var config *ProdConfig;
-    config.initializeConfig();
+    var config *utilities.ProdConfig;
+    config.InitializeConfig();
 
     go initializeConfiguration();
 
@@ -162,6 +160,6 @@ func main() {
     http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("static/css/"))));
     http.Handle("/generated/", http.StripPrefix("/generated/", http.FileServer(http.Dir("static/generated/"))));
 
-    log.Println("Start listen and serve from ", httpAddressAndPort);
-    http.ListenAndServe(httpAddressAndPort, nil);
+    log.Println("Start listen and serve from ", utilities.HttpAddressAndPort);
+    http.ListenAndServe(utilities.HttpAddressAndPort, nil);
 }

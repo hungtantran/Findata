@@ -1,4 +1,4 @@
-package main
+package utilities
 
 import (
 	"fmt"
@@ -12,12 +12,12 @@ func PopulateNewsInfo() {
 	// Create a client
 	client := GetElasticSearchClient();
 	var mysqlConnector *fin_database.MySqlConnector = fin_database.NewMySqlConnector(
-		mysqlUsername,
-		mysqlPassword,
-		mysqlServer,
-		mysqlDatabase);
+		MysqlUsername,
+		MysqlPassword,
+		MysqlServer,
+		MysqlDatabase);
 	var newsInfoDatabase *fin_database.NewsInfoDatabase = fin_database.NewNewsInfoDatabase(
-		dbType, "news_info", mysqlConnector);
+		DbType, "news_info", mysqlConnector);
 
 	maxNumResults := 2000;
 	curId := 0;

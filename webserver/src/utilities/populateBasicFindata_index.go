@@ -1,4 +1,4 @@
-package main
+package utilities
 
 import (
 	"fmt"
@@ -10,13 +10,9 @@ import (
 func PopulateEconomicsInfo() {
 	// Create a client
 	client := GetElasticSearchClient();
-	var mysqlConnector *fin_database.MySqlConnector = fin_database.NewMySqlConnector(
-		mysqlUsername,
-		mysqlPassword,
-		mysqlServer,
-		mysqlDatabase);
+	var mysqlConnector *fin_database.MySqlConnector = GetDefaultMysqlConnector();
 	var economicsInfoDatabase *fin_database.EconomicsInfoDatabase = fin_database.NewEconomicsInfoDatabase(
-		dbType, "economics_info", mysqlConnector);
+		DbType, "economics_info", mysqlConnector);
     allEconomicsInfo := economicsInfoDatabase.GetAllEconomicsInfo();
 
 	bulkRequest := client.Bulk();
@@ -48,13 +44,9 @@ func PopulateEconomicsInfo() {
 func PopulateTickerInfo() {
 	// Create a client
 	client := GetElasticSearchClient();
-	var mysqlConnector *fin_database.MySqlConnector = fin_database.NewMySqlConnector(
-		mysqlUsername,
-		mysqlPassword,
-		mysqlServer,
-		mysqlDatabase);
+	var mysqlConnector *fin_database.MySqlConnector = GetDefaultMysqlConnector();
 	var tickerInfoDatabase *fin_database.TickerInfoDatabase = fin_database.NewTickerInfoDatabase(
-		dbType, "ticker_info", mysqlConnector);
+		DbType, "ticker_info", mysqlConnector);
     allTickerInfo := tickerInfoDatabase.GetAllTickerInfo();
 
 	bulkRequest := client.Bulk();
@@ -98,13 +90,9 @@ func PopulateTickerInfo() {
 func PopulateExchangeIndexInfo() {
 	// Create a client
 	client := GetElasticSearchClient();
-	var mysqlConnector *fin_database.MySqlConnector = fin_database.NewMySqlConnector(
-		mysqlUsername,
-		mysqlPassword,
-		mysqlServer,
-		mysqlDatabase);
+	var mysqlConnector *fin_database.MySqlConnector = GetDefaultMysqlConnector();
 	var exchangeIndexInfoDatabase *fin_database.ExchangeIndexInfoDatabase = fin_database.NewExchangeIndexInfoDatabase(
-		dbType, "exchange_index_info", mysqlConnector);
+		DbType, "exchange_index_info", mysqlConnector);
     allExchangeIndexInfo := exchangeIndexInfoDatabase.GetAllExchangeIndexInfo();
 
 	bulkRequest := client.Bulk();

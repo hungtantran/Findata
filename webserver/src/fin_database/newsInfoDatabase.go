@@ -120,6 +120,7 @@ func (newsInfoDatabase *NewsInfoDatabase) GetNewsInfo(startId int, numResults in
 func (newsInfoDatabase *NewsInfoDatabase) InsertNewsInfo(newsInfo *NewsInfo) int64 {
     stmt, err := newsInfoDatabase.dbConnector.GetConnector().Prepare(
             "INSERT " + newsInfoDatabase.dbTableName + " SET id=?, source=?, date=?, headline=?, print_headline=?, abstract=?, section=?, subsection=?, tags=?, keywords=?, link=?, authors=?, metadata=?");
+    defer stmt.Close();
     if err != nil {
         log.Println(err);
         return -1;
@@ -149,8 +150,6 @@ func (newsInfoDatabase *NewsInfoDatabase) InsertNewsInfo(newsInfo *NewsInfo) int
         log.Println(err);
         return -1;
     }
-
-    stmt.Close();
 
     return lastId;
 }

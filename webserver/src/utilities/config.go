@@ -1,44 +1,44 @@
-package main
+package utilities
 
-var dbType string
+var DbType string
 
-var mysqlUsername string;
-var mysqlPassword string;
-var mysqlServer string;
-var mysqlDatabase string;
+var MysqlUsername string;
+var MysqlPassword string;
+var MysqlServer string;
+var MysqlDatabase string;
 
-var elasticSearchIp string;
-var elasticSearchPort int;
+var ElasticSearchIp string;
+var ElasticSearchPort int;
 
-var maxNumMatchesReturned int;
+var MaxNumMatchesReturned int;
 
-var httpAddressAndPort string;
+var HttpAddressAndPort string;
 
-var oauthClientId string;
-var oauthClientSecret string;
+var OauthClientId string;
+var OauthClientSecret string;
 
 type Config interface {
-    initializeConfig()
+    InitializeConfig()
 }
 
 type ProdConfig struct {
 }
 
-func (config *ProdConfig) initializeConfig() {
-    dbType = "mysql"
+func (config *ProdConfig) InitializeConfig() {
+    DbType = "mysql"
 
-    mysqlUsername = "root";
-    mysqlPassword = "testtest";
-    mysqlServer = "104.154.40.63";
-    mysqlDatabase = "models";
+    MysqlUsername = "root";
+    MysqlPassword = "testtest";
+    MysqlServer = "104.154.40.63";
+    MysqlDatabase = "models";
 
-    elasticSearchIp = "104.198.15.187";
-    elasticSearchPort = 9200;
+    ElasticSearchIp = "104.198.15.187";
+    ElasticSearchPort = 9200;
 
-    maxNumMatchesReturned = 10;
+    MaxNumMatchesReturned = 10;
 
-    httpAddressAndPort = "localhost:8080";
+    HttpAddressAndPort = "localhost:8080";
     
-    oauthClientId = "292129338715-hv2qf7rlvgq00dpjn9h7q04otkoan1fh.apps.googleusercontent.com";
-    oauthClientSecret = "ESk1Pw0yR-FhbCAcPgm6Z8NV";   
+    OauthClientId = "292129338715-hv2qf7rlvgq00dpjn9h7q04otkoan1fh.apps.googleusercontent.com";
+    OauthClientSecret = "ESk1Pw0yR-FhbCAcPgm6Z8NV";   
 }

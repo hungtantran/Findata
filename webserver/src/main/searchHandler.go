@@ -15,6 +15,7 @@ import (
     //"github.com/davecgh/go-spew/spew"
 
     "fin_database"
+    "utilities"
 )
 
 type ElasticSearchHistogramJsonObject struct {
@@ -164,8 +165,8 @@ func (searchHandler *StandardSearchHandler) GetNewsInfoData(match string) []fin_
 
     var connectionString string = fmt.Sprintf(
         "http://%s:%d/news/news_info/_search",
-        elasticSearchIp,
-        elasticSearchPort);
+        utilities.ElasticSearchIp,
+        utilities.ElasticSearchPort);
     req, err := http.NewRequest("POST", connectionString, bytes.NewBuffer(queryString));
     req.Header.Set("Content-Type", "application/json");
     client := &http.Client{};

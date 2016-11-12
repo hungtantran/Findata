@@ -6,6 +6,7 @@ import (
     "sync"
 
     "fin_database"
+    "utilities"
 )
 
 func main() {
@@ -13,47 +14,42 @@ func main() {
 	// Initialize logger to output filename
     log.SetFlags(log.Lshortfile);
     // Initialize configuration constants
-    var config *ProdConfig;
-    config.initializeConfig();
+    var config *utilities.ProdConfig;
+    config.InitializeConfig();
 
-	var mysqlConnector *fin_database.MySqlConnector =  fin_database.NewMySqlConnector(
-        mysqlUsername,
-        mysqlPassword,
-        mysqlServer,
-        mysqlDatabase);
+	var mysqlConnector *fin_database.MySqlConnector =  utilities.GetDefaultMysqlConnector();
 
     var newsInfoDatabase *fin_database.NewsInfoDatabase = fin_database.NewNewsInfoDatabase(
-        dbType,
+        utilities.DbType,
         "news_info",
         mysqlConnector);
 
     var newsContentDatabase *fin_database.NewsContentDatabase = fin_database.NewNewsContentDatabase(
-        dbType,
+        utilities.DbType,
         "news_content",
         mysqlConnector);
 
     var waitGroup sync.WaitGroup;
-	/*var nytimesCrawler *NYTimesCrawler = NewNYTimesCrawler(
-        waitGroup,
-        newsInfoDatabase,
-        newsContentDatabase,
-        415, //startDayFromToday 
-        2000, // endDayFromToday
-        5, // maxPageDepthPerDay
-        5 * 60 * 60, // updateFrequencySecs
-        20); // waitSecsBeforeRestart*/
-    var wsjCrawler *WSJCrawler = NewWSJCrawler(
+	var nytimesCrawler *NYTimesCrawler = NewNYTimesCrawler(
         &waitGroup,
         newsInfoDatabase,
         newsContentDatabase,
-        0, // startDayFromToday
-        2000, // endDayFromToday
+        2957, //startDayFromToday 
+        5000, // endDayFromToday
+        5, // maxPageDepthPerDay
+        5 * 60 * 60, // updateFrequencySecs
+        20); // waitSecsBeforeRestart
+    crawlers := [...]Crawler{nytimesCrawler};
+    /*var wsjCrawler *WSJCrawler = NewWSJCrawler(
+        &waitGroup,
+        newsInfoDatabase,
+        newsContentDatabase,
+        1131, // startDayFromToday
+        5000, // endDayFromToday
         5 * 60 * 60, // updateFrequencySecs
         60); // waitSecsBeforeRestart
-
+    crawlers := [...]Crawler{wsjCrawler};*/
     //crawlers := [...]Crawler{nytimesCrawler, wsjCrawler};
-    //crawlers := [...]Crawler{nytimesCrawler};
-    crawlers := [...]Crawler{wsjCrawler};
 
     /*json, err := ioutil.ReadFile("D:\\Users\\hungtantran\\PycharmProjects\\Models\\Rand\\NYTImes_response");
     if (err != nil) {
