@@ -64,3 +64,12 @@ func GetDefaultMysqlConnector() *fin_database.MySqlConnector {
 		MysqlDatabase);
 	return mysqlConnector;
 }
+
+func IsStringAlphabet(str string) bool {
+     for _, r := range str {
+        if (r < 'a' || r > 'z') && (r < 'A' || r > 'Z') {
+            return false
+        }
+    }
+    return true
+}

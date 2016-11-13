@@ -145,8 +145,10 @@ func (wsjCrawler *WSJCrawler) ParseOnePage(content string) []WSJDocObject {
     }
 
     var newsItemNodes []*html.Node;
+    attrKeys := []string{"class"};
+    attrValues := []string{"newsItem"};
     utilities.ExtractItemsFromNode(
-        doc, "ul", "class", "newsItem", newsItemNodes);
+        doc, "ul", attrKeys, attrValues, &newsItemNodes);
     if (len(newsItemNodes) != 1) {
         log.Printf("Find %d news item node", len(newsItemNodes));
         return docs;

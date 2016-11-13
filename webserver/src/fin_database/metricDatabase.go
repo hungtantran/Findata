@@ -59,6 +59,37 @@ func (metricDatabase *MetricDatabase) GetMetricWithName(tableName string, metric
     return allMetric;
 }
 
+func (metricDatabase *MetricDatabase) InsertMetric(tableName string, metric *Metric) int64 {
+    stmt, err := metricDatabase.dbConnector.GetConnector().Prepare(
+            "INSERT " + tableName + " SET id=?, metric_name=?, value=?, unit=?, start_date=?, end_date=?, metadata=?");
+    defer stmt.Close();
+    if err != nil {
+        log.Println(err);
+        return -1;
+    }
+
+    res, err := stmt.Exec(
+            metric.Id,
+            metric.MetricName,
+            metric.Value,
+            metric.Unit,
+            metric.StartDate,
+            metric.EndDate,
+            metric.MetaData);
+    if err != nil {
+        log.Println(err);
+        return -1;
+    }
+
+    lastId, err := res.LastInsertId();
+    if err != nil {
+        log.Println(err);
+        return -1;
+    }
+
+    return lastId;
+}
+
 func (metricDatabase *MetricDatabase) Close() {
     metricDatabase.dbConnector.Close();
 }

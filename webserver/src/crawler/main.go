@@ -18,8 +18,9 @@ func main() {
     config.InitializeConfig();
 
 	var mysqlConnector *fin_database.MySqlConnector =  utilities.GetDefaultMysqlConnector();
+    var waitGroup sync.WaitGroup;
 
-    var newsInfoDatabase *fin_database.NewsInfoDatabase = fin_database.NewNewsInfoDatabase(
+    /*var newsInfoDatabase *fin_database.NewsInfoDatabase = fin_database.NewNewsInfoDatabase(
         utilities.DbType,
         "news_info",
         mysqlConnector);
@@ -29,7 +30,6 @@ func main() {
         "news_content",
         mysqlConnector);
 
-    var waitGroup sync.WaitGroup;
 	var nytimesCrawler *NYTimesCrawler = NewNYTimesCrawler(
         &waitGroup,
         newsInfoDatabase,
@@ -40,7 +40,7 @@ func main() {
         5 * 60 * 60, // updateFrequencySecs
         20); // waitSecsBeforeRestart
     crawlers := [...]Crawler{nytimesCrawler};
-    /*var wsjCrawler *WSJCrawler = NewWSJCrawler(
+    var wsjCrawler *WSJCrawler = NewWSJCrawler(
         &waitGroup,
         newsInfoDatabase,
         newsContentDatabase,
@@ -66,6 +66,23 @@ func main() {
     }
     content := string(html);
     wsjCrawler.ParseOnePage(content);*/
+
+    var metricDatabase *fin_database.MetricDatabase = fin_database.NewMetricDatabase(
+        utilities.DbType, mysqlConnector);
+    var tickerInfoDatabase *fin_database.TickerInfoDatabase = fin_database.NewTickerInfoDatabase(
+        utilities.DbType, "ticker_info", mysqlConnector);
+    allTickerInfo := tickerInfoDatabase.GetAllTickerInfo();
+    googleFinanceCrawler := NewGoogleFinanceCrawler(
+        &waitGroup, metricDatabase, allTickerInfo, 60);
+    crawlers := [...]Crawler{googleFinanceCrawler};
+
+    /*html, err := ioutil.ReadFile("D:\\Users\\hungtantran\\PycharmProjects\\Models\\Rand\\google_finance_financial_html.txt");
+    if (err != nil) {
+        log.Println(err);
+        return;
+    }
+    content := string(html);
+    googleFinanceCrawler.ParseOnePage(content);*/
 
     for _, crawler := range(crawlers) {
         waitGroup.Add(1);
