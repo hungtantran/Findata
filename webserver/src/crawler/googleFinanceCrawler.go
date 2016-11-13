@@ -74,11 +74,12 @@ func (googleFinanceCrawler *GoogleFinanceCrawler) CrawlOneTry(ticker *fin_databa
     defer resp.Body.Close();
     body, err := ioutil.ReadAll(resp.Body);
     var metrics []fin_database.Metric = googleFinanceCrawler.ParseOnePage(string(body));
-    log.Printf("Insert %d metrics", len(metrics));
+    tableName := fmt.Sprintf("ticker_info_%d_metrics", ticker.Id.Int64);
+    log.Printf("Insert %d metrics into %s", len(metrics), tableName);
     for _, metric := range(metrics) {
-        tableName := fmt.Sprintf("ticker_info_%d_metrics", ticker.Id.Int64);
         googleFinanceCrawler.metricDatabase.InsertMetric(tableName, &metric);
     }
+    log.Print("Done inserting into table %s", tableName);
     return nil;
 }
 
@@ -194,7 +195,7 @@ func (googleFinanceCrawler *GoogleFinanceCrawler) ParseHeaderToDates(header stri
     re := regexp.MustCompile(`([0-9]+) months ending ([0-9]+)-([0-9]+)-([0-9]+)$`);
 	matches := re.FindStringSubmatch(header);
     if (len(matches) == 5) {
-        duration, err := strconv.Atoi(matches[1]);
+        durationMonth, err := strconv.Atoi(matches[1]);
         if (err != nil) { return nil, nil, err; }
         year, err := strconv.Atoi(matches[2]);
         if (err != nil) { return nil, nil, err; }
@@ -204,7 +205,25 @@ func (googleFinanceCrawler *GoogleFinanceCrawler) ParseHeaderToDates(header stri
         if (err != nil) { return nil, nil, err; }
         endDate, err := time.Parse("2006-1-2", fmt.Sprintf("%d-%d-%d", year, month, day));
         if (err != nil) { return nil, nil, err; }
-        startDate := endDate.AddDate(0, -duration, 0);
+        startDate := endDate.AddDate(0, -durationMonth, 0);
+        return &startDate, &endDate, nil;
+    }
+
+    // 52 weeks ending 2016-01-02
+    re = regexp.MustCompile(`([0-9]+) weeks ending ([0-9]+)-([0-9]+)-([0-9]+)$`);
+	matches = re.FindStringSubmatch(header);
+    if (len(matches) == 5) {
+        durationWeek, err := strconv.Atoi(matches[1]);
+        if (err != nil) { return nil, nil, err; }
+        year, err := strconv.Atoi(matches[2]);
+        if (err != nil) { return nil, nil, err; }
+        month, err := strconv.Atoi(matches[3]);
+        if (err != nil) { return nil, nil, err; }
+        day, err := strconv.Atoi(matches[4]);
+        if (err != nil) { return nil, nil, err; }
+        endDate, err := time.Parse("2006-1-2", fmt.Sprintf("%d-%d-%d", year, month, day));
+        if (err != nil) { return nil, nil, err; }
+        startDate := endDate.AddDate(0, -durationWeek/4, 0);
         return &startDate, &endDate, nil;
     }
 
