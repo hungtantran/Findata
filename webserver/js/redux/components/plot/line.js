@@ -12,7 +12,6 @@ function Line(props) {
 
 
     props.style.className = 'line';
-    props.style.stroke = 'blue';
     props.style.d = scaledData;
     props.style.fill = 'none';
     return <path {...props.style} />;

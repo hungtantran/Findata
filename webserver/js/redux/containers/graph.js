@@ -9,6 +9,7 @@ class Graph extends React.Component {
         super(props);
 
         this.updatePlotPositions = this.updatePlotPositions.bind(this);
+        this.legendWidth = 50;
     }
 
     updatePlotPositions() {
@@ -19,7 +20,7 @@ class Graph extends React.Component {
 
         this.props.plots.forEach((plot, index) => {
             const y = margins.top + plotHeight * index;
-            const innerWidth = this.props.width - (margins.right + margins.left);
+            const innerWidth = (this.props.width - (margins.right + margins.left)) - this.legendWidth;
             const position = { width: innerWidth, height: plotHeight, x: margins.left, y};
             this.props.positionPlot(plot, position);
         });
@@ -53,10 +54,20 @@ class Graph extends React.Component {
             return <Plot id={plot} key={plot} />;
         });
 
+        let legendItems = [];
+        Object.keys(this.props.items).forEach((key) => {
+            legendItems.push(<div title={key} style={{overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: this.props.items[key]}}>{key}</div>);
+        });
+
         return (
-            <svg className="graph" width={this.props.width} height={this.props.height} >
-                {plotsToRender}
-            </svg>
+            <div style={{display: 'flex'}} width={this.props.width}>
+                <svg className="graph" width={this.props.width - this.legendWidth} height={this.props.height} >
+                    {plotsToRender}
+                </svg>
+                <div className="legend">
+                    {legendItems}
+                </div>
+            </div>
         );
     }
 }
@@ -65,7 +76,8 @@ Graph.propTypes = {
     plots: React.PropTypes.array,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
-    positionPlot: React.PropTypes.func
+    positionPlot: React.PropTypes.func,
+    items: React.PropTypes.object
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -79,7 +91,16 @@ const mapStateToProps = (state, ownProps) => {
     let width = info.width ? info.width * cellWidth - 10 : 0;
     let height = info.height ? info.height * cellHeight - 10 : 0;
 
-    return {width, height, plots: info.plots};
+
+    let items = {};
+    info.plots.forEach((plot) => {
+        state.plots[plot].dataSets.forEach((dataSet) => {
+            let name = state.dataSets[dataSet].tableName + state.dataSets[dataSet].name;
+            items[name] = info.colorScale(dataSet);
+        });
+    });
+
+    return {width, height, plots: info.plots, items};
 };
 
 const mapDispatchToProps = (dispatch) => {

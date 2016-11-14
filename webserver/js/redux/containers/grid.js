@@ -104,7 +104,7 @@ class Grid extends React.Component {
         let elements = Object.keys(this.props.elements).map((id) => {
             return (
             <div className="grid-stack-item" id={id} key={id}>
-                <div className="grid-stack-item-content">
+                <div className="grid-stack-item-content" style={{left: 0, right: 0}}>
                     <Graph id={id} key={id} />
                 </div>
             </div>

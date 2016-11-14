@@ -45,6 +45,7 @@ Plot.propTypes = {
     height: React.PropTypes.number,
     x: React.PropTypes.number,
     y: React.PropTypes.number,
+    colorScale: React.PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -79,7 +80,7 @@ const mapStateToProps = (state, ownProps) => {
 
     let {x, y, width, height } = plot;
 
-    return {dataSets: dataSetIds, domain: [xMin, xMax], range: [yMin, yMax], x, y, width, height};
+    return {dataSets: dataSetIds, domain: [xMin, xMax], range: [yMin, yMax], x, y, width, height, colorScale: state.elements[parentId].colorScale};
 };
 
 export default connect(

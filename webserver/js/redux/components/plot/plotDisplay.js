@@ -24,7 +24,7 @@ class PlotDisplay extends React.Component {
 
     buildItems(dataSets, xscale, yscale) {
         return Array.from(dataSets, (dataSet) => {
-            return <DataSet key={dataSet} id={dataSet} xscale={xscale} yscale={yscale} />;
+            return <DataSet key={dataSet} id={dataSet} xscale={xscale} yscale={yscale} colorScale={this.props.colorScale} />;
         });
     }
 
@@ -41,10 +41,7 @@ class PlotDisplay extends React.Component {
         let dataSets = this.buildItems(this.props.dataSets, xscale, yscale);
         return (
             <g className="plot" transform={getPlotTranslation(this.props.x, this.props.y)} ref="element" >
-                <clipPath id='clip'>
-                    <rect width={this.props.width * .95} height={this.props.height} />
-                </clipPath>
-                <g ref="items" clipPath='url(#clip)' >
+                <g ref="items">
                     {dataSets}
                 </g>
                 <XAxis scale={xscale} translate={getXScaleTranslation(this.props.height)} />
@@ -61,7 +58,8 @@ PlotDisplay.propTypes = {
     y: React.PropTypes.number,
     dataSets: React.PropTypes.array,
     domain: React.PropTypes.array,
-    range: React.PropTypes.array
+    range: React.PropTypes.array,
+    colorScale: React.PropTypes.func
 };
 
 export default PlotDisplay;

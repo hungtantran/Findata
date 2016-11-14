@@ -24,22 +24,24 @@ class DataSet extends React.Component {
     // }
 
     render() {
-        return <Line data={this.props.data} yscale={this.props.yscale} xscale={this.props.xscale} />;
+        let style={stroke: this.props.color};
+        return <Line data={this.props.data} yscale={this.props.yscale} xscale={this.props.xscale} style={style} />;
     }
 }
 
 DataSet.propTypes = {
     data: React.PropTypes.array,
     xscale: React.PropTypes.func,
-    yscale: React.PropTypes.func
+    yscale: React.PropTypes.func,
+    color: React.PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => {
 
     let data = state.dataSets[ownProps.id].data;
-    let {xscale, yscale} = ownProps;
+    let {xscale, yscale, colorScale} = ownProps;
 
-    return {data, xscale, yscale};
+    return {data, xscale, yscale, color: colorScale(ownProps.id)};
 };
 
 export default connect(

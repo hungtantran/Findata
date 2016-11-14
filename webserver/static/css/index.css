@@ -103,9 +103,10 @@
   margin-bottom: 100px; */
 }
 
-.grid-stack-item {
-  border: 2px solid darkblue;
-}
+/*.grid-stack-item {
+  border-left: 2px solid darkblue;
+  border-bottom: 2px solid darkblue;
+}*/
 
 .grid-stack {
 }
