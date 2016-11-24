@@ -2,6 +2,7 @@ import {LAYOUT_CHANGE} from '../actions/gridActions';
 import {ADD_ELEMENT} from '../actions/elementActions';
 import {ADD_PLOTS} from '../actions/plotActions';
 import {scaleOrdinal, schemeCategory10} from 'd3-scale';
+import {LOAD_ELEMENTS} from '../actions/dashboardTabsActions';
 
 function Elements(state={}, action) {
     switch(action.type) {
@@ -30,6 +31,8 @@ function Elements(state={}, action) {
             });
             return Object.assign({}, state, {[action.parentId]: { plots, x, y, width, height, colorScale}});   
         }
+    case LOAD_ELEMENTS:
+        return Object.assign({}, action.elements);
     default:
         return state;
     }

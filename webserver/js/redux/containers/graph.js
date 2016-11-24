@@ -99,7 +99,6 @@ const mapStateToProps = (state, ownProps) => {
     let width = info.width ? info.width * cellWidth - 10 : 0;
     let height = info.height ? info.height * cellHeight - 10 : 0;
 
-
     let items = {};
     info.plots.forEach((plot) => {
         state.plots[plot].dataSets.forEach((dataSet) => {

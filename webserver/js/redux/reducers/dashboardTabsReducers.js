@@ -40,6 +40,8 @@ function DashboardTabs(state=initialState, action) {
                 tabs: element(state.activeTab, state.tabs, currentIds)
             });
         }
+    case Actions.LOAD_DASHBOARD_TABS:
+        return Object.assign({}, action.dashboardTabs);
     default:
         return state;
     }

@@ -1,4 +1,5 @@
 import * as Actions from '../actions/plotActions';
+import {LOAD_PLOTS} from '../actions/dashboardTabsActions';
 
 function Plots(state={}, action) {
     switch(action.type) {
@@ -21,6 +22,8 @@ function Plots(state={}, action) {
             let plot = Object.assign({}, state[action.id], action.position);
             return Object.assign({}, state, {[action.id]: plot});
         }
+    case LOAD_PLOTS:
+        return Object.assign({}, action.plots);
     default:
         return state;
     }

@@ -1,5 +1,6 @@
 import {RECEIVE_SEARCH} from '../actions/searchBarActions';
 import {REQUEST_DATA_SET, RECIEVE_DATA_SET} from '../actions/dataSetActions';
+import {LOAD_DATASETS} from '../actions/dashboardTabsActions';
 
 function DataSets(state={}, action) {
     switch(action.type) {
@@ -65,6 +66,8 @@ function DataSets(state={}, action) {
                 {isFetching: false, data: newData, range: [yMin, yMax], domain: [xMin, xMax]});
             return Object.assign({}, state, {[action.id]: dataSetInfo});
         }
+    case LOAD_DATASETS:
+        return Object.assign({}, action.dataSets);
     default:
         return state;
     }

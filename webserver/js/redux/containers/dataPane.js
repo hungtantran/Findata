@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 const DataPane = ({tableNameToMetricsMap}) => {
     let groupItems = Object.keys(tableNameToMetricsMap).map((tableName) => {
         let attributes = tableNameToMetricsMap[tableName];
-        console.log(attributes);
         // attributeList is the list of attributes for the current table name
         let attributeList = [];
         attributes.forEach((attribute) => {
@@ -51,6 +50,7 @@ DataPane.propTypes = {
 
 function mapStateToProps(state) {
     let dataSets = state.dataSets;
+    // TODO: table name can be duplicated, table code is better
     var tableNameToMetricsMap = {};
     Object.keys(dataSets).forEach((id) => {
         let dataSet = dataSets[id];

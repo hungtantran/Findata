@@ -1,4 +1,5 @@
 import {RECEIVE_SEARCH} from '../actions/searchBarActions';
+import {LOAD_INSTRUMENTS} from '../actions/dashboardTabsActions';
 
 function Instruments(state={}, action) {
     switch(action.type) {
@@ -29,6 +30,8 @@ function Instruments(state={}, action) {
             });
             return Object.assign({}, state, instruments);
         }
+    case LOAD_INSTRUMENTS:
+        return Object.assign({}, action.instruments);
     default:
         return state;
     }
