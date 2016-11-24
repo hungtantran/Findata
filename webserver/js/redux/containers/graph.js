@@ -9,7 +9,7 @@ class Graph extends React.Component {
         super(props);
 
         this.updatePlotPositions = this.updatePlotPositions.bind(this);
-        this.legendWidth = 50;
+        this.legendWidth = 100;
     }
 
     updatePlotPositions() {

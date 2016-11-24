@@ -54,7 +54,7 @@ class Grid extends React.Component {
             let element = this.props.elements[key];
             var x = element.x <= 0 ? 0 : element.x;
             var y = element.y <= 0 ? 0 : element.y;
-            var width = element.width <= 0 ? 4 : element.width;
+            var width = element.width <= 0 ? 6 : element.width;
             var height = element.height <= 0 ? 8 : element.height;
             var node = {
                 x: x,
