@@ -75,8 +75,11 @@ function loadDashboard(dispatch, getState) {
         console.log('parsing failed', ex);
     }).then((json) => {
         let savedState = JSON.parse(json);
-        console.log(savedState);
         let {dashboardTabs, dataSets, elements, instruments, plots, searchBar} = savedState;
+        if (dashboardTabs === undefined ||
+            dataSets === undefined) {
+            return;
+        }
         Object.keys(elements).forEach((id) => {
             elements[id].colorScale = scaleOrdinal(schemeCategory10);
         });
