@@ -68,10 +68,10 @@ class Graph extends React.Component {
 
         return (
             <div style={{display: 'flex'}} width={this.props.width}>
-                <svg className="graph" width={this.props.width - this.legendWidth} height={this.props.height} >
+                <svg className='graph' width={this.props.width - this.legendWidth} height={this.props.height} >
                     {plotsToRender}
                 </svg>
-                <div className="legend">
+                <div className='legend'>
                     {legendItems}
                 </div>
             </div>
@@ -103,7 +103,11 @@ const mapStateToProps = (state, ownProps) => {
     let items = {};
     info.plots.forEach((plot) => {
         state.plots[plot].dataSets.forEach((dataSet) => {
-            let name = state.dataSets[dataSet].tableName + ' ' + state.dataSets[dataSet].metricName;
+            let name = state.dataSets[dataSet].tableName;
+            // Don't concatenate duplicate string when table name equals metric name
+            if (name != state.dataSets[dataSet].metricName) {
+                name += ' ' + state.dataSets[dataSet].metricName;
+            }
             items[name] = info.colorScale(dataSet);
         });
     });

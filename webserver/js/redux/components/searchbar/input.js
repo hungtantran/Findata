@@ -29,6 +29,7 @@ class Input extends React.Component {
                 placeholder={this.props.placeholder}
                 onChange={this.handleChange}
                 onKeyDown={this.handleKeyDown}
+                style={{width: '100%'}}
             />
         );
     }

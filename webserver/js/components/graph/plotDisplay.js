@@ -201,9 +201,9 @@ class PlotDisplay extends React.Component {
                 <text
                     x={elX}
                     y={this.yscale.range()[0]}
-                    fontFamily="sans-serif"
-                    fontSize="15px"
-                    fill="red"
+                    fontFamily='sans-serif'
+                    fontSize='15px'
+                    fill='red'
                     key={'hovervaluex'}
                 >
                     {hoverXVal.toDateString()}
@@ -214,9 +214,9 @@ class PlotDisplay extends React.Component {
                     <text
                         x={this.state.transformedXScale.range()[1]}
                         y={this.yscale(val)}
-                        fontFamily="sans-serif"
-                        fontSize="15px"
-                        fill="red"
+                        fontFamily='sans-serif'
+                        fontSize='15px'
+                        fill='red'
                         key={`hovervaluey${index}`}
                     >
                         {val}
@@ -257,19 +257,19 @@ class PlotDisplay extends React.Component {
     render() {
         var items = this.buildItems(this.props.plotData);
         return (
-            <g className="plot" transform={getPlotTranslation(this.props.xOffset, this.props.yOffset)} ref="element" >
+            <g className='plot' transform={getPlotTranslation(this.props.xOffset, this.props.yOffset)} ref='element' >
                 <clipPath id='clip'>
                     <rect width={this.props.width * .95} height={this.props.height} />
                 </clipPath>
-                <g ref="items" clipPath='url(#clip)' >
+                <g ref='items' clipPath='url(#clip)' >
                     {items}
                 </g>
-                <XAxis key="axis" scale={this.state.transformedXScale} translate={getXScaleTranslation(this.props.height)} />
+                <XAxis key='axis' scale={this.state.transformedXScale} translate={getXScaleTranslation(this.props.height)} />
                 {this.state.hoverLines}
                 {this.state.hoverValues}
-                <YAxis key="yaxis" scale={this.yscale} translate={getYScaleTranslation(this.props.width * .95)} />
+                <YAxis key='yaxis' scale={this.yscale} translate={getYScaleTranslation(this.props.width * .95)} />
                 <Legend xpos={this.props.width * .95} ypos={0} colorscale={this.colorscale} items={this.props.plotData} />
-                <rect width={this.props.width * .95} height={this.props.height} fill="none" pointerEvents="all" ref="zoom" />
+                <rect width={this.props.width * .95} height={this.props.height} fill='none' pointerEvents='all' ref='zoom' />
             </g>
         );
     }
