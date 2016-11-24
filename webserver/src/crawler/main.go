@@ -73,7 +73,7 @@ func main() {
         utilities.DbType, "ticker_info", mysqlConnector);
     allTickerInfo := tickerInfoDatabase.GetAllTickerInfo();
     googleFinanceCrawler := NewGoogleFinanceCrawler(
-        &waitGroup, metricDatabase, allTickerInfo, 60);
+        &waitGroup, metricDatabase, allTickerInfo, 20);
     crawlers := [...]Crawler{googleFinanceCrawler};
 
     /*html, err := ioutil.ReadFile("D:\\Users\\hungtantran\\PycharmProjects\\Models\\Rand\\google_finance_financial_html.txt");

@@ -13,7 +13,7 @@ function fetchDataSet(id) {
     return (dispatch, getState) => {
         let state = getState();
         dispatch(requestDataSet(id));
-        let {name, tableName} = state.dataSets[id];
+        let {metricCode, tableCode} = state.dataSets[id];
         fetch($SCRIPT_ROOT + '/search', {
             mode: 'no-cors',
             method: 'POST',
@@ -23,8 +23,8 @@ function fetchDataSet(id) {
             },
             body: JSON.stringify({
                 action: 'GetData',
-                metricName: name,
-                tableName: tableName,
+                metricCode: metricCode,
+                tableCode: tableCode,
             })
         }).then(function(response) {
             return response.json();

@@ -56,7 +56,14 @@ class Graph extends React.Component {
 
         let legendItems = [];
         Object.keys(this.props.items).forEach((key) => {
-            legendItems.push(<div title={key} style={{overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: this.props.items[key]}}>{key}</div>);
+            let dataSet = this.props.items[key];
+            legendItems.push(
+                <div
+                    title={key}
+                    style={{overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: this.props.items[key]}}
+                >
+                    {key}
+                </div>);
         });
 
         return (
@@ -77,6 +84,7 @@ Graph.propTypes = {
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     positionPlot: React.PropTypes.func,
+    // Map between legend name and color scale
     items: React.PropTypes.object
 };
 
@@ -95,7 +103,7 @@ const mapStateToProps = (state, ownProps) => {
     let items = {};
     info.plots.forEach((plot) => {
         state.plots[plot].dataSets.forEach((dataSet) => {
-            let name = state.dataSets[dataSet].tableName + state.dataSets[dataSet].name;
+            let name = state.dataSets[dataSet].tableName + ' ' + state.dataSets[dataSet].metricName;
             items[name] = info.colorScale(dataSet);
         });
     });

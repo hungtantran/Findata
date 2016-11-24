@@ -107,21 +107,21 @@ func initializeConfiguration() {
             utilities.DbType,
             "ticker_info",
             mysqlConnector);
-    tickerInfoChan := make(chan []fin_database.TickerInfo);
+    tickerInfoChan := make(chan map[int64]fin_database.TickerInfo);
     go func() { tickerInfoChan <- tickerInfoDatabase.GetAllTickerInfo(); }();
 
     var economicsInfoDatabase *fin_database.EconomicsInfoDatabase = fin_database.NewEconomicsInfoDatabase(
             utilities.DbType,
             "economics_info",
             mysqlConnector);
-    economicsInfoChan := make(chan []fin_database.EconomicsInfo);
+    economicsInfoChan := make(chan map[int64]fin_database.EconomicsInfo);
     go func() { economicsInfoChan <- economicsInfoDatabase.GetAllEconomicsInfo(); }();
 
     var exchangeIndexInfoDatabase *fin_database.ExchangeIndexInfoDatabase = fin_database.NewExchangeIndexInfoDatabase(
             utilities.DbType,
             "exchange_index_info",
             mysqlConnector);
-    exchangeIndexInfoChan := make(chan []fin_database.ExchangeIndexInfo);
+    exchangeIndexInfoChan := make(chan map[int64]fin_database.ExchangeIndexInfo);
     go func() { exchangeIndexInfoChan <- exchangeIndexInfoDatabase.GetAllExchangeIndexInfo(); }();
 
     allTickerInfo := <-tickerInfoChan;

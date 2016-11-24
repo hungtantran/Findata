@@ -22,14 +22,14 @@ func NewExchangeIndexInfoDatabase(
     return exchangeIndexInfoDatabase;
 }
 
-func (exchangeIndexInfoDatabase *ExchangeIndexInfoDatabase) GetAllExchangeIndexInfo() []ExchangeIndexInfo {
+func (exchangeIndexInfoDatabase *ExchangeIndexInfoDatabase) GetAllExchangeIndexInfo() map[int64]ExchangeIndexInfo {
     rows, err := exchangeIndexInfoDatabase.dbConnector.GetConnector().Query("SELECT * FROM " + exchangeIndexInfoDatabase.dbTableName);
     if err != nil {
         log.Println(err)
     }
     defer rows.Close()
     var exchangeIndexInfo ExchangeIndexInfo;
-    var allExchangeIndexInfo []ExchangeIndexInfo;
+    allExchangeIndexInfo := make(map[int64]ExchangeIndexInfo);
     for rows.Next() {
         err := rows.Scan(
                 &exchangeIndexInfo.Id,
@@ -43,7 +43,7 @@ func (exchangeIndexInfoDatabase *ExchangeIndexInfoDatabase) GetAllExchangeIndexI
         if err != nil {
             log.Println(err)
         }
-        allExchangeIndexInfo = append(allExchangeIndexInfo, exchangeIndexInfo);
+        allExchangeIndexInfo[exchangeIndexInfo.Id.Int64] = exchangeIndexInfo;
     }
     err = rows.Err()
     if err != nil {

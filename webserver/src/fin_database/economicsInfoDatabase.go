@@ -22,14 +22,14 @@ func NewEconomicsInfoDatabase(
     return economicsInfoDatabase;
 }
 
-func (economicsInfoDatabase *EconomicsInfoDatabase) GetAllEconomicsInfo() []EconomicsInfo {
+func (economicsInfoDatabase *EconomicsInfoDatabase) GetAllEconomicsInfo() map[int64]EconomicsInfo {
     rows, err := economicsInfoDatabase.dbConnector.GetConnector().Query("SELECT * FROM " + economicsInfoDatabase.dbTableName);
     if err != nil {
         log.Println(err)
     }
     defer rows.Close()
     var economicsInfo EconomicsInfo;
-    var allEconomicsInfo []EconomicsInfo;
+    allEconomicsInfo := make(map[int64]EconomicsInfo);
     for rows.Next() {
         err := rows.Scan(
                 &economicsInfo.Id,
@@ -42,7 +42,7 @@ func (economicsInfoDatabase *EconomicsInfoDatabase) GetAllEconomicsInfo() []Econ
         if err != nil {
             log.Println(err)
         }
-        allEconomicsInfo = append(allEconomicsInfo, economicsInfo);
+        allEconomicsInfo[economicsInfo.Id.Int64] = economicsInfo;
     }
     err = rows.Err()
     if err != nil {

@@ -90,27 +90,34 @@ function search(dispatch, getState) {
 
         let response = {};
         let plotsToAdd = [];
-        Object.keys(json).forEach((key) => {
+        Object.keys(json).forEach((tableCode) => {
             // key: tablename
-            // attributes: [adj_close, volume, etc...]
-            let attributes = json[key];
-            response[key] = [];
-            let instrument = state.instruments[key];
+            // attributes: array of 
+            // {
+            //    TableName string
+            //    TableCode string
+            //    MetricName string
+            //    MetricCode string
+            // }
+            let attributes = json[tableCode];
+            response[tableCode] = [];
+            let instrument = state.instruments[tableCode];
+            // Map between attribute code like "adj_close" to its guid
             let attributeIdMap = {};
             attributes.forEach((attribute) => {
                 // Don't add if instrument/attribute pair already exists
-                if (instrument && instrument[attribute]) {
-                    attributeIdMap[attribute] = instrument[attribute];
+                if (instrument && instrument[attribute.MetricCode]) {
+                    attributeIdMap[attribute.MetricCode] = instrument[attribute.MetricCode];
                     return;
                 }
 
                 let attributeId = Guid.raw();
-                attributeIdMap[attribute] = attributeId;
-                response[key].push({name:attribute, id: attributeId});
+                attributeIdMap[attribute.MetricCode] = attributeId;
+                response[tableCode].push({attribute:attribute, id: attributeId});
             });
 
-            Object.keys(attributeIdMap).forEach((key) => {
-                let attributeId = attributeIdMap[key];
+            Object.keys(attributeIdMap).forEach((attributeCode) => {
+                let attributeId = attributeIdMap[attributeCode];
                 let plotId = Guid.raw();
                 plotsToAdd.push({id:plotId, dataSets:[attributeId]});
             });

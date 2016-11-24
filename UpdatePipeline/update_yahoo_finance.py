@@ -92,9 +92,6 @@ class UpdateYahooFinance(threading.Thread):
                 end_date.day,
                 end_date.year)
 
-    def get_unit(self):
-        return 'usd'
-
     def get_metric_name(self, metric, dimension):
         return dimension
 
@@ -248,13 +245,15 @@ class UpdateYahooFinance(threading.Thread):
                 date = StringHelper.convert_string_to_datetime(cells[0])
                 for j in range(1, len(cells)):
                     cell_value = StringHelper.parse_value_string(cells[j])
+                    metric_name = UpdateYahooFinance.SUMMARY_DIMENSIONS[j - 1]
+                    unit = 'usd'
+                    if metric_name == 'volume':
+                        unit = 'share'
                     value = metrics.Metrics(
-                            metric_name=self.get_metric_name(
-                                    metric,
-                                    UpdateYahooFinance.SUMMARY_DIMENSIONS[j - 1]),
+                            metric_name=self.get_metric_name(metric, metric_name),
                             start_date=date,
                             end_date=date,
-                            unit=self.get_unit(),
+                            unit=unit,
                             value=cell_value)
                     data.append(value)
         except Exception as e:

@@ -22,14 +22,14 @@ func NewTickerInfoDatabase(
     return tickerInfoDatabase;
 }
 
-func (tickerInfoDatabase *TickerInfoDatabase) GetAllTickerInfo() []TickerInfo {
+func (tickerInfoDatabase *TickerInfoDatabase) GetAllTickerInfo() map[int64]TickerInfo {
     rows, err := tickerInfoDatabase.dbConnector.GetConnector().Query("SELECT * FROM " + tickerInfoDatabase.dbTableName);
     if err != nil {
         log.Println(err)
     }
     defer rows.Close()
     var tickerInfo TickerInfo;
-    var allTickerInfo []TickerInfo;
+    allTickerInfo := make(map[int64]TickerInfo);
     for rows.Next() {
         err := rows.Scan(
                 &tickerInfo.Id,
@@ -53,7 +53,7 @@ func (tickerInfoDatabase *TickerInfoDatabase) GetAllTickerInfo() []TickerInfo {
         if err != nil {
             log.Println(err);
         }
-        allTickerInfo = append(allTickerInfo, tickerInfo);
+        allTickerInfo[tickerInfo.Id.Int64] = tickerInfo;
     }
     err = rows.Err()
     if err != nil {

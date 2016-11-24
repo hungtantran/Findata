@@ -24,14 +24,14 @@ var GOOGLE_FINANCE_API string = "https://www.google.com/finance?q=%s%%3A%s&fstyp
 type GoogleFinanceCrawler struct {
     waitGroup *sync.WaitGroup
     metricDatabase *fin_database.MetricDatabase
-    allTickerInfo []fin_database.TickerInfo
+    allTickerInfo map[int64]fin_database.TickerInfo
     updateFrequencySecs int
 }
 
 func NewGoogleFinanceCrawler(
         waitGroup *sync.WaitGroup,
         metricDatabase *fin_database.MetricDatabase,
-        allTickerInfo []fin_database.TickerInfo,
+        allTickerInfo map[int64]fin_database.TickerInfo,
         updateFrequencySecs int) *GoogleFinanceCrawler {
     var googleFinanceCrawler *GoogleFinanceCrawler = new(GoogleFinanceCrawler);
     googleFinanceCrawler.waitGroup = waitGroup;
@@ -44,10 +44,12 @@ func NewGoogleFinanceCrawler(
 func (googleFinanceCrawler *GoogleFinanceCrawler) Crawl() {
     count := 0;
     for _, ticker := range googleFinanceCrawler.allTickerInfo {
+        if (ticker.Id.Int64 < 6500) {
+            continue;
+        }
         if (ticker.TickerType.String == "stock" && ticker.Exchange.Valid &&
             ticker.Ticker.Valid && utilities.IsStringAlphabet(ticker.Ticker.String)) {
             count++;
-            log.Printf("Process %d ticker info", count);
             err := googleFinanceCrawler.CrawlOneTry(&ticker);
             if (err != nil) {
                 log.Println(err);
@@ -79,7 +81,7 @@ func (googleFinanceCrawler *GoogleFinanceCrawler) CrawlOneTry(ticker *fin_databa
     for _, metric := range(metrics) {
         googleFinanceCrawler.metricDatabase.InsertMetric(tableName, &metric);
     }
-    log.Print("Done inserting into table %s", tableName);
+    log.Printf("Done inserting into table %s", tableName);
     return nil;
 }
 
@@ -131,16 +133,28 @@ func (googleFinanceCrawler *GoogleFinanceCrawler) ParseOnePage(content string) [
         utilities.ExtractItemsFromNode(node, "th", emptyAttrKeys, emptyAttrValues, &headerNodes);
         var startDates []time.Time;
         var endDates []time.Time;
-        for _, headerNode := range(headerNodes) {
+        var unit *string = nil;
+        for i, headerNode := range(headerNodes) {
             header := strings.TrimSpace(utilities.ExtractFirstTextFromNode(headerNode));
-            startDate, endDate, err := googleFinanceCrawler.ParseHeaderToDates(header);
-            if (err != nil) {
-                log.Println(header);
-                log.Println(err);
-                continue;
+            if (i == 0) {
+                unit, err = googleFinanceCrawler.ParseHeaderToUnit(header);
+                if (err != nil || unit == nil) {
+                    log.Println(header);
+                    break;
+                }
+            } else {
+                startDate, endDate, err := googleFinanceCrawler.ParseHeaderToDates(header);
+                if (err != nil) {
+                    log.Println(header);
+                    break;
+                }
+                startDates = append(startDates, *startDate);
+                endDates = append(endDates, *endDate);
             }
-            startDates = append(startDates, *startDate);
-            endDates = append(endDates, *endDate);
+        }
+        if (err != nil) {
+            log.Println(err);
+            continue;
         }
 
         // Parse the content
@@ -171,9 +185,16 @@ func (googleFinanceCrawler *GoogleFinanceCrawler) ParseOnePage(content string) [
                 if (err != nil) {
                     continue;
                 }
+                // Per share item doesn't need to be in million
+                cellTitleLower := strings.ToLower(cellTitle);
+                if (!strings.Contains(cellTitleLower, "eps") && !strings.Contains(cellTitleLower, "per share")) {
+                    val = val * 1000 * 1000;
+                }
                 var metric fin_database.Metric;
                 metric.MetricName.String = cellTitle;
-                metric.MetricName.Valid = true; 
+                metric.MetricName.Valid = true;
+                metric.Unit.String = *unit;
+                metric.Unit.Valid = true; 
                 metric.Value.Float64 = val;
                 metric.Value.Valid = true;
                 metric.StartDate = startDates[i-1];
@@ -186,6 +207,22 @@ func (googleFinanceCrawler *GoogleFinanceCrawler) ParseOnePage(content string) [
     //spew.Dump(metrics);
 
     return metrics;
+}
+
+func (googleFinanceCrawler *GoogleFinanceCrawler) ParseHeaderToUnit(header string) (*string, error) {
+    
+    err := errors.New("Parsing error");
+    
+    // In Millions of EUR (except for per share items)
+    // In Millions of USD (except for per share items)
+    re := regexp.MustCompile(`In Millions of ([a-zA-Z]+) \(except for per share items\)$`);
+	matches := re.FindStringSubmatch(header);
+    if (len(matches) == 2) {
+        unit := strings.ToLower(matches[1]);
+        return &unit, nil;
+    }
+
+    return nil, err;
 }
 
 func (googleFinanceCrawler *GoogleFinanceCrawler) ParseHeaderToDates(header string) (*time.Time, *time.Time, error) {

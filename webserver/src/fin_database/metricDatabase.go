@@ -61,7 +61,7 @@ func (metricDatabase *MetricDatabase) GetMetricWithName(tableName string, metric
 
 func (metricDatabase *MetricDatabase) InsertMetric(tableName string, metric *Metric) int64 {
     stmt, err := metricDatabase.dbConnector.GetConnector().Prepare(
-            "INSERT " + tableName + " SET id=?, metric_name=?, value=?, unit=?, start_date=?, end_date=?, metadata=?");
+            "INSERT " + tableName + " SET id=?, metric_name=?, value=?, unit=?, start_date=?, end_date=?, metadata=? ON DUPLICATE KEY UPDATE value=?, unit=?, metadata=?");
     defer stmt.Close();
     if err != nil {
         log.Println(err);
@@ -75,6 +75,9 @@ func (metricDatabase *MetricDatabase) InsertMetric(tableName string, metric *Met
             metric.Unit,
             metric.StartDate,
             metric.EndDate,
+            metric.MetaData,
+            metric.Value,
+            metric.Unit,
             metric.MetaData);
     if err != nil {
         log.Println(err);

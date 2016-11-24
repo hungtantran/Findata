@@ -6,12 +6,24 @@ function DataSets(state={}, action) {
     case RECEIVE_SEARCH:
         {
             let dataSets = {};
+            // action.results is a map with:
+            // + key: tableCode like "economics_info_431_metrics"
+            // + value: object {attribute:attribute, id: attributeId}
+            // where attribute is an object
+            // {
+            //    TableName string
+            //    TableCode string
+            //    MetricName string
+            //    MetricCode string
+            // }
             Object.keys(action.results).forEach((key) => {
                 let pairs = action.results[key];
                 pairs.forEach((pair) => {
                     dataSets[pair.id] = {
-                        name: pair.name,
-                        tableName: key,
+                        tableName: pair.attribute.TableName,
+                        tableCode: key,
+                        metricName: pair.attribute.MetricName,
+                        metricCode: pair.attribute.MetricCode,
                         isFetching: false,
                         data: [],
                         domain: [],

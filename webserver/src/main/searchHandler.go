@@ -35,19 +35,26 @@ type BucketObject struct {
     Doc_count int
 }
 
+type DataDesc struct {
+    TableName string
+    TableCode string
+    MetricName string
+    MetricCode string
+}
+
 type StandardSearchHandler struct {
     metricDatabase *fin_database.MetricDatabase
-    allTickerInfo []fin_database.TickerInfo
-    allEconomicsInfo []fin_database.EconomicsInfo
-    allExchangeIndexInfo []fin_database.ExchangeIndexInfo
+    allTickerInfo map[int64]fin_database.TickerInfo
+    allEconomicsInfo map[int64]fin_database.EconomicsInfo
+    allExchangeIndexInfo map[int64]fin_database.ExchangeIndexInfo
     elasticClient *elastic.Client
 }
 
 func NewStandardSearchHandler(
         metricDatabase *fin_database.MetricDatabase,
-        allTickerInfo []fin_database.TickerInfo,
-        allEconomicsInfo []fin_database.EconomicsInfo,
-        allExchangeIndexInfo []fin_database.ExchangeIndexInfo,
+        allTickerInfo map[int64]fin_database.TickerInfo,
+        allEconomicsInfo map[int64]fin_database.EconomicsInfo,
+        allExchangeIndexInfo map[int64]fin_database.ExchangeIndexInfo,
         elasticSearchIp string,
         elasticSearchPort int) *StandardSearchHandler {
     var connectionString string = elasticSearchIp + ":" + fmt.Sprintf("%d", elasticSearchPort);
@@ -73,38 +80,73 @@ func NewStandardSearchHandler(
     return searchHandler;
 }
 
-func (searchHandler *StandardSearchHandler) findTableAndMetricNames(param map[string]string) (string, []string) {
-    tableName := "";
-    var metricNames []string;
+func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string) (map[string][]DataDesc) {
+    metrics := make(map[string][]DataDesc);
+
     searchType := param["type"];
+    // TODO check error
     searchMetricType, err := strconv.Atoi(searchType);
-    searchId := param["id"];
+    searchId, err := strconv.ParseInt(param["id"], 10, 64);
     searchTerm := param["term"];
 
-    if (err == nil && searchId != "") {
+    if (err == nil) {
         switch MetricType(searchMetricType) {
         case Equities:
-            tableName = "ticker_info_" + searchId + "_metrics";
-            metricNames = append(metricNames, "adj_close");
-            metricNames = append(metricNames, "volume");
+            tableCode := fmt.Sprintf("ticker_info_%d_metrics", searchId);
+            adjClose := DataDesc{
+                TableName: searchHandler.allTickerInfo[searchId].Name.String,
+                TableCode: tableCode,
+                MetricName: "Adjusted Close",
+                MetricCode: "adj_close",
+            };
+            volume := DataDesc{
+                TableName: searchHandler.allTickerInfo[searchId].Name.String,
+                TableCode: tableCode,
+                MetricName: "Volume",
+                MetricCode: "volume",
+            };
+            dataDesc := []DataDesc{adjClose, volume};
+            metrics[tableCode] = dataDesc;
         case EconIndicator:
-            tableName = "economics_info_" + searchId + "_metrics";
-            metricNames = append(metricNames, "");
+            tableCode := fmt.Sprintf("economics_info_%d_metrics", searchId);
+            econMetric := DataDesc{
+                TableName: searchHandler.allEconomicsInfo[searchId].Name.String,
+                TableCode: tableCode,
+                MetricName: searchHandler.allEconomicsInfo[searchId].Name.String,
+                MetricCode: "",
+            };
+            dataDesc := []DataDesc{econMetric};
+            metrics[tableCode] = dataDesc;
         case Indices:
-            tableName = "exchange_index_info_" + searchId + "_metrics";
-            metricNames = append(metricNames, "adj_close");
-            metricNames = append(metricNames, "volume");
+            tableCode := fmt.Sprintf("exchange_index_info_%d_metrics", searchId);
+            adjClose := DataDesc{
+                TableName: searchHandler.allExchangeIndexInfo[searchId].Name.String,
+                TableCode: tableCode,
+                MetricName: "Adjusted Close",
+                MetricCode: "adj_close",
+            };
+            volume := DataDesc{
+                TableName: searchHandler.allExchangeIndexInfo[searchId].Name.String,
+                TableCode: tableCode,
+                MetricName: "Volume",
+                MetricCode: "volume",
+            };
+            dataDesc := []DataDesc{adjClose, volume};
+            metrics[tableCode] = dataDesc;
         }
-    } else if (searchTerm != "") {
-        tableName = "news_info";
-        metricNames = append(metricNames, searchTerm);
+    } else {
+        tableCode := "news_info";
+        newsInfoMetric := DataDesc{
+            TableName: "Count of term in news articles",
+            TableCode: tableCode,
+            MetricName: searchTerm,
+            MetricCode: searchTerm,
+        };
+        dataDesc := []DataDesc{newsInfoMetric};
+        metrics[tableCode] = dataDesc;
     }
 
-    if len(metricNames) == 0 {
-        metricNames = append(metricNames, "");
-    }
-
-    return tableName, metricNames;
+    return metrics;
 }
 
 func (searchHandler *StandardSearchHandler) chooseChartType(tableName string, metricName string) string {
@@ -197,15 +239,16 @@ func (searchHandler *StandardSearchHandler) GetNewsInfoData(match string) []fin_
 }
 
 func (searchHandler *StandardSearchHandler) ProcessGetData(w http.ResponseWriter, param map[string]string) {
-    tableName := param["tableName"];
-    metricName := param["metricName"];
+    tableCode := param["tableCode"];
+    metricCode := param["metricCode"];
 
     // news_info is special "fake" table that will get data from elasticsearch
     var metrics []fin_database.ResultMetric;
-    if (tableName == "news_info") {
-        metrics = searchHandler.GetNewsInfoData(metricName);
+    if (tableCode == "news_info") {
+        metrics = searchHandler.GetNewsInfoData(metricCode);
     } else {
-        metrics = searchHandler.metricDatabase.GetMetricWithName(tableName, metricName);
+        metrics = searchHandler.metricDatabase.GetMetricWithName(
+            tableCode, metricCode);
     }
 
     adjustedMetrics := searchHandler.adjustMetrics(metrics);
@@ -216,17 +259,10 @@ func (searchHandler *StandardSearchHandler) ProcessGetData(w http.ResponseWriter
 }
 
 func (searchHandler *StandardSearchHandler) ProcessGetGraph(w http.ResponseWriter, param map[string]string) {
-    tableName, metricNames := searchHandler.findTableAndMetricNames(param);
-    if tableName == "" {
-        http.Error(w, "Error", 400);
-        return;
-    }
-
-    response := make(map[string][]string);
-    response[tableName] = metricNames;
-
-    graphJson, _ := json.Marshal(response);
+    metrics := searchHandler.findMetrics(param);
+    graphJson, _ := json.Marshal(metrics);
     graphJsonString := string(graphJson);
+    log.Printf("%s\n", graphJsonString);
     fmt.Fprintf(w, graphJsonString);
 }
 
