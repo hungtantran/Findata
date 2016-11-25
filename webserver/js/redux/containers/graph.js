@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import React from 'react';
-import { positionPlot } from '../actions/plotActions';
+import { positionPlot, createNewPlot } from '../actions/plotActions';
 import Plot from './plot';
 
 class Graph extends React.Component {
@@ -73,6 +73,9 @@ class Graph extends React.Component {
             <div style={{display: 'flex'}} width={this.props.width}>
                 <svg className='graph' width={this.props.width - this.legendWidth} height={this.props.height} >
                     {plotsToRender}
+                    <g>
+                        <rect x={this.props.width - 40 - this.legendWidth} y={this.props.height - 30} width='30' height='30' fill='green' pointerEvents='all' onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); let data = ev.dataTransfer.getData('text/plain'); this.props.onDragEnd(data); }} />
+                    </g>
                 </svg>
                 <div className='legend'>
                     {legendItems}
@@ -88,7 +91,8 @@ Graph.propTypes = {
     height: React.PropTypes.number,
     positionPlot: React.PropTypes.func,
     // Map between legend name and color scale
-    items: React.PropTypes.object
+    items: React.PropTypes.object,
+    onDragEnd: React.PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -117,9 +121,10 @@ const mapStateToProps = (state, ownProps) => {
     return {width, height, plots: info.plots, items};
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        positionPlot: (plot, position) => dispatch(positionPlot(plot, position))
+        positionPlot: (plot, position) => dispatch(positionPlot(plot, position)),
+        onDragEnd: (dataSetId) => dispatch(createNewPlot(dataSetId, ownProps.id))
     };
 };
 
