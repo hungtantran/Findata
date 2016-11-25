@@ -24,6 +24,15 @@ function Plots(state={}, action) {
         }
     case LOAD_PLOTS:
         return Object.assign({}, action.plots);
+    case Actions.ADD_DATASET_TO_PLOT:
+        {
+            let currentDataSets = state[action.plotId].dataSets.slice();
+            if(currentDataSets.indexOf(action.dataSetId) >= 0)
+                return state;
+            currentDataSets.push(action.dataSetId);
+            let plot = Object.assign({}, state[action.plotId], {dataSets : currentDataSets});
+            return Object.assign({}, state, {[action.plotId]: plot});
+        }
     default:
         return state;
     }

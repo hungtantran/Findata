@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import React from 'react';
 import {fetchDataSetIfNeeded} from '../actions/dataSetActions';
+import {addDataSetToPlot} from '../actions/plotActions';
 import PlotDisplay from '../components/plot/plotDisplay';
 
 class Plot extends React.Component {
@@ -83,6 +84,14 @@ const mapStateToProps = (state, ownProps) => {
     return {dataSets: dataSetIds, domain: [xMin, xMax], range: [yMin, yMax], x, y, width, height, colorScale: state.elements[parentId].colorScale};
 };
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        onDragEnd: (dataSetId) => dispatch(addDataSetToPlot(dataSetId, ownProps.id)),
+        dispatch
+    };
+};
+
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Plot);

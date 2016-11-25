@@ -46,6 +46,7 @@ class PlotDisplay extends React.Component {
                 </g>
                 <XAxis scale={xscale} translate={getXScaleTranslation(this.props.height)} />
                 <YAxis scale={yscale} translate={getYScaleTranslation(this.props.width * .95)} />
+                <rect width={this.props.width * .95} height={this.props.height} fill='none' pointerEvents='all' onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); let data = ev.dataTransfer.getData('text/plain'); this.props.onDragEnd(data); }} />
             </g>
         );
     }
@@ -59,7 +60,8 @@ PlotDisplay.propTypes = {
     dataSets: React.PropTypes.array,
     domain: React.PropTypes.array,
     range: React.PropTypes.array,
-    colorScale: React.PropTypes.func
+    colorScale: React.PropTypes.func,
+    onDragEnd: React.PropTypes.func
 };
 
 export default PlotDisplay;

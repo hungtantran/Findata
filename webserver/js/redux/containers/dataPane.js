@@ -8,7 +8,7 @@ const DataPane = ({tableNameToMetricsMap}) => {
         let attributeList = [];
         attributes.forEach((attribute) => {
             attributeList.push(
-                <li className='list-group-item' key={attribute.metricName} >
+                <li className='list-group-item' key={attribute.metricName} draggable='true' onDragStart={(ev) => {ev.dataTransfer.setData('text/plain', attribute.dataId);}}>
                     {attribute.metricName}
                 </li>);
         });
@@ -58,6 +58,7 @@ function mapStateToProps(state) {
             tableNameToMetricsMap[dataSet.tableName] = [];
         }
         tableNameToMetricsMap[dataSet.tableName].push({
+            dataId: id,
             metricCode: dataSet.metricCode,
             metricName: dataSet.metricName,
             tableCode: dataSet.tableCode,
