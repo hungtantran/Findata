@@ -63,7 +63,7 @@ class Graph extends React.Component {
             legendItems.push(
                 <div
                     title={key}
-                    style={{overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: this.props.items[key]}}
+                    style={{fontSize: 10, overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: this.props.items[key]}}
                 >
                     {key}
                 </div>);
