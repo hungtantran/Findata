@@ -30,6 +30,9 @@ class Graph extends React.Component {
         if(this.props.plots.length != nextProps.plots.length)
             return true;
 
+        if(this.props.items.length != nextProps.items.length)
+            return true;
+
         if(this.props.width != nextProps.width || this.props.height != nextProps.height)
             return true;
         
