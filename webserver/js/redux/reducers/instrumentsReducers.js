@@ -6,26 +6,30 @@ function Instruments(state={}, action) {
     case RECEIVE_SEARCH:
         {
             let instruments = {};
-            // action.results is a map with:
-            // + key: tableCode like "economics_info_431_metrics"
-            // + value: object {attribute:attribute, id: attributeId}
-            // where attribute is an object
+            // action.results is an array of DataDesc
+            // DataDesc is an object:
             // {
-            //    TableName string
-            //    TableCode string
-            //    MetricName string
-            //    MetricCode string
+            //     tableName string
+            //     tableCode string
+            //     dataType MetricType
+            //     metricDescs []MetricDesc
             // }
-            Object.keys(action.results).forEach((key) => {
-                if (state[key]) {
-                    instruments[key] = Object.assign({}, state[key]);
+            //
+            // type MetricDesc struct {
+            //     MetricName string
+            //     MetricCode string
+            //     id guid
+            // }
+            action.results.forEach((dataDesc) => {
+                if (state[dataDesc.tableCode]) {
+                    instruments[dataDesc.tableCode] = Object.assign({}, state[dataDesc.tableCode]);
                 } else {
-                    instruments[key] = {};
+                    instruments[dataDesc.tableCode] = {};
                 }
 
-                let pairs = action.results[key];
-                pairs.forEach((pair) => {
-                    instruments[key][pair.attribute.MetricCode] = pair.id;
+                let metricDescs = dataDesc.metricDescs;
+                metricDescs.forEach((metricDesc) => {
+                    instruments[dataDesc.tableCode][metricDesc.MetricCode] = metricDesc.id;
                 });
             });
             return Object.assign({}, state, instruments);

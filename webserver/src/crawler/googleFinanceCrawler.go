@@ -43,10 +43,11 @@ func NewGoogleFinanceCrawler(
 
 func (googleFinanceCrawler *GoogleFinanceCrawler) Crawl() {
     count := 0;
+    log.Printf("Start crawling");
     for _, ticker := range googleFinanceCrawler.allTickerInfo {
-        if (ticker.Id.Int64 < 6500) {
+        /*if (ticker.Id.Int64 < 6500) {
             continue;
-        }
+        }*/
         if (ticker.TickerType.String == "stock" && ticker.Exchange.Valid &&
             ticker.Ticker.Valid && utilities.IsStringAlphabet(ticker.Ticker.String)) {
             count++;
@@ -56,8 +57,8 @@ func (googleFinanceCrawler *GoogleFinanceCrawler) Crawl() {
                 googleFinanceCrawler.waitGroup.Done();
                 return;
             }
+            time.Sleep(time.Duration(googleFinanceCrawler.updateFrequencySecs) * time.Second);
         }
-        time.Sleep(time.Duration(googleFinanceCrawler.updateFrequencySecs) * time.Second);
     }
     googleFinanceCrawler.waitGroup.Done();
 }

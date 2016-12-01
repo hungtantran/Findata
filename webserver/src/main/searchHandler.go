@@ -38,6 +38,11 @@ type BucketObject struct {
 type DataDesc struct {
     TableName string
     TableCode string
+    DataType MetricType
+    MetricDescs []MetricDesc
+}
+
+type MetricDesc struct {
     MetricName string
     MetricCode string
 }
@@ -80,8 +85,8 @@ func NewStandardSearchHandler(
     return searchHandler;
 }
 
-func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string) (map[string][]DataDesc) {
-    metrics := make(map[string][]DataDesc);
+func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string) ([]DataDesc) {
+    var metrics []DataDesc;
 
     searchType := param["type"];
     // TODO check error
@@ -93,57 +98,65 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
         switch MetricType(searchMetricType) {
         case Equities:
             tableCode := fmt.Sprintf("ticker_info_%d_metrics", searchId);
-            adjClose := DataDesc{
-                TableName: searchHandler.allTickerInfo[searchId].Name.String,
-                TableCode: tableCode,
+            adjClose := MetricDesc{
                 MetricName: "Adjusted Close",
                 MetricCode: "adj_close",
             };
-            volume := DataDesc{
-                TableName: searchHandler.allTickerInfo[searchId].Name.String,
-                TableCode: tableCode,
+            volume := MetricDesc{
                 MetricName: "Volume",
                 MetricCode: "volume",
             };
-            dataDesc := []DataDesc{adjClose, volume};
-            metrics[tableCode] = dataDesc;
+            metricDesc := []MetricDesc{adjClose, volume};
+            dataDesc := DataDesc{
+                TableName: searchHandler.allTickerInfo[searchId].Name.String,
+                TableCode: tableCode,
+                MetricDescs: metricDesc,
+            };
+            metrics = append(metrics, dataDesc);
         case EconIndicator:
             tableCode := fmt.Sprintf("economics_info_%d_metrics", searchId);
-            econMetric := DataDesc{
-                TableName: searchHandler.allEconomicsInfo[searchId].Name.String,
-                TableCode: tableCode,
+            econMetric := MetricDesc{
                 MetricName: searchHandler.allEconomicsInfo[searchId].Name.String,
                 MetricCode: "",
             };
-            dataDesc := []DataDesc{econMetric};
-            metrics[tableCode] = dataDesc;
+            metricDesc := []MetricDesc{econMetric};
+            dataDesc := DataDesc{
+                TableName: searchHandler.allTickerInfo[searchId].Name.String,
+                TableCode: tableCode,
+                MetricDescs: metricDesc,
+            };
+            metrics = append(metrics, dataDesc);
         case Indices:
             tableCode := fmt.Sprintf("exchange_index_info_%d_metrics", searchId);
-            adjClose := DataDesc{
-                TableName: searchHandler.allExchangeIndexInfo[searchId].Name.String,
-                TableCode: tableCode,
+            adjClose := MetricDesc{
                 MetricName: "Adjusted Close",
                 MetricCode: "adj_close",
             };
-            volume := DataDesc{
-                TableName: searchHandler.allExchangeIndexInfo[searchId].Name.String,
-                TableCode: tableCode,
+            volume := MetricDesc{
                 MetricName: "Volume",
                 MetricCode: "volume",
             };
-            dataDesc := []DataDesc{adjClose, volume};
-            metrics[tableCode] = dataDesc;
+            metricDesc := []MetricDesc{adjClose, volume};
+            dataDesc := DataDesc{
+                TableName: searchHandler.allExchangeIndexInfo[searchId].Name.String,
+                TableCode: tableCode,
+                MetricDescs: metricDesc,
+            };
+            metrics = append(metrics, dataDesc);
         }
     } else {
         tableCode := "news_info";
-        newsInfoMetric := DataDesc{
-            TableName: "Count of term in news articles",
-            TableCode: tableCode,
+        newsInfoMetric := MetricDesc{
             MetricName: searchTerm,
             MetricCode: searchTerm,
         };
-        dataDesc := []DataDesc{newsInfoMetric};
-        metrics[tableCode] = dataDesc;
+        metricDesc := []MetricDesc{newsInfoMetric};
+        dataDesc := DataDesc{
+            TableName: "Count of term in news articles",
+            TableCode: tableCode,
+            MetricDescs: metricDesc,
+        };
+        metrics = append(metrics, dataDesc);
     }
 
     return metrics;

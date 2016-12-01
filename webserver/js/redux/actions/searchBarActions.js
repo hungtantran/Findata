@@ -90,36 +90,43 @@ function search(dispatch, getState) {
 
         let response = {};
         let plotsToAdd = [];
-        Object.keys(json).forEach((tableCode) => {
-            // key: tablename
-            // attributes: array of 
+        json.forEach((dataDesc) => {
+            // dataDesc is an object:
             // {
-            //    TableName string
-            //    TableCode string
-            //    MetricName string
-            //    MetricCode string
+            //     TableName string
+            //     TableCode string
+            //     DataType MetricType
+            //     MetricDescs []MetricDesc
             // }
-            let attributes = json[tableCode];
-            response[tableCode] = [];
+            //
+            // type MetricDesc struct {
+            //     MetricName string
+            //     MetricCode string
+            // }
+
+            let tableCode = dataDesc.TableCode;
+            let tableName = dataDesc.TableName;
+            let dataType = dataDesc.DataType;
+            let metricDescs = dataDesc.MetricDescs;
+
+            // Response is an array of dataDesc but with MetricDesc has an 'id' field added
+            response = [];
             let instrument = state.instruments[tableCode];
-            // Map between attribute code like "adj_close" to its guid
-            let attributeIdMap = {};
-            attributes.forEach((attribute) => {
+            metricDescs.forEach((metricDesc) => {
                 // Don't add if instrument/attribute pair already exists
-                if (instrument && instrument[attribute.MetricCode]) {
-                    attributeIdMap[attribute.MetricCode] = instrument[attribute.MetricCode];
+                if (instrument && instrument[metricDesc.MetricCode]) {
+                    metricDesc['id'] = instrument[metricDesc.MetricCode];
                     return;
                 }
 
                 let attributeId = Guid.raw();
-                attributeIdMap[attribute.MetricCode] = attributeId;
-                response[tableCode].push({attribute:attribute, id: attributeId});
+                metricDesc['id'] = attributeId;
             });
+            response.push({tableName: tableName, tableCode: tableCode, dataType: dataType, metricDescs: metricDescs});
 
-            Object.keys(attributeIdMap).forEach((attributeCode) => {
-                let attributeId = attributeIdMap[attributeCode];
+            metricDescs.forEach((metricDesc) => {
                 let plotId = Guid.raw();
-                plotsToAdd.push({id:plotId, dataSets:[attributeId]});
+                plotsToAdd.push({id:plotId, dataSets:[metricDesc.id]});
             });
         });
 

@@ -7,24 +7,32 @@ function DataSets(state={}, action) {
     case RECEIVE_SEARCH:
         {
             let dataSets = {};
-            // action.results is a map with:
-            // + key: tableCode like "economics_info_431_metrics"
-            // + value: object {attribute:attribute, id: attributeId}
-            // where attribute is an object
+            // action.results is an array of DataDesc
+            // DataDesc is an object:
             // {
-            //    TableName string
-            //    TableCode string
-            //    MetricName string
-            //    MetricCode string
+            //     tableName string
+            //     tableCode string
+            //     dataType MetricType
+            //     metricDescs []MetricDesc
             // }
-            Object.keys(action.results).forEach((key) => {
-                let pairs = action.results[key];
-                pairs.forEach((pair) => {
-                    dataSets[pair.id] = {
-                        tableName: pair.attribute.TableName,
-                        tableCode: key,
-                        metricName: pair.attribute.MetricName,
-                        metricCode: pair.attribute.MetricCode,
+            //
+            // type MetricDesc struct {
+            //     MetricName string
+            //     MetricCode string
+            //     id guid
+            // }
+            action.results.forEach((dataDesc) => {
+                let tableName = dataDesc.tableName;
+                let tableCode = dataDesc.tableCode;
+                let dataType = dataDesc.dataType;
+                let metricDescs = dataDesc.metricDescs;
+                
+                metricDescs.forEach((metricDesc) => {
+                    dataSets[metricDesc.id] = {
+                        tableName: tableName,
+                        tableCode: tableCode,
+                        metricName: metricDesc.MetricName,
+                        metricCode: metricDesc.MetricCode,
                         isFetching: false,
                         data: [],
                         domain: [],
