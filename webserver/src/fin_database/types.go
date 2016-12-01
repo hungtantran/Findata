@@ -50,6 +50,24 @@ func (tickerInfo *TickerInfo) String() string {
             tickerInfo.MetaData.String;
 }
 
+type TickerInfoDimension struct {
+    Id sql.NullInt64 `json:"id"`
+    Abbrv sql.NullString `json:"abbrv"`
+    Name sql.NullString `json:"name"`
+    NameHash sql.NullString `json:"name_hash"`
+    Unit sql.NullString `json:"unit"`
+    Metadata sql.NullString `json:"metadata"`
+}
+
+func (tickerInfoDimension *TickerInfoDimension) String() string {
+    return  string(tickerInfoDimension.Id.Int64) + " " +
+            tickerInfoDimension.Abbrv.String + " " +
+            tickerInfoDimension.Name.String + " " +
+            tickerInfoDimension.NameHash.String + " " +
+            tickerInfoDimension.Unit.String + " " +
+            tickerInfoDimension.Metadata.String;
+}
+
 type Metric struct {
     Id sql.NullInt64
     MetricName sql.NullString

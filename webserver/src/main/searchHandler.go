@@ -52,6 +52,7 @@ type StandardSearchHandler struct {
     allTickerInfo map[int64]fin_database.TickerInfo
     allEconomicsInfo map[int64]fin_database.EconomicsInfo
     allExchangeIndexInfo map[int64]fin_database.ExchangeIndexInfo
+    allTickerInfoDimensions map[string]fin_database.TickerInfoDimension
     elasticClient *elastic.Client
 }
 
@@ -60,6 +61,7 @@ func NewStandardSearchHandler(
         allTickerInfo map[int64]fin_database.TickerInfo,
         allEconomicsInfo map[int64]fin_database.EconomicsInfo,
         allExchangeIndexInfo map[int64]fin_database.ExchangeIndexInfo,
+        allTickerInfoDimensions map[string]fin_database.TickerInfoDimension,
         elasticSearchIp string,
         elasticSearchPort int) *StandardSearchHandler {
     var connectionString string = elasticSearchIp + ":" + fmt.Sprintf("%d", elasticSearchPort);
@@ -80,6 +82,7 @@ func NewStandardSearchHandler(
     searchHandler.allEconomicsInfo = allEconomicsInfo;
     searchHandler.allTickerInfo = allTickerInfo;
     searchHandler.allExchangeIndexInfo = allExchangeIndexInfo;
+    searchHandler.allTickerInfoDimensions = allTickerInfoDimensions;
     searchHandler.elasticClient = elasticClient;
 
     return searchHandler;
@@ -98,19 +101,17 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
         switch MetricType(searchMetricType) {
         case Equities:
             tableCode := fmt.Sprintf("ticker_info_%d_metrics", searchId);
-            adjClose := MetricDesc{
-                MetricName: "Adjusted Close",
-                MetricCode: "adj_close",
-            };
-            volume := MetricDesc{
-                MetricName: "Volume",
-                MetricCode: "volume",
-            };
-            metricDesc := []MetricDesc{adjClose, volume};
+            var metricDescs []MetricDesc;
+            for abbr, dimension := range(searchHandler.allTickerInfoDimensions) {
+                metricDescs = append(metricDescs, MetricDesc{
+                    MetricName: dimension.Name.String,
+                    MetricCode: abbr,
+                });
+            }
             dataDesc := DataDesc{
                 TableName: searchHandler.allTickerInfo[searchId].Name.String,
                 TableCode: tableCode,
-                MetricDescs: metricDesc,
+                MetricDescs: metricDescs,
             };
             metrics = append(metrics, dataDesc);
         case EconIndicator:
@@ -119,11 +120,11 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
                 MetricName: searchHandler.allEconomicsInfo[searchId].Name.String,
                 MetricCode: "",
             };
-            metricDesc := []MetricDesc{econMetric};
+            metricDescs := []MetricDesc{econMetric};
             dataDesc := DataDesc{
                 TableName: searchHandler.allTickerInfo[searchId].Name.String,
                 TableCode: tableCode,
-                MetricDescs: metricDesc,
+                MetricDescs: metricDescs,
             };
             metrics = append(metrics, dataDesc);
         case Indices:
@@ -136,11 +137,11 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
                 MetricName: "Volume",
                 MetricCode: "volume",
             };
-            metricDesc := []MetricDesc{adjClose, volume};
+            metricDescs := []MetricDesc{adjClose, volume};
             dataDesc := DataDesc{
                 TableName: searchHandler.allExchangeIndexInfo[searchId].Name.String,
                 TableCode: tableCode,
-                MetricDescs: metricDesc,
+                MetricDescs: metricDescs,
             };
             metrics = append(metrics, dataDesc);
         }
@@ -150,11 +151,11 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
             MetricName: searchTerm,
             MetricCode: searchTerm,
         };
-        metricDesc := []MetricDesc{newsInfoMetric};
+        metricDescs := []MetricDesc{newsInfoMetric};
         dataDesc := DataDesc{
             TableName: "Count of term in news articles",
             TableCode: tableCode,
-            MetricDescs: metricDesc,
+            MetricDescs: metricDescs,
         };
         metrics = append(metrics, dataDesc);
     }

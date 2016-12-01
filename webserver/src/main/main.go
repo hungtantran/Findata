@@ -124,9 +124,17 @@ func initializeConfiguration() {
     exchangeIndexInfoChan := make(chan map[int64]fin_database.ExchangeIndexInfo);
     go func() { exchangeIndexInfoChan <- exchangeIndexInfoDatabase.GetAllExchangeIndexInfo(); }();
 
+    var tickerInfoDimensionsDatabase *fin_database.TickerInfoDimensionsDatabase = fin_database.NewTickerInfoDimensionsDatabase(
+            utilities.DbType,
+            "ticker_info_dimensions",
+            mysqlConnector);
+    tickerInfoDimensionChan := make(chan map[string]fin_database.TickerInfoDimension);
+    go func() { tickerInfoDimensionChan <- tickerInfoDimensionsDatabase.GetAllTickerInfoDimensions(); }();
+
     allTickerInfo := <-tickerInfoChan;
     allEconomicsInfo := <-economicsInfoChan;
     allExchangeIndexInfo := <-exchangeIndexInfoChan;
+    allTickerInfoDimensions := <- tickerInfoDimensionChan;
 
     var metricDatabase *fin_database.MetricDatabase = fin_database.NewMetricDatabase(
             utilities.DbType, mysqlConnector);
@@ -135,6 +143,7 @@ func initializeConfiguration() {
         allTickerInfo,
         allEconomicsInfo,
         allExchangeIndexInfo,
+        allTickerInfoDimensions,
         utilities.ElasticSearchIp,
         utilities.ElasticSearchPort);
 }

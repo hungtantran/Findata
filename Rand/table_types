@@ -149,3 +149,14 @@ economics_info_%_metrics
   PRIMARY KEY (`id`),
   CONSTRAINT `news_content_ibfk_1` FOREIGN KEY (`id`) REFERENCES `news_info` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
+
+| ticker_info_dimensions | CREATE TABLE `ticker_info_dimensions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `abbrv` varchar(255) DEFAULT NULL,
+  `name` text NOT NULL,
+  `name_hash` varchar(255) NOT NULL,
+  `unit` varchar(32) DEFAULT NULL,
+  `metadata` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name_hash` (`name_hash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |

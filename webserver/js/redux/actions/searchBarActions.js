@@ -125,6 +125,12 @@ function search(dispatch, getState) {
             response.push({tableName: tableName, tableCode: tableCode, dataType: dataType, metricDescs: metricDescs});
 
             metricDescs.forEach((metricDesc) => {
+                // For equities, skip all except for Volume and Adjusted Close
+                if (dataType === 0) {
+                    if (metricDesc.MetricCode !== 'adj_close' && metricDesc.MetricCode !== 'volume') {
+                        return;
+                    }
+                }
                 let plotId = Guid.raw();
                 plotsToAdd.push({id:plotId, dataSets:[metricDesc.id]});
             });
