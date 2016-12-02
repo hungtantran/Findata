@@ -93,6 +93,32 @@ func (metricDatabase *MetricDatabase) InsertMetric(tableName string, metric *Met
     return lastId;
 }
 
+func (metricDatabase *MetricDatabase) GetAllDimensions(tableName string) map[string]TickerInfoDimension {
+    rows, err := metricDatabase.dbConnector.GetConnector().Query(
+        "SELECT distinct metric_name, metric_name FROM " + tableName);
+    if err != nil {
+        log.Println(err)
+    }
+    defer rows.Close()
+    var metricDimension TickerInfoDimension;
+    allMetricsDimensions := make(map[string]TickerInfoDimension);
+    for rows.Next() {
+        err := rows.Scan(
+                &metricDimension.Abbrv,
+                &metricDimension.Name);
+        if err != nil {
+            log.Println(err);
+        }
+        allMetricsDimensions[metricDimension.Abbrv.String] = metricDimension;
+    }
+    err = rows.Err()
+    if err != nil {
+        log.Println(err);
+    }
+    log.Println("Found", len(allMetricsDimensions), "metric dimensions");
+    return allMetricsDimensions;
+}
+
 func (metricDatabase *MetricDatabase) Close() {
     metricDatabase.dbConnector.Close();
 }

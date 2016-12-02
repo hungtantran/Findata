@@ -102,7 +102,8 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
         case Equities:
             tableCode := fmt.Sprintf("ticker_info_%d_metrics", searchId);
             var metricDescs []MetricDesc;
-            for abbr, dimension := range(searchHandler.allTickerInfoDimensions) {
+            allMetricDimensions := searchHandler.metricDatabase.GetAllDimensions(tableCode);
+            for abbr, dimension := range(allMetricDimensions) {
                 metricDescs = append(metricDescs, MetricDesc{
                     MetricName: dimension.Name.String,
                     MetricCode: abbr,
