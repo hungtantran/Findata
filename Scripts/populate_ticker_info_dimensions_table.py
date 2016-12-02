@@ -44,11 +44,11 @@ def populate_ticker_info_dimensions_table():
                         if metric_abbrv == 'open':
                             metric_name = 'Open'
                         elif metric_abbrv == 'high':
-                            metric_name = 'Close'
+                            metric_name = 'High'
                         elif metric_abbrv == 'low':
                             metric_name = 'Low'
                         elif metric_abbrv == 'close':
-                            metric_name = 'High'
+                            metric_name = 'Close'
                         elif metric_abbrv == 'volume':
                             metric_name = 'Volume'
                         elif metric_abbrv == 'adj_close':
@@ -128,11 +128,11 @@ def rename_ticker_info_financial_metric_name():
                         if metric_abbrv == 'open':
                             metric_abbrv = 'Open'
                         elif metric_abbrv == 'high':
-                            metric_abbrv = 'Close'
+                            metric_abbrv = 'High'
                         elif metric_abbrv == 'low':
                             metric_abbrv = 'Low'
                         elif metric_abbrv == 'close':
-                            metric_abbrv = 'High'
+                            metric_abbrv = 'Close'
                         elif metric_abbrv == 'volume':
                             metric_abbrv = 'Volume'
                         elif metric_abbrv == 'adj_close':

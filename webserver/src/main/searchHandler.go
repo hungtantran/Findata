@@ -111,6 +111,7 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
             dataDesc := DataDesc{
                 TableName: searchHandler.allTickerInfo[searchId].Name.String,
                 TableCode: tableCode,
+                DataType: Equities,
                 MetricDescs: metricDescs,
             };
             metrics = append(metrics, dataDesc);
@@ -122,8 +123,9 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
             };
             metricDescs := []MetricDesc{econMetric};
             dataDesc := DataDesc{
-                TableName: searchHandler.allTickerInfo[searchId].Name.String,
+                TableName: searchHandler.allEconomicsInfo[searchId].Name.String,
                 TableCode: tableCode,
+                DataType: EconIndicator,
                 MetricDescs: metricDescs,
             };
             metrics = append(metrics, dataDesc);
@@ -131,16 +133,17 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
             tableCode := fmt.Sprintf("exchange_index_info_%d_metrics", searchId);
             adjClose := MetricDesc{
                 MetricName: "Adjusted Close",
-                MetricCode: "adj_close",
+                MetricCode: "Adjusted Close",
             };
             volume := MetricDesc{
                 MetricName: "Volume",
-                MetricCode: "volume",
+                MetricCode: "Volume",
             };
             metricDescs := []MetricDesc{adjClose, volume};
             dataDesc := DataDesc{
                 TableName: searchHandler.allExchangeIndexInfo[searchId].Name.String,
                 TableCode: tableCode,
+                DataType: Indices,
                 MetricDescs: metricDescs,
             };
             metrics = append(metrics, dataDesc);
@@ -155,6 +158,7 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
         dataDesc := DataDesc{
             TableName: "Count of term in news articles",
             TableCode: tableCode,
+            DataType: Other,
             MetricDescs: metricDescs,
         };
         metrics = append(metrics, dataDesc);
@@ -276,7 +280,6 @@ func (searchHandler *StandardSearchHandler) ProcessGetGraph(w http.ResponseWrite
     metrics := searchHandler.findMetrics(param);
     graphJson, _ := json.Marshal(metrics);
     graphJsonString := string(graphJson);
-    log.Printf("%s\n", graphJsonString);
     fmt.Fprintf(w, graphJsonString);
 }
 

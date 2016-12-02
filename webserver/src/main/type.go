@@ -14,6 +14,7 @@ const (
     Indices MetricType = iota
     Equities MetricType = iota
     EconIndicator MetricType = iota
+    Other MetricType = iota
 )
 
 func (t MetricType) String() string {
@@ -24,6 +25,8 @@ func (t MetricType) String() string {
         return "Equities";
     case EconIndicator:
         return "Economics Indicators";
+    case Other:
+        return "Others";
     }
     return "";
 }
