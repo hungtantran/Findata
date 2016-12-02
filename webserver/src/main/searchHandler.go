@@ -101,6 +101,7 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
         switch MetricType(searchMetricType) {
         case Equities:
             tableCode := fmt.Sprintf("ticker_info_%d_metrics", searchId);
+            tableName := searchHandler.allTickerInfo[searchId].Name.String
             var metricDescs []MetricDesc;
             allMetricDimensions := searchHandler.metricDatabase.GetAllDimensions(tableCode);
             for abbr, dimension := range(allMetricDimensions) {
@@ -110,7 +111,7 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
                 });
             }
             dataDesc := DataDesc{
-                TableName: searchHandler.allTickerInfo[searchId].Name.String,
+                TableName: tableName,
                 TableCode: tableCode,
                 DataType: Equities,
                 MetricDescs: metricDescs,
@@ -118,13 +119,17 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
             metrics = append(metrics, dataDesc);
         case EconIndicator:
             tableCode := fmt.Sprintf("economics_info_%d_metrics", searchId);
-            econMetric := MetricDesc{
-                MetricName: searchHandler.allEconomicsInfo[searchId].Name.String,
-                MetricCode: "",
-            };
-            metricDescs := []MetricDesc{econMetric};
+            tableName := searchHandler.allEconomicsInfo[searchId].Name.String
+            var metricDescs []MetricDesc;
+            allMetricDimensions := searchHandler.metricDatabase.GetAllDimensions(tableCode);
+            for abbr, dimension := range(allMetricDimensions) {
+                metricDescs = append(metricDescs, MetricDesc{
+                    MetricName: dimension.Name.String,
+                    MetricCode: abbr,
+                });
+            }
             dataDesc := DataDesc{
-                TableName: searchHandler.allEconomicsInfo[searchId].Name.String,
+                TableName: tableName,
                 TableCode: tableCode,
                 DataType: EconIndicator,
                 MetricDescs: metricDescs,
@@ -132,17 +137,17 @@ func (searchHandler *StandardSearchHandler) findMetrics(param map[string]string)
             metrics = append(metrics, dataDesc);
         case Indices:
             tableCode := fmt.Sprintf("exchange_index_info_%d_metrics", searchId);
-            adjClose := MetricDesc{
-                MetricName: "Adjusted Close",
-                MetricCode: "Adjusted Close",
-            };
-            volume := MetricDesc{
-                MetricName: "Volume",
-                MetricCode: "Volume",
-            };
-            metricDescs := []MetricDesc{adjClose, volume};
+            tableName := searchHandler.allExchangeIndexInfo[searchId].Name.String
+            var metricDescs []MetricDesc;
+            allMetricDimensions := searchHandler.metricDatabase.GetAllDimensions(tableCode);
+            for abbr, dimension := range(allMetricDimensions) {
+                metricDescs = append(metricDescs, MetricDesc{
+                    MetricName: dimension.Name.String,
+                    MetricCode: abbr,
+                });
+            }
             dataDesc := DataDesc{
-                TableName: searchHandler.allExchangeIndexInfo[searchId].Name.String,
+                TableName: tableName,
                 TableCode: tableCode,
                 DataType: Indices,
                 MetricDescs: metricDescs,

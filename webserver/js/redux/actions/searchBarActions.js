@@ -126,7 +126,7 @@ function search(dispatch, getState) {
 
             metricDescs.forEach((metricDesc) => {
                 // For equities, skip all except for Volume and Adjusted Close
-                if (dataType === 1) {
+                if (dataType === 0 || dataType === 1) {
                     if (metricDesc.MetricCode !== 'Adjusted Close' && metricDesc.MetricCode !== 'Volume') {
                         return;
                     }
