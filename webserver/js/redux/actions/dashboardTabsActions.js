@@ -35,7 +35,7 @@ function saveDashboard(dispatch, getState) {
     var gridJson = JSON.stringify(grid);
 
     dispatch(requestSave());
-    return fetch($SCRIPT_ROOT + '/user', {
+    return fetch('/user', {
         credentials: 'same-origin',
         mode: 'no-cors',
         method: 'POST',
@@ -58,7 +58,7 @@ function saveDashboard(dispatch, getState) {
 
 function loadDashboard(dispatch, getState) {
     dispatch(requestLoad());
-    return fetch($SCRIPT_ROOT + '/user', {
+    return fetch('/user', {
         credentials: 'same-origin',
         mode: 'no-cors',
         method: 'POST',

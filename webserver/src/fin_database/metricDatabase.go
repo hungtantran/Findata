@@ -23,9 +23,9 @@ func NewMetricDatabase(
 
 func (metricDatabase *MetricDatabase) GetMetricWithName(tableName string, metricName string) []ResultMetric {
     // TODO sql injection
-    query := "SELECT * FROM " + tableName + " WHERE metric_name = '" + metricName + "' ORDER BY start_date";
+    query := "SELECT * FROM " + tableName + " WHERE metric_name = '" + metricName + "' ORDER BY end_date";
     if metricName == "" {
-        query = "SELECT * FROM " + tableName + " ORDER BY start_date";
+        query = "SELECT * FROM " + tableName + " ORDER BY end_date";
     }
     rows, err := metricDatabase.dbConnector.GetConnector().Query(query);
     if err != nil {
@@ -37,15 +37,15 @@ func (metricDatabase *MetricDatabase) GetMetricWithName(tableName string, metric
     
     var id sql.NullInt64;
     var name, unit, metaData sql.NullString;
-    var endDate time.Time;
+    var startDate time.Time;
     for rows.Next() {
         err := rows.Scan(
                 &id,
                 &name,
                 &metric.V,
                 &unit,
+                &startDate,
                 &metric.T,
-                &endDate,
                 &metaData);
         if err != nil {
             log.Println(err);

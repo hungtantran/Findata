@@ -29,7 +29,7 @@ export function searchChanged(currentSearch) {
     return dispatch=> {
         if (currentSearch) {
             dispatch(requestSuggestions(currentSearch));
-            return fetch($SCRIPT_ROOT + '/match' + '?match=' + currentSearch, {mode: 'no-cors'})
+            return fetch('/match' + '?match=' + currentSearch, {mode: 'no-cors'})
             .then(function(response) {
                 return response.json();
             }).catch(function(ex) {

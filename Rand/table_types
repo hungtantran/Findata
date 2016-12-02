@@ -118,7 +118,7 @@ economics_info_%_metrics
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `userid` int(11) NOT NULL,
-  `grid` text NOT NULL,
+  `grid` mediumtext NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`userid`),
   KEY `usersession_ibfk_1` (`userid`),

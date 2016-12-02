@@ -7,6 +7,7 @@ import instruments from '../reducers/instrumentsReducers';
 import elements from '../reducers/elementsReducers';
 import plots from '../reducers/plotsReducers';
 import dataSets from '../reducers/dataSetsReducers';
+import dataPane from '../reducers/dataPaneReducers';
 
 const loggerMiddleware = createLogger();
 
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     instruments,
     elements,
     plots,
-    dataSets
+    dataSets,
+    dataPane,
 });
 
 export default function configureStore(preloadedState) {
