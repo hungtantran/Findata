@@ -33,6 +33,30 @@ function Plots(state={}, action) {
             let plot = Object.assign({}, state[action.plotId], {dataSets : currentDataSets});
             return Object.assign({}, state, {[action.plotId]: plot});
         }
+    case Actions.REMOVE_DATASET_FROM_PLOT:
+        {
+            // just remove first one. Super hack, hahah.
+            let foundOne = false;
+            let newDataSets = state[action.plotId].dataSets.filter((id) => {
+                if(id == action.dataSetId && !foundOne) {
+                    foundOne = true;
+                    return false;
+                }
+
+                return true;
+            });            
+            if(newDataSets.length == state[action.plotId].dataSets.length)
+                return state;
+
+            let plot = Object.assign({}, state[action.plotId], {dataSets : newDataSets});
+            return Object.assign({}, state, {[action.plotId]: plot});
+        }
+    case Actions.REMOVE_PLOT:
+        {
+            let newState = Object.assign({}, state);
+            delete newState[action.plotId];
+            return newState;
+        }
     default:
         return state;
     }

@@ -1,6 +1,6 @@
 import {LAYOUT_CHANGE} from '../actions/gridActions';
 import {ADD_ELEMENT} from '../actions/elementActions';
-import {ADD_PLOTS} from '../actions/plotActions';
+import {ADD_PLOTS, REMOVE_PLOT} from '../actions/plotActions';
 import {scaleOrdinal, schemeCategory10} from 'd3-scale';
 import {LOAD_ELEMENTS} from '../actions/dashboardTabsActions';
 
@@ -33,6 +33,18 @@ function Elements(state={}, action) {
         }
     case LOAD_ELEMENTS:
         return Object.assign({}, action.elements);
+    case REMOVE_PLOT:
+        {
+            let newPlots = state[action.parent].plots.filter((id) => {
+                return id != action.plotId;
+            });            
+
+            if(newPlots.length == state[action.parent].plots.length)
+                return state;
+
+            let element = Object.assign({}, state[action.parent], {plots : newPlots});
+            return Object.assign({}, state, {[action.parent]: element});
+        }
     default:
         return state;
     }
