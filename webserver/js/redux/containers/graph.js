@@ -2,6 +2,7 @@ import {connect} from 'react-redux';
 import React from 'react';
 import { positionPlot, createNewPlot } from '../actions/plotActions';
 import Plot from './plot';
+import Legend from './legend';
 
 class Graph extends React.Component {
 
@@ -77,9 +78,7 @@ class Graph extends React.Component {
                         <rect x={this.props.width - 40 - this.legendWidth} y={this.props.height - 30} width='30' height='30' fill='green' pointerEvents='all' onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); let data = ev.dataTransfer.getData('text/plain'); this.props.onDragEnd(data); }} />
                     </g>
                 </svg>
-                <div className='legend'>
-                    {legendItems}
-                </div>
+                <Legend id={this.props.id} />
             </div>
         );
     }
@@ -92,7 +91,8 @@ Graph.propTypes = {
     positionPlot: React.PropTypes.func,
     // Map between legend name and color scale
     items: React.PropTypes.object,
-    onDragEnd: React.PropTypes.func
+    onDragEnd: React.PropTypes.func,
+    id: React.PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -118,7 +118,7 @@ const mapStateToProps = (state, ownProps) => {
         });
     });
 
-    return {width, height, plots: info.plots, items};
+    return {width, height, plots: info.plots, items, id: ownProps.id};
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
