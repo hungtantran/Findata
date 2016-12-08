@@ -17,8 +17,12 @@ class Legend extends React.Component {
         this.props.items.forEach((item) => {
             let innerItems = Object.keys(item.innerItems).map((key) => {
                 return (
-                    <div title={key}
-                    style={{fontSize: 10, overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: item.innerItems[key]}} >
+                    <div
+                    className='legendItem' 
+                    title={key}
+                    draggable='true'
+                    onDragStart={(ev) => {ev.stopPropagation(); ev.dataTransfer.setData('text/plain', item.innerItems[key].id);}}
+                    style={{fontSize: 10, overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: item.innerItems[key].color}} >
                         {key}
                     </div>
                 );
@@ -59,12 +63,14 @@ const mapStateToProps = (state, ownProps) => {
             if (name != state.dataSets[dataSet].metricName) {
                 name += ' ' + state.dataSets[dataSet].metricName;
             }
-            items[index].innerItems[name] = info.colorScale(dataSet);
+            items[index].innerItems[name] = {color: info.colorScale(dataSet), id: dataSet};
         });
     });
 
     return {items};
 };
+
+
 
 export default connect(
     mapStateToProps

@@ -78,6 +78,7 @@ class Grid extends React.Component {
             var options = {
                 verticalMargin: 0,
                 //float: true
+                draggable: {handle: '.grid-stack-item-content', scroll: false, appendTo: 'body', cancel: '.legendItem'}
             };
             $('.grid-stack').gridstack(options);
         });
