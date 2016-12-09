@@ -30,7 +30,7 @@ class Legend extends React.Component {
                     onDragStart={(ev) => {
                         ev.stopPropagation();
                         this.props.onDragStart(
-                            {source: 'legend', dataSetId: item.innerItems[key].id, plotId: item.id}
+                            {source: 'legend', dataSetId: item.innerItems[key].id, plotId: item.id, control: ev.ctrlKey || ev.metaKey}
                             );
                     }}
                     style={{fontSize: 10, overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: item.innerItems[key].color}} >

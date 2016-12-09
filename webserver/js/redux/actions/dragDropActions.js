@@ -21,7 +21,7 @@ export function endDrag() {
         let sourceInfo = dragDropState.sourceInfo;
 
         if(sourceInfo) {
-            if(sourceInfo.source == 'legend' && (!targetInfo || targetInfo.plotId != sourceInfo.plotId))
+            if(sourceInfo.source == 'legend' && !sourceInfo.control && (!targetInfo || targetInfo.plotId != sourceInfo.plotId))
                 dispatch(removeDataSetFromPlot(sourceInfo.dataSetId, sourceInfo.plotId));
 
             if(targetInfo) {
