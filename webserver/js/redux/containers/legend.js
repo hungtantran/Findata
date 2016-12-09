@@ -40,13 +40,13 @@ class Legend extends React.Component {
             });
             totalHeight += item.height;
             legendItems.push(
-                <div height={heightString} style={{minHeight: heightString, maxHeight: heightString, overflow: 'scroll'}} >
+                <div height={heightString} style={{minHeight: heightString, maxHeight: heightString, overflowY: 'auto', overflowX: 'hidden', textOverflow: 'ellipsis'}} >
                     {innerItems}
                 </div>);
         });
 
         return (
-            <div className='legend' height={totalHeight}>
+            <div className='legend' height={totalHeight} style={{minHeight: totalHeight, maxHeight: totalHeight}}>
                 {legendItems}
             </div>
         );
