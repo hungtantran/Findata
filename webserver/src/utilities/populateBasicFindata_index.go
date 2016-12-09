@@ -2,6 +2,9 @@ package utilities
 
 import (
 	"fmt"
+	"log"
+	"strings"
+	"strconv"
 	elastic "gopkg.in/olivere/elastic.v3"
 
 	"fin_database"
@@ -49,8 +52,28 @@ func PopulateTickerInfo() {
 		DbType, "ticker_info", mysqlConnector);
     allTickerInfo := tickerInfoDatabase.GetAllTickerInfo();
 
+	rows, err := mysqlConnector.GetConnector().Query("SHOW TABLES LIKE 'ticker_info_%_metrics'");
+    if err != nil {
+        log.Println(err)
+    }
+    defer rows.Close()
+    existingTickerInfoIds := make(map[int64]int);
+    for rows.Next() {
+		var tickerInfoTableName string;
+        rows.Scan(&tickerInfoTableName);
+		nameParts := strings.Split(tickerInfoTableName, "_");
+		if (len(nameParts) != 4) {
+			continue;
+		}
+		id, _ := strconv.ParseInt(nameParts[2], 10, 64);
+		existingTickerInfoIds[id] = 1;
+    }
+
 	bulkRequest := client.Bulk();
 	for _, tickerInfo := range(allTickerInfo) {
+		if _, ok := existingTickerInfoIds[tickerInfo.Id.Int64]; !ok {
+			continue;
+		}
 		tickerElastic := TickerInfoElastic {
 			Id: defaultNullInt(tickerInfo.Id),
 			Ticker: defaultNullString(tickerInfo.Ticker),

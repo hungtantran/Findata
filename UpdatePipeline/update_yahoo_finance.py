@@ -96,7 +96,7 @@ class UpdateYahooFinance(threading.Thread):
         return dimension
 
     def get_earliest_and_latest_time(self, metric, metrics_db):
-        return metrics_db.get_earliest_and_latest_time(metric_name='adj_close')
+        return metrics_db.get_earliest_and_latest_time(metric_name=UpdateYahooFinance.SUMMARY_DIMENSIONS[5])
 
     def get_list_of_crawl_pages(self, latest_time, earliest_time):
         crawl_pages = []
@@ -247,7 +247,7 @@ class UpdateYahooFinance(threading.Thread):
                     cell_value = StringHelper.parse_value_string(cells[j])
                     metric_name = UpdateYahooFinance.SUMMARY_DIMENSIONS[j - 1]
                     unit = 'usd'
-                    if metric_name == 'volume':
+                    if metric_name == UpdateYahooFinance.SUMMARY_DIMENSIONS[4]:
                         unit = 'share'
                     value = metrics.Metrics(
                             metric_name=self.get_metric_name(metric, metric_name),
