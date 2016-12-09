@@ -15,7 +15,7 @@ class Graph extends React.Component {
     }
 
     updatePlotPositions() {
-        const margins = { top: 20, right: 40, bottom: 30, left: 10 };
+        const margins = { top: 0, right: 40, bottom: 30, left: 10 };
         const innerHeight = this.props.height - (margins.top + margins.bottom);
         const plotCount = this.props.plots.length;
         const plotHeight = innerHeight / plotCount;
