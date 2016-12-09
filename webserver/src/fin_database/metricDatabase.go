@@ -95,7 +95,7 @@ func (metricDatabase *MetricDatabase) InsertMetric(tableName string, metric *Met
 
 func (metricDatabase *MetricDatabase) GetAllDimensions(tableName string) map[string]TickerInfoDimension {
     rows, err := metricDatabase.dbConnector.GetConnector().Query(
-        "SELECT distinct metric_name, metric_name FROM " + tableName);
+        "SELECT metric_name, metric_name, count(*) as count from " + tableName + " group by metric_name having count > 1");
     if err != nil {
         log.Println(err)
     }
@@ -103,9 +103,11 @@ func (metricDatabase *MetricDatabase) GetAllDimensions(tableName string) map[str
     var metricDimension TickerInfoDimension;
     allMetricsDimensions := make(map[string]TickerInfoDimension);
     for rows.Next() {
+        var count int;
         err := rows.Scan(
                 &metricDimension.Abbrv,
-                &metricDimension.Name);
+                &metricDimension.Name,
+                &count);
         if err != nil {
             log.Println(err);
         }

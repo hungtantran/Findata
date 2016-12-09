@@ -19,7 +19,7 @@ from Common.constants_config import Config
 
 class UpdateYahooFinance(threading.Thread):
     SUMMARY_LINKS_TEMPLATE = 'http://chart.finance.yahoo.com/table.csv?s=%s&a=%d&b=%d&c=%d&d=%d&e=%d&f=%d&g=d&ignore=.csv'
-    SUMMARY_DIMENSIONS = ['open', 'high', 'low', 'close', 'volume', 'adj_close']
+    SUMMARY_DIMENSIONS = ['Open', 'High', 'Low', 'Close', 'Volume', 'Adjusted Close']
     CSV_HEADERS = ['Date', 'Open', 'High', 'Low', 'Close', 'Volume', 'Adj Close']
     NUM_RETRIES_DOWNLOAD = 2
     WAIT_TIME_BETWEEN_DOWNLOAD_IN_SEC = 3
