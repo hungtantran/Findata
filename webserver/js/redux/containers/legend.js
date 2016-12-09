@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import React from 'react';
 import {removeDataSetFromPlot} from '../actions/plotActions';
-import {startDrag, endDrag} from '../actions/dragDropActions';
+import {startDrag, endDrag, drop} from '../actions/dragDropActions';
 
 class Legend extends React.Component {
 
@@ -40,7 +40,8 @@ class Legend extends React.Component {
             });
             totalHeight += item.height;
             legendItems.push(
-                <div height={heightString} style={{minHeight: heightString, maxHeight: heightString, overflowY: 'auto', overflowX: 'hidden', textOverflow: 'ellipsis'}} >
+                <div height={heightString} style={{minHeight: heightString, maxHeight: heightString, overflowY: 'auto', overflowX: 'hidden', textOverflow: 'ellipsis'}}
+                onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); this.props.onDrop(item.id); }}>
                     {innerItems}
                 </div>);
         });
@@ -87,7 +88,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         onDragEnd: () => dispatch(endDrag()),
-        onDragStart: (info) => dispatch(startDrag(info))
+        onDragStart: (info) => dispatch(startDrag(info)),
+        onDrop: (plotId) => dispatch(drop({target: 'plot', plotId})),
     };
 };
 
