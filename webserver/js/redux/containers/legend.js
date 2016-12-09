@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import React from 'react';
 import {removeDataSetFromPlot} from '../actions/plotActions';
+import {startDrag, endDrag} from '../actions/dragDropActions';
 
 class Legend extends React.Component {
 
@@ -22,8 +23,16 @@ class Legend extends React.Component {
                     className='legendItem' 
                     title={key}
                     draggable='true'
-                    onDragEnd={(ev) => {ev.stopPropagation(); this.props.onDragEnd(item.innerItems[key].id, item.id);}}
-                    onDragStart={(ev) => {ev.stopPropagation(); ev.dataTransfer.setData('text/plain', item.innerItems[key].id);}}
+                    onDragEnd={(ev) => {
+                        ev.stopPropagation();
+                        this.props.onDragEnd();
+                    }}
+                    onDragStart={(ev) => {
+                        ev.stopPropagation();
+                        this.props.onDragStart(
+                            {source: 'legend', dataSetId: item.innerItems[key].id, plotId: item.id}
+                            );
+                    }}
                     style={{fontSize: 10, overflow: 'hidden', textOverflow: 'ellipsis', width: this.legendWidth, color: item.innerItems[key].color}} >
                         {key}
                     </div>
@@ -46,7 +55,8 @@ class Legend extends React.Component {
 
 Legend.propTypes = {
     items: React.PropTypes.array,
-    onDragEnd: React.PropTypes.func
+    onDragEnd: React.PropTypes.func,
+    onDragStart: React.PropTypes.func
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -76,7 +86,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onDragEnd: (dataSetId, plotId) => dispatch(removeDataSetFromPlot(dataSetId, plotId))
+        onDragEnd: () => dispatch(endDrag()),
+        onDragStart: (info) => dispatch(startDrag(info))
     };
 };
 

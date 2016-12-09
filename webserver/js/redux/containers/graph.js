@@ -1,8 +1,9 @@
 import {connect} from 'react-redux';
 import React from 'react';
-import { positionPlot, createNewPlot } from '../actions/plotActions';
+import { positionPlot } from '../actions/plotActions';
 import Plot from './plot';
 import Legend from './legend';
+import {drop} from '../actions/dragDropActions';
 
 class Graph extends React.Component {
 
@@ -75,7 +76,7 @@ class Graph extends React.Component {
                 <svg className='graph' width={this.props.width - this.legendWidth} height={this.props.height} >
                     {plotsToRender}
                     <g>
-                        <rect x={this.props.width - 40 - this.legendWidth} y={this.props.height - 30} width='30' height='30' fill='green' pointerEvents='all' onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); let data = ev.dataTransfer.getData('text/plain'); this.props.onDragEnd(data); }} />
+                        <rect x={this.props.width - 40 - this.legendWidth} y={this.props.height - 30} width='30' height='30' fill='green' pointerEvents='all' onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); this.props.onDragEnd(); }} />
                     </g>
                 </svg>
                 <Legend id={this.props.id} />
@@ -124,7 +125,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         positionPlot: (plot, position) => dispatch(positionPlot(plot, position)),
-        onDragEnd: (dataSetId) => dispatch(createNewPlot(dataSetId, ownProps.id))
+        onDragEnd: () => dispatch(drop({target: 'element', elementId: ownProps.id}))
     };
 };
 

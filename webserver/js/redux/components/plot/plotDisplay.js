@@ -4,10 +4,6 @@ import XAxis from './xaxis';
 import YAxis from './yaxis';
 import {scaleLinear, scaleTime} from 'd3-scale';
 
-function getPlotTranslation(left, top) {
-    return `translate(${left}, ${top})`;
-}
-
 function getXScaleTranslation(height) {
     return `translate(0, ${height})`;
 }
@@ -40,13 +36,12 @@ class PlotDisplay extends React.Component {
             .range([this.props.height, 0]);
         let dataSets = this.buildItems(this.props.dataSets, xscale, yscale);
         return (
-            <g className="plot" transform={getPlotTranslation(this.props.x, this.props.y)} ref="element" >
+            <g className="plot" ref="element" >
                 <g ref="items">
                     {dataSets}
                 </g>
                 <XAxis scale={xscale} translate={getXScaleTranslation(this.props.height)} />
                 <YAxis scale={yscale} translate={getYScaleTranslation(this.props.width * .95)} />
-                <rect width={this.props.width * .95} height={this.props.height} fill='none' pointerEvents='all' onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); let data = ev.dataTransfer.getData('text/plain'); this.props.onDragEnd(data); }} />
             </g>
         );
     }

@@ -1,8 +1,12 @@
 import {connect} from 'react-redux';
 import React from 'react';
 import {fetchDataSetIfNeeded} from '../actions/dataSetActions';
-import {addDataSetToPlot} from '../actions/plotActions';
+import {drop} from '../actions/dragDropActions';
 import PlotDisplay from '../components/plot/plotDisplay';
+
+function getPlotTranslation(left, top) {
+    return `translate(${left}, ${top})`;
+}
 
 class Plot extends React.Component {
     constructor(props) {
@@ -31,9 +35,14 @@ class Plot extends React.Component {
                 <text>
                     {'Loading...'}
                 </text>
-                );
+            );
         else
-            return <PlotDisplay {...this.props} />;
+            return (
+                <g transform={getPlotTranslation(this.props.x, this.props.y)}>
+                    <PlotDisplay {...this.props} />
+                    <rect id={this.props.id} width={this.props.width * .95} height={this.props.height} fill='none' pointerEvents='all' onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); this.props.onDragEnd(); }} />
+                </g>
+            );
     }
 }
 
@@ -46,7 +55,8 @@ Plot.propTypes = {
     height: React.PropTypes.number,
     x: React.PropTypes.number,
     y: React.PropTypes.number,
-    colorScale: React.PropTypes.func
+    colorScale: React.PropTypes.func,
+    id: React.PropTypes.string
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -81,12 +91,12 @@ const mapStateToProps = (state, ownProps) => {
 
     let {x, y, width, height } = plot;
 
-    return {dataSets: dataSetIds, domain: [xMin, xMax], range: [yMin, yMax], x, y, width, height, colorScale: state.elements[parentId].colorScale};
+    return {dataSets: dataSetIds, domain: [xMin, xMax], range: [yMin, yMax], x, y, width, height, colorScale: state.elements[parentId].colorScale, id: ownProps.id};
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        onDragEnd: (dataSetId) => dispatch(addDataSetToPlot(dataSetId, ownProps.id)),
+        onDragEnd: () => dispatch(drop({target: 'plot', plotId: ownProps.id})),
         dispatch
     };
 };

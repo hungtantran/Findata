@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {
     filterChanged
 } from '../actions/dataPaneActions';
+import {startDrag, endDrag} from '../actions/dragDropActions';
 
 class DataPane extends React.Component {
     constructor(props) {
@@ -41,7 +42,9 @@ class DataPane extends React.Component {
                         className='list-group-item'
                         key={attribute.metricName}
                         draggable='true'
-                        onDragStart={(ev) => {ev.dataTransfer.setData('text/plain', attribute.dataId);}}>
+                        onDragStart={(ev) => {this.props.onDragStart(attribute.dataId); }}
+                        onDragEnd={(ev) => {ev.stopPropagation(); this.props.onDragEnd();}}
+                        >
                         {attribute.metricName}
                     </li>);
             });
@@ -121,6 +124,8 @@ function mapStateToProps(state) {
 const mapDispatchToProps = (dispatch) => {
     return {
         onFilterChange: (tableCode, filter) => dispatch(filterChanged(tableCode, filter)),
+        onDragStart: (dataSetId) => dispatch(startDrag({source: 'dataPane', dataSetId})),
+        onDragEnd: () => dispatch(endDrag())
     };
 };
 

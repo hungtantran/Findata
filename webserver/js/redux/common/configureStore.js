@@ -8,6 +8,7 @@ import elements from '../reducers/elementsReducers';
 import plots from '../reducers/plotsReducers';
 import dataSets from '../reducers/dataSetsReducers';
 import dataPane from '../reducers/dataPaneReducers';
+import dragDrop from '../reducers/dragDropReducers';
 
 const loggerMiddleware = createLogger();
 
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     plots,
     dataSets,
     dataPane,
+    dragDrop
 });
 
 export default function configureStore(preloadedState) {
