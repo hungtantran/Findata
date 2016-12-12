@@ -58,7 +58,8 @@ class GoogleSignin extends React.Component {
             'height': 30,
             'longtitle': true,
             'theme': 'dark',
-            'onsuccess': this.onGoogleSignIn
+            'approvalprompt':'force',
+            'onsuccess': this.onGoogleSignIn,
         });  
     }
 
