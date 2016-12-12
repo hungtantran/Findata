@@ -10,14 +10,19 @@ import (
     "os"
     "strings"
     "time"
+    "fin_database"
     elastic "gopkg.in/olivere/elastic.v3"
 )
 
 type ElasticSearchMatchHandler struct {
     client *elastic.Client
+    allTickerInfo map[string]fin_database.TickerInfo
 }
 
-func NewElasticSearchMatchHandler(elasticSearchIp string, elasticSearchPort int) *ElasticSearchMatchHandler {
+func NewElasticSearchMatchHandler(
+    allTickerInfo map[int64]fin_database.TickerInfo,
+    elasticSearchIp string,
+    elasticSearchPort int) *ElasticSearchMatchHandler {
     var connectionString string = elasticSearchIp + ":" + fmt.Sprintf("%d", elasticSearchPort);
     client, err := elastic.NewClient(
         elastic.SetURL(connectionString),
@@ -33,37 +38,73 @@ func NewElasticSearchMatchHandler(elasticSearchIp string, elasticSearchPort int)
 
     var matchHandler *ElasticSearchMatchHandler = new(ElasticSearchMatchHandler);
     matchHandler.client = client;
+    matchHandler.allTickerInfo = make(map[string]fin_database.TickerInfo);
+    for _, tickerInfo := range(allTickerInfo) {
+        matchHandler.allTickerInfo[tickerInfo.Ticker.String] = tickerInfo;
+    }
     return matchHandler;
 }
 
 func (matchHandler *ElasticSearchMatchHandler) FindTickerInfoMatches(match string) ([]MatchResult, error) {
-    matchParts := strings.Split(match, " ");
+    matchLower := strings.ToLower(match);
+    matchUpper := strings.ToUpper(match);
+
+    var matchTickerInfo []MatchResult;
+    var remaningResults = 10;
+    // Match entire ticker string
+    if tickerInfo, ok := matchHandler.allTickerInfo[matchUpper]; ok {
+        metadata := make(map[string]interface{});
+        metadata["Id"] = tickerInfo.Id.Int64;
+        matchResult := MatchResult{
+            Abbrv: tickerInfo.Ticker.String,
+            Name: tickerInfo.Name.String,
+            Metadata: metadata,
+        }
+        matchTickerInfo = append(matchTickerInfo, matchResult);
+        remaningResults -= 1;
+    }
+
+    // Match partial ticker string
+    for abbrv, tickerInfo := range(matchHandler.allTickerInfo) {
+        if (abbrv == matchUpper || !strings.Contains(abbrv, matchUpper)) {
+            continue;
+        }
+
+        metadata := make(map[string]interface{});
+        metadata["Id"] = tickerInfo.Id.Int64;
+        matchResult := MatchResult{
+            Abbrv: tickerInfo.Ticker.String,
+            Name: tickerInfo.Name.String,
+            Metadata: metadata,
+        }
+        matchTickerInfo = append(matchTickerInfo, matchResult);
+        remaningResults -= 1;
+        if (remaningResults <= 0) {
+            return matchTickerInfo, nil;
+        }
+    }
+    
+    matchParts := strings.Split(matchLower, " ");
     var queries []elastic.Query;
     for _, matchPart := range matchParts {
         queries = append(queries, elastic.NewPrefixQuery("name", matchPart));
     }
     nameQuery := elastic.NewBoolQuery();
     nameQuery = nameQuery.Must(queries...);
-
-    query := elastic.NewBoolQuery();
-    query = query.Should(
-        nameQuery,
-        elastic.NewPrefixQuery("ticker", match));
     searchResult, err := matchHandler.client.Search().
         Index("findata").
         Type("ticker_info").
         Field("id").
         Field("ticker").
         Field("name").
-        Query(query).
-        From(0).Size(10).
+        Query(nameQuery).
+        From(0).Size(remaningResults).
         Pretty(true).
         Do();
     if err != nil {
         return nil, errors.New("Can't query elasticsearch");
     }
 
-    var matchTickerInfo []MatchResult;
     if searchResult.Hits.TotalHits > 0 {
         // Iterate through results
         for _, hit := range searchResult.Hits.Hits {

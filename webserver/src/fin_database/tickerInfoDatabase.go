@@ -1,6 +1,8 @@
 package fin_database
 
 import (
+    "strings"
+    "strconv"
     "log"
 )
 
@@ -23,13 +25,31 @@ func NewTickerInfoDatabase(
 }
 
 func (tickerInfoDatabase *TickerInfoDatabase) GetAllTickerInfo() map[int64]TickerInfo {
-    rows, err := tickerInfoDatabase.dbConnector.GetConnector().Query("SELECT * FROM " + tickerInfoDatabase.dbTableName);
+    allTickerInfo := make(map[int64]TickerInfo);
+    
+	rows, err := tickerInfoDatabase.dbConnector.GetConnector().Query("SHOW TABLES LIKE 'ticker_info_%_metrics'");
+    if err != nil {
+        return allTickerInfo;
+    }
+    defer rows.Close()
+    existingTickerInfoIds := make(map[int64]int);
+    for rows.Next() {
+		var tickerInfoTableName string;
+        rows.Scan(&tickerInfoTableName);
+		nameParts := strings.Split(tickerInfoTableName, "_");
+		if (len(nameParts) != 4) {
+			continue;
+		}
+		id, _ := strconv.ParseInt(nameParts[2], 10, 64);
+		existingTickerInfoIds[id] = 1;
+    }
+
+    rows, err = tickerInfoDatabase.dbConnector.GetConnector().Query("SELECT * FROM " + tickerInfoDatabase.dbTableName);
     if err != nil {
         log.Println(err)
     }
     defer rows.Close()
     var tickerInfo TickerInfo;
-    allTickerInfo := make(map[int64]TickerInfo);
     for rows.Next() {
         err := rows.Scan(
                 &tickerInfo.Id,
@@ -53,6 +73,9 @@ func (tickerInfoDatabase *TickerInfoDatabase) GetAllTickerInfo() map[int64]Ticke
         if err != nil {
             log.Println(err);
         }
+        if _, ok := existingTickerInfoIds[tickerInfo.Id.Int64]; !ok {
+			continue;
+		}
         allTickerInfo[tickerInfo.Id.Int64] = tickerInfo;
     }
     err = rows.Err()

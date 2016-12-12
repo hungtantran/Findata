@@ -99,17 +99,16 @@ func initializeConfiguration() {
     userHandlerObj = NewStandardUserHandler(usersDatabase, gridsDatabase);
 
     // Initialize match handler
-    matchHandlerObj = NewElasticSearchMatchHandler(
-        utilities.ElasticSearchIp, utilities.ElasticSearchPort);
-
-    // Initialize search handler
     var tickerInfoDatabase *fin_database.TickerInfoDatabase = fin_database.NewTickerInfoDatabase(
             utilities.DbType,
             "ticker_info",
             mysqlConnector);
-    tickerInfoChan := make(chan map[int64]fin_database.TickerInfo);
-    go func() { tickerInfoChan <- tickerInfoDatabase.GetAllTickerInfo(); }();
+    allTickerInfo := tickerInfoDatabase.GetAllTickerInfo();
 
+    matchHandlerObj = NewElasticSearchMatchHandler(
+        allTickerInfo, utilities.ElasticSearchIp, utilities.ElasticSearchPort);
+
+    // Initialize search handler
     var economicsInfoDatabase *fin_database.EconomicsInfoDatabase = fin_database.NewEconomicsInfoDatabase(
             utilities.DbType,
             "economics_info",
@@ -131,7 +130,6 @@ func initializeConfiguration() {
     tickerInfoDimensionChan := make(chan map[string]fin_database.TickerInfoDimension);
     go func() { tickerInfoDimensionChan <- tickerInfoDimensionsDatabase.GetAllTickerInfoDimensions(); }();
 
-    allTickerInfo := <-tickerInfoChan;
     allEconomicsInfo := <-economicsInfoChan;
     allExchangeIndexInfo := <-exchangeIndexInfoChan;
     allTickerInfoDimensions := <- tickerInfoDimensionChan;
