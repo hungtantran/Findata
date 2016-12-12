@@ -26,9 +26,10 @@ class DataPane extends React.Component {
             attributeList.push(
                 <input
                     id={tableCode}
-                    type="text"
-                    className="form-control"
-                    placeholder="Filter..."
+                    key='filter'
+                    type='text'
+                    className='form-control'
+                    placeholder='Filter...'
                     onChange={this.handleChange}
                 />
             );
@@ -42,8 +43,12 @@ class DataPane extends React.Component {
                         className='list-group-item'
                         key={attribute.metricName}
                         draggable='true'
-                        onDragStart={(ev) => {this.props.onDragStart(attribute.dataId); }}
-                        onDragEnd={(ev) => {ev.stopPropagation(); this.props.onDragEnd();}}
+                        onDragStart={(ev) => {
+                            this.props.onDragStart(attribute.dataId);
+                        }}
+                        onDragEnd={(ev) => {
+                            ev.stopPropagation(); this.props.onDragEnd();
+                        }}
                         >
                         {attribute.metricName}
                     </li>);
@@ -84,6 +89,8 @@ class DataPane extends React.Component {
 DataPane.propTypes = {
     tableCodeToMetricsMap: React.PropTypes.object,
     onFilterChange: React.PropTypes.func,
+    onDragStart: React.PropTypes.func,
+    onDragEnd: React.PropTypes.func,
 };
 
 function mapStateToProps(state) {

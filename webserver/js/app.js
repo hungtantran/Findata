@@ -1,12 +1,12 @@
-import ReactDOM from 'react-dom'
-import React, { Component } from 'react'
-import { Router, Route, Link, browserHistory } from 'react-router'
-import Index from './index'
-import About from './about'
-import Contact from './contact'
-import Login from './login'
-import Signup from './signup'
-import NotFound from './notfound'
+import ReactDOM from 'react-dom';
+import React from 'react';
+import { Router, Route, browserHistory } from 'react-router';
+import Index from './index';
+import About from './about';
+import Contact from './contact';
+import Login from './login';
+import Signup from './signup';
+import NotFound from './notfound';
 
 ReactDOM.render((
   <Router history={browserHistory}>

@@ -40,7 +40,15 @@ class Plot extends React.Component {
             return (
                 <g transform={getPlotTranslation(this.props.x, this.props.y)}>
                     <PlotDisplay {...this.props} />
-                    <rect id={this.props.id} width={this.props.width * .95} height={this.props.height} fill='none' pointerEvents='all' onDragOver={(ev) => {ev.preventDefault();}} onDrop={(ev) => {ev.preventDefault(); this.props.onDragEnd(); }} />
+                    <rect
+                        id={this.props.id}
+                        width={this.props.width * .95}
+                        height={this.props.height}
+                        fill='none'
+                        pointerEvents='all'
+                        onDragOver={(ev) => {ev.preventDefault();}}
+                        onDrop={(ev) => {ev.preventDefault(); this.props.onDragEnd(); }}
+                    />
                 </g>
             );
     }

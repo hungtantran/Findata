@@ -1,8 +1,8 @@
-import ReactDOM from 'react-dom'
-import React from 'react' 
-import Footer from './components/footer'
-import Header from './components/header'
-import GoogleSignin from './components/googleSignin'
+import React from 'react';
+import Footer from './components/footer';
+import Header from './components/header';
+import GoogleSignin from './redux/components/googleSignin';
+import GetCookie from './redux/common/utilities';
 
 class Login extends React.Component {
     constructor(props) {
@@ -12,12 +12,12 @@ class Login extends React.Component {
         this.parseLoginResult = this.parseLoginResult.bind(this);
 
         this.state = {
-            success: "None",
-            message: ""
+            success: 'None',
+            message: ''
         };
     }
 
-    handleMouseUp(event) {
+    handleMouseUp() {
         var username = document.getElementById('username').value;
         var password = document.getElementById('password').value;
 
@@ -31,7 +31,7 @@ class Login extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                type: "Findata",
+                type: 'Findata',
                 username: username,
                 password: password,
             })
@@ -45,9 +45,11 @@ class Login extends React.Component {
     }
 
     parseLoginResult(json) {
-        var result = "false";
+        console.log(json);
+        var result = 'false';
         if (json.result == true) {
-            result = "true";
+            result = 'true';
+            window.location = '/';
         }
         this.setState({
             success: result,
@@ -56,43 +58,51 @@ class Login extends React.Component {
     }
 
     render() {
+        var username = GetCookie('Username');
+        var fullname = GetCookie('Fullname');
+        // Redirect if user is logined
+        if (username !== '' && fullname !== '') {
+            window.location = '/';
+            return;
+        }
+
         // TODO add form validator
-        if (this.state.success === "true") {
+        if (this.state.success === 'true') {
             return (
-                <div className="row">
-                    <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
-                    <div className="formContainer col-lg-4 col-md-6">
+                <div className='row'>
+                    <div className='col-lg-4 col-md-3 hidden-sm hidden-xs'></div>
+                    <div className='formContainer col-lg-4 col-md-6'>
                         Successful login to Findata.
                     </div>
                 </div>
-            )
+            );
         }
 
         var loginForm = (
-        <div>
-            <Header />
-            <div className="row">
-                <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
-                <div className="formContainer col-lg-4 col-md-6">
-                    <div className="g-signin2" id="g-signin2" data-onsuccess="onSignIn"></div>            
-                    <GoogleSignin />
-                    <form>
-                        <div className="form-group">
-                            <label for="username">Username</label>
-                            <input className="form-control" id="username"></input>
-                        </div>
-                        <div className="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" className="form-control" id="password"></input>
-                        </div>
-                    </form>
-                    <button className="btn btn-primary" onMouseUp={this.handleMouseUp}>Login</button>
+            <div>
+                <Header />
+                <div className='row'>
+                    <div className='col-lg-4 col-md-3 hidden-sm hidden-xs'></div>
+                    <div className='formContainer col-lg-4 col-md-6'>
+                        <div className='g-signin2' id='g-signin2' data-onsuccess='onSignIn'></div>            
+                        <GoogleSignin />
+                        <form>
+                            <div className='form-group'>
+                                <label htmlFor='username'>Username</label>
+                                <input className='form-control' id='username'></input>
+                            </div>
+                            <div className='form-group'>
+                                <label htmlFor='password'>Password</label>
+                                <input type='password' className='form-control' id='password'></input>
+                            </div>
+                        </form>
+                        <button className='btn btn-primary' onMouseUp={this.handleMouseUp}>Login</button>
+                    </div>
+                    <div className='col-lg-4 col-md-3 hidden-sm hidden-xs'></div>
                 </div>
-                <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
+                <Footer />
             </div>
-            <Footer />
-        </div>
-        )
+        );
 
         return loginForm;
     }

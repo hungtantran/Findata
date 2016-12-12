@@ -1,8 +1,8 @@
-import ReactDOM from 'react-dom'
-import React from 'react' 
-import Footer from './components/footer'
-import Header from './components/header'
-import GoogleSignin from './components/googleSignin'
+import ReactDOM from 'react-dom';
+import React from 'react';
+import Footer from './components/footer';
+import Header from './components/header';
+import GoogleSignin from './redux/components/googleSignin';
 
 class Signup extends React.Component {
     constructor(props) {
@@ -72,48 +72,48 @@ class Signup extends React.Component {
         }
 
         var signUpForm = (
-        <div>
-            <Header />
-            <div className="row">
-                <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
-                <div className="formContainer col-lg-4 col-md-6">
-                    <GoogleSignin />
-                    {this.state.message}
-                    <form data-toggle="validator" role="form">
-                        <div className="form-group">
-                            <label for="fullname">Full Name</label>
-                            <input className="form-control" id="fullname" placeholder="Jones Smith"></input>
-                        </div>
-                        <div className="form-group">
-                            <label for="email">Email address</label>
-                            <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="abc@example.com"></input>
-                        </div>
-                        <div className="form-group">
-                            <label for="username">Username</label>
-                            <input className="form-control" id="username"></input>
-                        </div>
-                        <div className="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" className="form-control" id="password" data-minlength="6" required></input>
-                        </div>
-                        <div className="form-group">
-                            <label for="confirmedpassword">Confirm Password</label>
-                            <input type="password" className="form-control" id="confirmedpassword" data-match="#password" data-match-error="Don't match. Please try again" required></input>
-                        </div>
-                        <div className="form-check">
-                            <label className="form-check-label">
-                                <input type="checkbox" className="form-check-input"></input>
-                                By checking this box you are indicating that you have read and accept the <a href="">terms of use.</a>
-                            </label>
-                        </div>
-                    </form>
-                    <button className="btn btn-primary" onMouseUp={this.handleMouseUp}>Register</button>
+            <div>
+                <Header />
+                <div className="row">
+                    <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
+                    <div className="formContainer col-lg-4 col-md-6">
+                        <GoogleSignin />
+                        {this.state.message}
+                        <form data-toggle="validator" role="form">
+                            <div className="form-group">
+                                <label htmlFor="fullname">Full Name</label>
+                                <input className="form-control" id="fullname" placeholder="Jones Smith"></input>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email">Email address</label>
+                                <input type="email" className="form-control" id="email" aria-describedby="emailHelp" placeholder="abc@example.com"></input>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="username">Username</label>
+                                <input className="form-control" id="username"></input>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password">Password</label>
+                                <input type="password" className="form-control" id="password" data-minlength="6" required></input>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="confirmedpassword">Confirm Password</label>
+                                <input type="password" className="form-control" id="confirmedpassword" data-match="#password" data-match-error="Don't match. Please try again" required></input>
+                            </div>
+                            <div className="form-check">
+                                <label className="form-check-label">
+                                    <input type="checkbox" className="form-check-input"></input>
+                                    By checking this box you are indicating that you have read and accept the <a href="">terms of use.</a>
+                                </label>
+                            </div>
+                        </form>
+                        <button className="btn btn-primary" onMouseUp={this.handleMouseUp}>Register</button>
+                    </div>
+                    <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
                 </div>
-                <div className="col-lg-4 col-md-3 hidden-sm hidden-xs"></div>
+                <Footer />
             </div>
-            <Footer />
-        </div>
-        )
+        );
 
         return signUpForm;
     }
