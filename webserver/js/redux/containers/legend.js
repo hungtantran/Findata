@@ -41,7 +41,8 @@ class Legend extends React.Component {
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             width: this.legendWidth,
-                            color: item.innerItems[key].color
+                            color: item.innerItems[key].color,
+                            cursor: 'move'
                         }}
                     >
                         {key}

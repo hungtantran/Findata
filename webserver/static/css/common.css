@@ -103,6 +103,20 @@
 }
 
 /*
+ * Legend
+ */
+.legendItem:hover {
+  background-color: aliceblue;
+}
+
+/*
+ * Data Pane
+ */
+.paneAttribute:hover {
+  background-color: aliceblue;
+}
+
+/*
  * Content 
  */
 

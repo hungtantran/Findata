@@ -40,7 +40,7 @@ class DataPane extends React.Component {
                 }
                 attributeList.push(
                     <li
-                        className='list-group-item'
+                        className='paneAttribute list-group-item'
                         key={attribute.metricName}
                         draggable='true'
                         onDragStart={(ev) => {
@@ -49,6 +49,7 @@ class DataPane extends React.Component {
                         onDragEnd={(ev) => {
                             ev.stopPropagation(); this.props.onDragEnd();
                         }}
+                        style={{cursor: 'move'}}
                         >
                         {attribute.metricName}
                     </li>);
