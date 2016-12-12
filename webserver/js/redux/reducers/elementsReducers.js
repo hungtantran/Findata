@@ -1,5 +1,5 @@
 import {LAYOUT_CHANGE} from '../actions/gridActions';
-import {ADD_ELEMENT} from '../actions/elementActions';
+import {ADD_ELEMENT, REMOVE_ELEMENT} from '../actions/elementActions';
 import {ADD_PLOTS, REMOVE_PLOT} from '../actions/plotActions';
 import {scaleOrdinal, schemeCategory10} from 'd3-scale';
 import {LOAD_ELEMENTS} from '../actions/dashboardTabsActions';
@@ -20,6 +20,17 @@ function Elements(state={}, action) {
             let x = 0, y = 0, width = 0, height = 0;
             let colorScale = scaleOrdinal(schemeCategory10);
             return Object.assign({}, state, {[action.id]:{x, y, width, height, plots: [], colorScale}});   
+        }
+    case REMOVE_ELEMENT:
+        {
+            let newElements = {};
+            Object.keys(state).forEach((id) => {
+                if (id != action.elementId) {
+                    newElements[id] = state[id];
+                }
+            });
+
+            return Object.assign({}, newElements);   
         }
     case ADD_PLOTS:
         // TODO don't duplicate the plots

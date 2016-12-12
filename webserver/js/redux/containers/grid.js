@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import React from 'react';
 import { updateGridLayout } from '../actions/gridActions';
+import { removeElement } from '../actions/elementActions';
 import Graph from './graph';
 
 class Grid extends React.Component {
@@ -8,6 +9,7 @@ class Grid extends React.Component {
     constructor(props) {
         super(props);
 
+        this.removeItem = this.removeItem.bind(this)
         this.addGraphs = this.addGraphs.bind(this);
         this.exportGraphState = this.exportGraphState.bind(this);
 
@@ -44,7 +46,7 @@ class Grid extends React.Component {
 
     // Function call when there is new update to the dom to add new graph to the gridstacl
     // TODO: in the future, thing change doesn't mean new graph
-    addGraphs(oldElements) {
+    addGraphs() {
         var grid = $('.grid-stack').data('gridstack');
 
         grid.batchUpdate();
@@ -104,10 +106,20 @@ class Grid extends React.Component {
         return false;
     }
 
+    removeItem(clickEvent) {
+        this.props.removeElement(clickEvent.target.id);
+    }
+
     render() {
         let elements = Object.keys(this.props.elements).map((id) => {
             return (
             <div className="grid-stack-item" id={id} key={id}>
+                <span style={{float:'left', display:'inline-block', position:'absolute', zIndex: '9999'}} onClick={this.removeItem}>
+                    <img
+                        id={id}
+                        src='https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcRzUypyvRutgLIArGpLOSEyT6noe39ZYiJKbzbvPVaE1ZTXEure'
+                        style={{width: '10px', height: '10px'}}/>
+                </span>
                 <div className="grid-stack-item-content" style={{left: 0, right: 0}}>
                     <Graph id={id} key={id} />
                 </div>
@@ -127,7 +139,8 @@ class Grid extends React.Component {
 
 Grid.propTypes = {
     elements: React.PropTypes.object, 
-    onLayoutChange: React.PropTypes.func
+    onLayoutChange: React.PropTypes.func,
+    removeElement: React.PropTypes.func
 };
 
 const mapStateToProps = (state) => {
@@ -146,7 +159,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onLayoutChange: (gridLayoutUpdate) => dispatch(updateGridLayout(gridLayoutUpdate))
+        onLayoutChange: (gridLayoutUpdate) => dispatch(updateGridLayout(gridLayoutUpdate)),
+        removeElement: (elementId) => dispatch(removeElement(elementId))
     };
 };
 

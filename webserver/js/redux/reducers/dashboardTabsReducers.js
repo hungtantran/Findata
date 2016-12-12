@@ -1,5 +1,5 @@
 import * as Actions from '../actions/dashboardTabsActions';
-import {ADD_ELEMENT} from '../actions/elementActions';
+import {ADD_ELEMENT, REMOVE_ELEMENT} from '../actions/elementActions';
 
 const initialState = {
     tabs: {'Dashboard 1': []},
@@ -38,6 +38,17 @@ function DashboardTabs(state=initialState, action) {
             currentIds.push(action.id);
             return Object.assign({}, state, {
                 tabs: element(state.activeTab, state.tabs, currentIds)
+            });
+        }
+    case REMOVE_ELEMENT:
+        {
+            console.log(state);
+            let currentIds = state.tabs[state.activeTab].slice();
+            let newIds = currentIds.filter((id) => {
+                return id != action.elementId;
+            }); 
+            return Object.assign({}, state, {
+                tabs: element(state.activeTab, state.tabs, newIds)
             });
         }
     case Actions.LOAD_DASHBOARD_TABS:
